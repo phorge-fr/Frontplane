@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - headlamp.yml
+  # - headlamp.yml
   - dexidp.yml
   - kube-prometheus-stack.yml
   - loki.yml
   - openfga.yml
-  - kops.yml
+  # - kops.yml
   # - semaphore.yml
