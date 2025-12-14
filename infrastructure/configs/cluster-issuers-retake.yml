@@ -1,0 +1,60 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+    name: letsencrypt-retake
+spec:
+    acme:
+        server: https://acme-v02.api.letsencrypt.org/directory
+        email: ENC[AES256_GCM,data:tQ7earw8VDuf6ACN1KL3td0=,iv:3EMCHeeTf9EQbeIPiOYVofV8bu1INrCJCH9O2BrJB38=,tag:F6wc/+r91n/4JrJ8fhsibA==,type:str]
+        privateKeySecretRef:
+            name: letsencrypt
+        solvers:
+            - dns01:
+                cloudflare:
+                    email: ENC[AES256_GCM,data:Dnh0ULxPEd+ZE5kIH8+TQuAupJ8yB6E=,iv:xPKVFPw+qw845gGp1Y1FFUlgJiYHgVsykk1xRdZWZqk=,tag:ADegU9PaYAnXSrT3hJW0cg==,type:str]
+                    apiTokenSecretRef:
+                        name: cloudflare-api-token-secret-retake
+                        key: ENC[AES256_GCM,data:HTI0b0nPgFPM,iv:vGnWfdnjangpWibLw5PmWGk4YhK3iZjJ+Lzfn29UiGk=,tag:uYbc7MK1QFHbwvEseXwS9g==,type:str]
+              selector:
+                dnsZones:
+                    - retake.fr
+                    - '*.retake.fr'
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNQ2lVRUhLNkp0S0pFQVo1
+            NTQzbzVPYnBCcFJnanhhcVlDYmRIcVNCWlQ0CjQ5cUJVRVRLUmNWL1JmUDNlL1Mz
+            T2pWdFk4NFVrZ1ZaTmk4MXRKdXN1T0kKLS0tIHMwUWR2MlpCZmFNaFhVNkhydGJJ
+            RGErMjNKNGdsVzdUMFkyYlhkSTNrbkEKJGNZQ6BWvzvmq1Oa7/YgAISCLsg8c6aE
+            wAeqOHwbREZ4ABnyv3wpaTm1/4b1ZsfH6cqW4V/0dw3fSAU1Klm6kA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T00:41:36Z"
+    mac: ENC[AES256_GCM,data:Z1NI+mUEqgIuIt3fzNcO7GheMDUOB042iIL7KDteri3Kx+Ay21uXAUgLxTHYHgYtdZwOMPSvPJB/5E3wxpxyHLthVegfgYygRiKnk0N/OvQ31pZixHnjjzgHunj6BO1/JzpBJPfFxCv9z7dKqIOrxgEPh4eev29GcA1DE5dBUyQ=,iv:jQFd+cfTmQTMYOsFJvx2JB9xeLHiHzEmsS4aJDyhH7Y=,tag:qrTOnbthtSk2j/Ys0yUEUA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: cloudflare-api-token-secret-retake
+    namespace: cert-manager
+type: Opaque
+data:
+    api-token: ENC[AES256_GCM,data:ptJl4mD1+91WDM1OoKTyh7KKswRej0MQdc6tJho4oBm9yBKPCjkkWkg/0PjWAXV3SmRngtR2Hp8=,iv:bBlut86IevbJG2tNFVxzxZWHiQfO+/E4kCX5ZB9bjVU=,tag:juwWN7sxz2Zk0cnvJOvuOw==,type:str]
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBNQ2lVRUhLNkp0S0pFQVo1
+            NTQzbzVPYnBCcFJnanhhcVlDYmRIcVNCWlQ0CjQ5cUJVRVRLUmNWL1JmUDNlL1Mz
+            T2pWdFk4NFVrZ1ZaTmk4MXRKdXN1T0kKLS0tIHMwUWR2MlpCZmFNaFhVNkhydGJJ
+            RGErMjNKNGdsVzdUMFkyYlhkSTNrbkEKJGNZQ6BWvzvmq1Oa7/YgAISCLsg8c6aE
+            wAeqOHwbREZ4ABnyv3wpaTm1/4b1ZsfH6cqW4V/0dw3fSAU1Klm6kA==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T00:41:36Z"
+    mac: ENC[AES256_GCM,data:Z1NI+mUEqgIuIt3fzNcO7GheMDUOB042iIL7KDteri3Kx+Ay21uXAUgLxTHYHgYtdZwOMPSvPJB/5E3wxpxyHLthVegfgYygRiKnk0N/OvQ31pZixHnjjzgHunj6BO1/JzpBJPfFxCv9z7dKqIOrxgEPh4eev29GcA1DE5dBUyQ=,iv:jQFd+cfTmQTMYOsFJvx2JB9xeLHiHzEmsS4aJDyhH7Y=,tag:qrTOnbthtSk2j/Ys0yUEUA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0

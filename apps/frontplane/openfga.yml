@@ -1,0 +1,98 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: openfga
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBMZzNPdG1oM2xBeEdobmZB
+            UGFoQ244S2FxL2hDZHNXVHJVcVZNL0d1TUVBCllROTJxeExQUGQwVGZCZVBoSVE0
+            b3NGRnZsQnJRa0I0Uy9OWmFGWXI1dlkKLS0tIGJ6cnVzSkEwS1k2NUxCTWZCbDI5
+            L1ZaSVFaRy81UWpiNWtPd2NiMFNValkKn9BouiCdFXgFsAYIbUUGXctvEGmPa0mt
+            0oCLcn1F/waxBW1VzhdKCaMUpXN+z4A5+ly9yFkK9Tq5n1cZuMF6ig==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-07T23:58:08Z"
+    mac: ENC[AES256_GCM,data:S1mNk8tgS8m/bcMs2ftACvOGfFfUal7HFc7v/kLtn4cv8++KdGvb7VS2/UO9BjFLfFyoo8cDUjNvEQ2aKh5UIPOwbqhrya2I+gtiqQ1mMHDgnnq5FABgcDu6aDXDvsYzlmF86ewgyqzNzewO2EKbx2ZlVdQRjqJHdO9TCy5s4MQ=,iv:zvvgdCUsnkHhpHLKsrkrUZIirfCdn3iVERlSzT1vvoE=,tag:g84sN2xdgfTg8UxQiR/H8w==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: openfga
+    namespace: openfga
+spec:
+    interval: 1m0s
+    timeout: 1m0s
+    url: https://openfga.github.io/helm-charts
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBMZzNPdG1oM2xBeEdobmZB
+            UGFoQ244S2FxL2hDZHNXVHJVcVZNL0d1TUVBCllROTJxeExQUGQwVGZCZVBoSVE0
+            b3NGRnZsQnJRa0I0Uy9OWmFGWXI1dlkKLS0tIGJ6cnVzSkEwS1k2NUxCTWZCbDI5
+            L1ZaSVFaRy81UWpiNWtPd2NiMFNValkKn9BouiCdFXgFsAYIbUUGXctvEGmPa0mt
+            0oCLcn1F/waxBW1VzhdKCaMUpXN+z4A5+ly9yFkK9Tq5n1cZuMF6ig==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-07T23:58:08Z"
+    mac: ENC[AES256_GCM,data:S1mNk8tgS8m/bcMs2ftACvOGfFfUal7HFc7v/kLtn4cv8++KdGvb7VS2/UO9BjFLfFyoo8cDUjNvEQ2aKh5UIPOwbqhrya2I+gtiqQ1mMHDgnnq5FABgcDu6aDXDvsYzlmF86ewgyqzNzewO2EKbx2ZlVdQRjqJHdO9TCy5s4MQ=,iv:zvvgdCUsnkHhpHLKsrkrUZIirfCdn3iVERlSzT1vvoE=,tag:g84sN2xdgfTg8UxQiR/H8w==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: openfga
+    namespace: openfga
+spec:
+    chart:
+        spec:
+            chart: openfga
+            sourceRef:
+                kind: HelmRepository
+                name: openfga
+            version: '*'
+    interval: 1m0s
+    values:
+        replicaCount: 1
+        datastore:
+            migrationType: initContainer
+            engine: postgres
+            uri: ENC[AES256_GCM,data:TqnNeZIZKYPVWYnsS7bOxK10ZUQ+eIV+nHB6cQlQLZxmJEnkT4o+Sqhh1iJpDRGSWEij7EnoAcuSRhavDImtyRz4NL+wG/imB1/YTIpFAUklbovJJCPO5tp+Va2TZSS2vbWFsITeNxCu/E8G0boZntv7,iv:zIes3hRPPSDi0ZdE8YjjKvutl8p5uK/qm2uPoMf/Jhg=,tag:HZHDXZJUIciRaceFZQ8owQ==,type:str]
+        postgresql:
+            image:
+                tag: latest
+            enabled: true
+            auth:
+                postgresPassword: ENC[AES256_GCM,data:fRFyN0dw1CgydnngAv1WAWArBg==,iv:ebdhkFtlTDwpiavFdRR87H5TY1J9mKMoUAPJZddD/Ss=,tag:7klWmEFqZwvcFejXUvTgPA==,type:str]
+                database: postgres
+            primary:
+                persistence:
+                    enabled: true
+                    size: 10Gi
+        service:
+            type: LoadBalancer
+        authn:
+            method: preshared
+            preshared:
+                keys:
+                    - ENC[AES256_GCM,data:rtoDjrc0FLz1DcicyVzNEQ==,iv:RNg9eHHDLglqmze+Db22CVvTFgMi5ZyOuYI/B3wcjQU=,tag:xTsmKpv3oRnKKL34cO4T8A==,type:str]
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBMZzNPdG1oM2xBeEdobmZB
+            UGFoQ244S2FxL2hDZHNXVHJVcVZNL0d1TUVBCllROTJxeExQUGQwVGZCZVBoSVE0
+            b3NGRnZsQnJRa0I0Uy9OWmFGWXI1dlkKLS0tIGJ6cnVzSkEwS1k2NUxCTWZCbDI5
+            L1ZaSVFaRy81UWpiNWtPd2NiMFNValkKn9BouiCdFXgFsAYIbUUGXctvEGmPa0mt
+            0oCLcn1F/waxBW1VzhdKCaMUpXN+z4A5+ly9yFkK9Tq5n1cZuMF6ig==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-07T23:58:08Z"
+    mac: ENC[AES256_GCM,data:S1mNk8tgS8m/bcMs2ftACvOGfFfUal7HFc7v/kLtn4cv8++KdGvb7VS2/UO9BjFLfFyoo8cDUjNvEQ2aKh5UIPOwbqhrya2I+gtiqQ1mMHDgnnq5FABgcDu6aDXDvsYzlmF86ewgyqzNzewO2EKbx2ZlVdQRjqJHdO9TCy5s4MQ=,iv:zvvgdCUsnkHhpHLKsrkrUZIirfCdn3iVERlSzT1vvoE=,tag:g84sN2xdgfTg8UxQiR/H8w==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0

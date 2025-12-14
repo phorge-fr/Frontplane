@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: dexidp
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwMG5rdWZqaVNvS1VJYmJ0
+            QlNwZEswWElma0tHOWFoczdYc0p3bmVPTWhvCjdHUGJGZThZWExmR1dtWGx4RWts
+            L1VlTkVYa2pqT1hid1RzWHIxdEdQQkEKLS0tIGdDMUxTYXZVOUZlYmd4NFdOcEhm
+            eXEvWmdHSWJZSnFTVlRsWllWd25lN1EKjL4Jh8CYRlWaiobWFzFaNKltDxNAXCHu
+            cSLxagljLz42AIftOSZWJ3IR66IUwf5ykLhG/GuiUeTsdlI7nzAPrg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-08T00:28:42Z"
+    mac: ENC[AES256_GCM,data:eZ6/AJGVv1nUdPSgJrjKIFvn6DHoPIvNXAB7nx0SZaqsgGlZjlFqguNXnFrYUgVjBlYNIUhraD+AMvRFIFkAXijxfzEV4AplaGp7QqeQXZcsqPWs/cpadxHpQjd2kppCvqgHgdbDN/AHkiilms9CSysjG6gs1dvBph2+QLHtN9k=,iv:T3Ar73NbHBzDY4Y8WYqjAPuIRo8FYOuF2x49lfVOalY=,tag:NmBBoJP7MsrbwN8AAMSKFg==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: dexidp
+    namespace: dexidp
+spec:
+    interval: 1m0s
+    timeout: 1m0s
+    url: https://charts.dexidp.io
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwMG5rdWZqaVNvS1VJYmJ0
+            QlNwZEswWElma0tHOWFoczdYc0p3bmVPTWhvCjdHUGJGZThZWExmR1dtWGx4RWts
+            L1VlTkVYa2pqT1hid1RzWHIxdEdQQkEKLS0tIGdDMUxTYXZVOUZlYmd4NFdOcEhm
+            eXEvWmdHSWJZSnFTVlRsWllWd25lN1EKjL4Jh8CYRlWaiobWFzFaNKltDxNAXCHu
+            cSLxagljLz42AIftOSZWJ3IR66IUwf5ykLhG/GuiUeTsdlI7nzAPrg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-08T00:28:42Z"
+    mac: ENC[AES256_GCM,data:eZ6/AJGVv1nUdPSgJrjKIFvn6DHoPIvNXAB7nx0SZaqsgGlZjlFqguNXnFrYUgVjBlYNIUhraD+AMvRFIFkAXijxfzEV4AplaGp7QqeQXZcsqPWs/cpadxHpQjd2kppCvqgHgdbDN/AHkiilms9CSysjG6gs1dvBph2+QLHtN9k=,iv:T3Ar73NbHBzDY4Y8WYqjAPuIRo8FYOuF2x49lfVOalY=,tag:NmBBoJP7MsrbwN8AAMSKFg==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: dex
+    namespace: dexidp
+spec:
+    chart:
+        spec:
+            chart: dex
+            sourceRef:
+                kind: HelmRepository
+                name: dexidp
+            version: '*'
+    interval: 1m0s
+    values:
+        ingress:
+            enabled: true
+            className: nginx
+            annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+            hosts:
+                - host: auth.phorge.fr
+                  paths:
+                    - path: /
+                      pathType: ImplementationSpecific
+            tls:
+                - secretName: dexidp-tls
+                  hosts:
+                    - auth.phorge.fr
+        config:
+            issuer: https://auth.phorge.fr
+            web:
+                allowedOrigins:
+                    - '*'
+            oauth2:
+                responseTypes:
+                    - code
+                skipApprovalScreen: true
+                alwaysShowLoginScreen: false
+            storage:
+                type: memory
+            connectors:
+                - type: github
+                  id: ENC[AES256_GCM,data:z9WgeFm4,iv:oj6UmuUUvBVgo0oBGrpkXv1QALQEpW1l6jiB9XKIkkY=,tag:byC31q6JyNYlQWgdLhAQsg==,type:str]
+                  name: GitHub
+                  config:
+                    clientID: ENC[AES256_GCM,data:LsE7ak6CJMOEM1yeA5WCVQlcKSw=,iv:fqz2k16lWdtx9pRZuVRyKyHhxAhQfrHjXgyknBPyMOw=,tag:oGMnpvYTJq0iod34jnjLNA==,type:str]
+                    clientSecret: ENC[AES256_GCM,data:yiYHigJ+nSVo4ZfpU00rfYFQzLGAh/47ew58TpfL+ETxFRfqRqeUHA==,iv:iRo9zO4oBvqZCn0OM2fk10aCJKB/e8LKAlDotEqjpH8=,tag:3SiYhqr+iJUkZw9RMO3iBw==,type:str]
+                    redirectURI: https://auth.phorge.fr/callback
+                    scopes:
+                        - groups
+                        - email
+                    orgs:
+                        - name: phorge-fr
+                          teams:
+                            - admins
+                    loadAllGroups: true
+                    teamNameField: slug
+                    useLoginAsID: false
+            staticClients:
+                - id: ENC[AES256_GCM,data:HVWOed9lN8H82g==,iv:50ZlOn3Oexq/MIFwkCgCsSA/IRn48FD2niu9agkWRw8=,tag:ZdZZHgP5D48u44drVvlrXA==,type:str]
+                  name: Monitoring
+                  secret: ENC[AES256_GCM,data:YevpXIdWOvarNyqjPTk9PtsFJL0FTYAwFzGbEq6evgcuNqudcPBvw5oaEXtRxcg=,iv:NS7YdGlFTlnR4ceV2Iy+pDdty34aw9C+PP5zeGf6C1Y=,tag:D80rYsJ1/ySwRKSI6vmVfg==,type:str]
+                  redirectURIs:
+                    - https://monitoring.phorge.fr/login/generic_oauth
+                - id: ENC[AES256_GCM,data:B3N5hdcqcdkJ6A==,iv:E39ysqiCecsUDzeah4RRv+3Gz/b0PFsX0eZ9itm7pWk=,tag:KIoKiXuihmPpLK13zbM/+g==,type:str]
+                  name: FrontPlane
+                  secret: ENC[AES256_GCM,data:1+gZV4NsWihOW3sFfaM0nFMLIu/L39c1Pc7W,iv:wydarAtDnSzqhHNLLDFh1GXAUXcB78EKWayKwbWkC8o=,tag:bYXK+Dgvk7KDg9uJm8142w==,type:str]
+                  redirectURIs:
+                    - https://headlamp.frontplane.phorge.fr/oidc-callback
+                - id: ENC[AES256_GCM,data:AI2i5Zg=,iv:CM1dyiv30IzXTzg7eZLfP88rRFua7GArCq/wUwerZWw=,tag:PprtOlvVPrDz75qd3xsOug==,type:str]
+                  name: Incus
+                  public: true
+                  redirectURIs:
+                    - https://iaas.phorge.fr/oidc/callback
+                    - /device/callback
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBwMG5rdWZqaVNvS1VJYmJ0
+            QlNwZEswWElma0tHOWFoczdYc0p3bmVPTWhvCjdHUGJGZThZWExmR1dtWGx4RWts
+            L1VlTkVYa2pqT1hid1RzWHIxdEdQQkEKLS0tIGdDMUxTYXZVOUZlYmd4NFdOcEhm
+            eXEvWmdHSWJZSnFTVlRsWllWd25lN1EKjL4Jh8CYRlWaiobWFzFaNKltDxNAXCHu
+            cSLxagljLz42AIftOSZWJ3IR66IUwf5ykLhG/GuiUeTsdlI7nzAPrg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-11-08T00:28:42Z"
+    mac: ENC[AES256_GCM,data:eZ6/AJGVv1nUdPSgJrjKIFvn6DHoPIvNXAB7nx0SZaqsgGlZjlFqguNXnFrYUgVjBlYNIUhraD+AMvRFIFkAXijxfzEV4AplaGp7QqeQXZcsqPWs/cpadxHpQjd2kppCvqgHgdbDN/AHkiilms9CSysjG6gs1dvBph2+QLHtN9k=,iv:T3Ar73NbHBzDY4Y8WYqjAPuIRo8FYOuF2x49lfVOalY=,tag:NmBBoJP7MsrbwN8AAMSKFg==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared)$
+    version: 3.11.0

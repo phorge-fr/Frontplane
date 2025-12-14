@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: front-rplb
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-config
+  namespace: front-rplb
+data:
+  haproxy.cfg: |
+    global
+      log stdout format raw local0 info
+      stats timeout 30s
+      ssl-default-bind-options ssl-min-ver TLSv1.2
+      tune.ssl.default-dh-param 2048
+      maxconn 100000
+
+    defaults
+      mode tcp
+      timeout connect 5s
+      timeout client 30s
+      timeout client-fin 30s
+      timeout server 120s
+      timeout tunnel 6h
+      timeout http-request 5s
+      maxconn 80000
+
+    backend http-301
+      mode http
+      redirect scheme https code 301
+
+    backend http-nginx-ingress
+      mode http
+      server ingress-server ingress-nginx-controller.ingress-nginx.svc.cluster.local:80 check
+
+    backend https-nginx-ingress
+      mode tcp
+      server ingress-server ingress-nginx-controller.ingress-nginx.svc.cluster.local:443 check
+
+    backend incus-cluster
+      mode tcp
+      balance roundrobin
+      option tcp-check
+      server clever-lynx 10.1.0.1:8443 check
+      server gentle-fox 10.1.0.2:8443 check
+      server mighty-deer 10.1.0.3:8443 check
+      server brave-whale 10.1.0.4:8443 check
+      server mighty-rabbit 10.1.0.5:8443 check
+      server clever-panda 10.1.0.6:8443 check
+
+    frontend http-dispatcher
+      bind :8080
+      mode http
+    
+      acl host_iaas hdr(host) -i iaas.phorge.fr
+      http-request redirect scheme https code 301 if host_iaas
+    
+      default_backend http-nginx-ingress
+
+    frontend sni-dispatcher
+      bind :8443
+      mode tcp
+
+      tcp-request inspect-delay 5s
+      tcp-request content accept if { req.ssl_hello_type 1 }
+
+      use_backend incus-cluster if { req.ssl_sni -i iaas.phorge.fr }
+
+      default_backend https-nginx-ingress
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: haproxy
+  namespace: front-rplb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: haproxy
+  template:
+    metadata:
+      labels:
+        app: haproxy
+    spec:
+      containers:
+        - name: haproxy
+          image: haproxy:latest
+          ports:
+            - containerPort: 8080
+            - containerPort: 8443
+          volumeMounts:
+            - name: haproxy-config
+              mountPath: /usr/local/etc/haproxy/haproxy.cfg
+              subPath: haproxy.cfg
+              readOnly: true
+      volumes:
+        - name: haproxy-config
+          configMap:
+            name: haproxy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: haproxy
+  namespace: front-rplb
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+      name: http
+    - port: 8443
+      targetPort: 8443
+      protocol: TCP
+      name: https
+  selector:
+    app: haproxy
+  type: LoadBalancer

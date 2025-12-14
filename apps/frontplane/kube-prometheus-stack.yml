@@ -1,0 +1,181 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: kube-prometheus-stack
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKSUsxSHF4MHVNNUpDWU8x
+            dGlxOUtzeXBwdllUa3JJZkwyNGxTaVIxdlR3CnhsWXpWTndwc05yY0JlVStlR0ph
+            aFliQTNXTURpVjFPdEs5bk9HZVJ4ZmMKLS0tIDRIVFBOakl2TXZLOGlSd3gyUDJ0
+            eUg2dUVwSytwYjhoZGdnY3BsYUdEMWcKICFQBeMdoBXdArUphBUKYXVfcURbkDa0
+            vFJlWyg45nMIEaTl7bZQHcYqBpOWLdpvkgsEnKXUkV01vHbIRlmfAg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T01:57:23Z"
+    mac: ENC[AES256_GCM,data:1++OS02fnn17jbNUipr0vGyF92zkEbnYRuS6KL8LSKqOQou3nKlOmg7czRdKPreqNTBky3n84c2OAfGEl7Wcz9zIra6J1bd2F9TQWU1elp+EVKEsCsH8ceOwRhaDSy+OI7z4vTiZXYuAUzGDh4xg8u6wUqpVlGw5TdaRFG7EHzQ=,iv:YXbOGjOGNbm30n7HjYT6gru/xDoIF0c7d1Rc0va1qIg=,tag:beMm4h23aZ0moGEH14fSpA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: kube-prometheus-stack
+    namespace: kube-prometheus-stack
+spec:
+    interval: 1m0s
+    timeout: 1m0s
+    url: https://prometheus-community.github.io/helm-charts
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKSUsxSHF4MHVNNUpDWU8x
+            dGlxOUtzeXBwdllUa3JJZkwyNGxTaVIxdlR3CnhsWXpWTndwc05yY0JlVStlR0ph
+            aFliQTNXTURpVjFPdEs5bk9HZVJ4ZmMKLS0tIDRIVFBOakl2TXZLOGlSd3gyUDJ0
+            eUg2dUVwSytwYjhoZGdnY3BsYUdEMWcKICFQBeMdoBXdArUphBUKYXVfcURbkDa0
+            vFJlWyg45nMIEaTl7bZQHcYqBpOWLdpvkgsEnKXUkV01vHbIRlmfAg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T01:57:23Z"
+    mac: ENC[AES256_GCM,data:1++OS02fnn17jbNUipr0vGyF92zkEbnYRuS6KL8LSKqOQou3nKlOmg7czRdKPreqNTBky3n84c2OAfGEl7Wcz9zIra6J1bd2F9TQWU1elp+EVKEsCsH8ceOwRhaDSy+OI7z4vTiZXYuAUzGDh4xg8u6wUqpVlGw5TdaRFG7EHzQ=,iv:YXbOGjOGNbm30n7HjYT6gru/xDoIF0c7d1Rc0va1qIg=,tag:beMm4h23aZ0moGEH14fSpA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: kube-prometheus-stack
+    namespace: kube-prometheus-stack
+spec:
+    chart:
+        spec:
+            chart: kube-prometheus-stack
+            sourceRef:
+                kind: HelmRepository
+                name: kube-prometheus-stack
+            version: '*'
+    interval: 1m0s
+    values:
+        grafana:
+            grafana.ini:
+                server:
+                    domain: monitoring.phorge.fr
+                    root_url: https://monitoring.phorge.fr/
+            enabled: true
+            adminPassword: ENC[AES256_GCM,data:D1hvpr/rTthuWeUZ3f2Uu2hMfOHUzC37,iv:Hu3S8RXDyneyRR23nUOlCh/ebSLV9cEAbMJbLi8o4yA=,tag:F+8QeA67uVQJWZmAcC3uSQ==,type:str]
+            service:
+                type: ClusterIP
+            ingress:
+                enabled: true
+                ingressClassName: nginx
+                annotations:
+                    cert-manager.io/cluster-issuer: letsencrypt
+                hosts:
+                    - monitoring.phorge.fr
+                tls:
+                    - secretName: grafana-tls
+                      hosts:
+                        - monitoring.phorge.fr
+            persistence:
+                enabled: true
+                accessModes:
+                    - ReadWriteOnce
+                size: 1Gi
+        prometheus:
+            prometheusSpec:
+                retention: 15d
+                retentionSize: 19GiB
+                serviceMonitorSelector: {}
+                secrets:
+                    - incus-metrics-credentials
+                storageSpec:
+                    volumeClaimTemplate:
+                        spec:
+                            storageClassName: longhorn
+                            accessModes:
+                                - ReadWriteOnce
+                            resources:
+                                requests:
+                                    storage: 20Gi
+                additionalScrapeConfigs:
+                    - job_name: incus
+                      metrics_path: /1.0/metrics
+                      scheme: https
+                      static_configs:
+                        - targets:
+                            - 10.1.0.1:8444
+                            - 10.1.0.2:8444
+                            - 10.1.0.3:8444
+                            - 10.1.0.4:8444
+                            - 10.1.0.5:8444
+                            - 10.1.0.6:8444
+                      tls_config:
+                        ca_file: /etc/prometheus/secrets/incus-metrics-credentials/ca.crt
+                        cert_file: /etc/prometheus/secrets/incus-metrics-credentials/metrics.crt
+                        key_file: /etc/prometheus/secrets/incus-metrics-credentials/metrics.key
+                        server_name: iaas.phorge.fr
+                        insecure_skip_verify: true
+                    - job_name: incus-node-exporter
+                      static_configs:
+                        - targets:
+                            - 10.1.0.1:9100
+                            - 10.1.0.2:9100
+                            - 10.1.0.3:9100
+                            - 10.1.0.4:9100
+                            - 10.1.0.5:9100
+                            - 10.1.0.6:9100
+                    - job_name: hpc-node-exporter
+                      static_configs:
+                        - targets:
+                            - 10.5.0.1:9100
+                    - job_name: hpc-gpu-exporter
+                      static_configs:
+                        - targets:
+                            - 10.5.0.1:8000
+                    - job_name: hpc-docker-cadvisor-exporter
+                      static_configs:
+                        - targets:
+                            - 10.5.0.1:8080
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKSUsxSHF4MHVNNUpDWU8x
+            dGlxOUtzeXBwdllUa3JJZkwyNGxTaVIxdlR3CnhsWXpWTndwc05yY0JlVStlR0ph
+            aFliQTNXTURpVjFPdEs5bk9HZVJ4ZmMKLS0tIDRIVFBOakl2TXZLOGlSd3gyUDJ0
+            eUg2dUVwSytwYjhoZGdnY3BsYUdEMWcKICFQBeMdoBXdArUphBUKYXVfcURbkDa0
+            vFJlWyg45nMIEaTl7bZQHcYqBpOWLdpvkgsEnKXUkV01vHbIRlmfAg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T01:57:23Z"
+    mac: ENC[AES256_GCM,data:1++OS02fnn17jbNUipr0vGyF92zkEbnYRuS6KL8LSKqOQou3nKlOmg7czRdKPreqNTBky3n84c2OAfGEl7Wcz9zIra6J1bd2F9TQWU1elp+EVKEsCsH8ceOwRhaDSy+OI7z4vTiZXYuAUzGDh4xg8u6wUqpVlGw5TdaRFG7EHzQ=,iv:YXbOGjOGNbm30n7HjYT6gru/xDoIF0c7d1Rc0va1qIg=,tag:beMm4h23aZ0moGEH14fSpA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: v1
+kind: Secret
+metadata:
+    name: incus-metrics-credentials
+    namespace: kube-prometheus-stack
+type: Opaque
+stringData:
+    metrics.crt: ENC[AES256_GCM,data:0t/KKIR1IkC0ueq3YuNnoad4cSwfN5NP67IoPNEgSDuSAIzG+w0Xk8IIt+D+cUia3gvm+SyFpvfjHR0NtVM9wDKidwriYnofowHmBSZ3Q7eocMb5+8WTVxRj3HcjYLX+jscRaE28RFngybZNFWHQG1saL+eIvbAsYsDguSAeEMkbNU5ECu6PqnRAGa/z0Py84m5ePnQ774+8U9N94jnAo4E/lI2etiK3zF7rZQzJslADUqQ4PBhjzY3pE6foqq2Kckie3YHgNSICOe/QwisWHSgwLue0jPdH5ALxfEMZut9hOaq2uw6AO8TakbJUx6VbVIn1of1YJPoRhBNUuiPkYwZwVoJQPa5eJNJBk9QAIfdJ8XkmPdOFxcv3M0BEbV8JRg1Z0Ptn48nPpp3eNzNIkO6ukApzAn5z7eDD3wQeomS7etlymjIhOxUS5lDdC8VoxxXQGga1Tlk3pPHTyRetWMXZIWrxC72zc+V0CPcAhMw2u+rnnCDaingoCx/GOpfo0KFT2HUNPdePnddpBvCj9J6359BC0SU2XLKkDaE7m1gFLW0yn5n8EJ7cOcliUVimpJrGAnzkPNtTxa8xhZgokm16xrX+bnR1wIdz7L9bRp7KKqOJXRNwpz94ZyTNaa+PmR0thbDHDlfOcFJqutAEnwdYuz4o0uVVbSpeYZzT4ZCtn14nmmgf0C5TuUBuqN1W8Mq6vBz20Cbj7HXzUjT9gk/C/Uxl9dumBvBwg7GXlmSJ4ZIUFNinYU/ZumGwdvXZAXUsf1uNQ2RPJfiGsUHZgry1yFLSasYQ5kGJXLf75cVfKkMSCC1qVCBLFFU8cSF4W5apt6k/rb9Mee+2NrIyKUElaybV4RU3AqFGWCfTfCLiA2f0f02qZ00IW4tmft3N,iv:q87BV0dqLgZBIKoS07EiWNfJU6gfOjQ5EjhSgDCcsXw=,tag:U2UgIZIr7DljG94tUAvO6A==,type:str]
+    metrics.key: ENC[AES256_GCM,data:6KoU6SptectvXSXSIU1IpeBmgFPN3f3leHJrMUWdGnlbRVv2z7pUZAsAG5/fxUGAhBBMmSoo9oivRqPsF5WYhqM5Mp9EL+kWaBjTxduiZW5ZUeVkp4qMjdbzl0lKIlore1Y3L1mG1ph6YhP4duU3D2sTBx222p7/Jjq5+noPdEC83yCwrEG/ar5ULqIFswmCri2a2i29SEuk+t0CRiU1sINL3hxRTb/CUU9eztCJ358crkWalmBG3yDJ+tYfA5l0m5/kw+mLWhBRU0+AoyMKLgcLj6d/qJyO72rPQ15Dk97mzL5KmF79jDZRm9OiRALg7SM+zbuZDJ8NPl2vjuFfSKl6M4uyzlusotPCNiHCSyKP+UAVs1/qsZ/0891/BeRGNCHlxHTwIKtBbWhpp5K19JCp,iv:Gz/xJLTxV++fhtuoSirAw7nzyFiPBPW3u1QSHwCuci4=,tag:Ty/bHswV5uTdPKlBw4be0w==,type:str]
+    ca.crt: ENC[AES256_GCM,data:uY6Uck1YUVgqPGiFYkzLrszxfPAvUAVAIit8K0c00tWwFc0idFzzvynhjni6MaFQgw76o6jFyNvPSG+7jLjDP77IgYDq+kxk50n51CV1mVhUJ73WQUOSNfyDIPaeuYbMgOMi62Df/cb3Ae8pRo0l/bt7ASW2fMf09sLUrzhmgIb+EwTc7F4CHhC0bzO2oj3zdf32c2MXxWVgO8DtVaROVNnFbM5k7jX8lhxfCaFoKEEwMCk+Wkfewc4uGDE7vtyzLFJloeN2ST4KpqHNTWiEVT/7lyIAcrXchiTlbfisG+9N07fNGQ+fhRy4RKw81nvu8+MsQ5HErWgwrW4Y61ZwBS5HWp3yDTt4zNf8XVT+VRxGDUZD+BAwwJxKB1/OZ0NAs6cWFPLMPOnWoiha50/mANGR/ED+/zz6/jUU5NvPbOW8v43yno0w2yoq5pLwGgz81nl2grxpdMe4P9fPMBOBEvLroQAmEo6zjegY9WetPI/z74+RiTnKy3MA/bBjK9AbDOQ6UokcaY/PtuKFGhxs8573mFY/X+l1r0/AybS6QBrgQ6Swff7vvcBn98z6jTwE5IQwOw1ZRu/23cidX59OKb2MLaYnWxa+CDmRhPvwe7+1emgozXNiOdaQpBYhtiovlLnaqTAW76wnHsv/UQbT6fsZ/eBsx1cvgQ0Yn13iNPjMGB+AM4YZScR8mtVJwRtQHs2QvoCra62wjWxfH86dkQF1FLBhSban+QOkOyrewiT2VJQZhMjPIpn879fQ/NzSZp2JBg+I+W+Uc6DBSl64b0qcCrsZv8E7L4EVh0pd9YS1EsV4a2x398bAs90lar8bxKhebWIFPoVQ5o9tD9fjzhD/T1zb2FnQcyfN6uPaD5Mt0a/dpKuR0QCewSG936bXB2kR3rlfsmXSVF5B3vpk6vbH+YAVIv+1r6eZf5n+X6BMgP6txhJsA5HYclLc1fREhm+pzjxqD04ehPf272izUf3NacG71TqZf6j4k3xsGVDDY0i5DiPo6Zb5B/936vw10EabU/lO,iv:lxg45A1VH++PkZDeziaZCAJyXjve/p760/0TDxo2KI4=,tag:LaGDTzSvrlmLRnvig5isUg==,type:str]
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBKSUsxSHF4MHVNNUpDWU8x
+            dGlxOUtzeXBwdllUa3JJZkwyNGxTaVIxdlR3CnhsWXpWTndwc05yY0JlVStlR0ph
+            aFliQTNXTURpVjFPdEs5bk9HZVJ4ZmMKLS0tIDRIVFBOakl2TXZLOGlSd3gyUDJ0
+            eUg2dUVwSytwYjhoZGdnY3BsYUdEMWcKICFQBeMdoBXdArUphBUKYXVfcURbkDa0
+            vFJlWyg45nMIEaTl7bZQHcYqBpOWLdpvkgsEnKXUkV01vHbIRlmfAg==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2025-12-14T01:57:23Z"
+    mac: ENC[AES256_GCM,data:1++OS02fnn17jbNUipr0vGyF92zkEbnYRuS6KL8LSKqOQou3nKlOmg7czRdKPreqNTBky3n84c2OAfGEl7Wcz9zIra6J1bd2F9TQWU1elp+EVKEsCsH8ceOwRhaDSy+OI7z4vTiZXYuAUzGDh4xg8u6wUqpVlGw5TdaRFG7EHzQ=,iv:YXbOGjOGNbm30n7HjYT6gru/xDoIF0c7d1Rc0va1qIg=,tag:beMm4h23aZ0moGEH14fSpA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
