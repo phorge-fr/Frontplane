@@ -1,0 +1,193 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: gitea
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBoRUlmcmw2VVp3K0xjVlFx
+            anJ1U2Q5TG1zVmxHR3JCSVJiUjZrZGRaK3o0CmZEVlRLTlVuTTEyRGp0WHRDTTRj
+            Y0xZV2VCSEY0ZEtvT0xhblA1cmZYRzQKLS0tIFExTW51NkxZZHczVVJCWTBia0hn
+            d0I4Q0JxSFkwWlBPOUw0TEllRHRaSncK7Uw2b+T5T3uOFbjo1oxnOhbfSbn2fOBb
+            gnwNQsulTMeBCqNjzy1McaxXhx/0vWYG1cRBqUbi2NNd9k0BGFuypw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-01-10T21:25:25Z"
+    mac: ENC[AES256_GCM,data:WJ6xZKSyAjp8m1wuvaA+se075W0HSHv3bXX2zjVAoxYy1e6Q8FL2NvmyD4sNSy7uGeVit6TKM5E2HvmLle1RkjjOyUBzjommxcK4sSsQTyMua2whZ3cbyK0d5EeM/zuXUcC/04MuK2kWk52mnBxsiLQVKNVDX147I3eBkYq3qh8=,iv:6u0onhxVL9nwkVL9z4L32P90T+jfrR674aPSd6yIGG0=,tag:YX3nYxzBLiiklMdaYZBzmA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: gitea
+    namespace: gitea
+spec:
+    interval: 1m0s
+    timeout: 1m0s
+    url: https://dl.gitea.com/charts/
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBoRUlmcmw2VVp3K0xjVlFx
+            anJ1U2Q5TG1zVmxHR3JCSVJiUjZrZGRaK3o0CmZEVlRLTlVuTTEyRGp0WHRDTTRj
+            Y0xZV2VCSEY0ZEtvT0xhblA1cmZYRzQKLS0tIFExTW51NkxZZHczVVJCWTBia0hn
+            d0I4Q0JxSFkwWlBPOUw0TEllRHRaSncK7Uw2b+T5T3uOFbjo1oxnOhbfSbn2fOBb
+            gnwNQsulTMeBCqNjzy1McaxXhx/0vWYG1cRBqUbi2NNd9k0BGFuypw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-01-10T21:25:25Z"
+    mac: ENC[AES256_GCM,data:WJ6xZKSyAjp8m1wuvaA+se075W0HSHv3bXX2zjVAoxYy1e6Q8FL2NvmyD4sNSy7uGeVit6TKM5E2HvmLle1RkjjOyUBzjommxcK4sSsQTyMua2whZ3cbyK0d5EeM/zuXUcC/04MuK2kWk52mnBxsiLQVKNVDX147I3eBkYq3qh8=,iv:6u0onhxVL9nwkVL9z4L32P90T+jfrR674aPSd6yIGG0=,tag:YX3nYxzBLiiklMdaYZBzmA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: gitea
+    namespace: gitea
+spec:
+    chart:
+        spec:
+            chart: gitea
+            sourceRef:
+                kind: HelmRepository
+                name: gitea
+            version: '*'
+    interval: 1m0s
+    values:
+        postExtraInitContainers:
+            - name: phorge-theme-install
+              image: alpine
+              command:
+                - sh
+                - -c
+                - |
+                  set -e
+                  apk add --no-cache rsync wget unzip
+                  mkdir -p /data/gitea
+                  wget -O /tmp/main.zip https://github.com/phorge-fr/gitea-phorge-theme/archive/refs/heads/main.zip
+                  unzip -n /tmp/main.zip -d /tmp/
+                  rsync -a --inplace --checksum /tmp/gitea-phorge-theme-main/ /data/gitea/
+                  chown -R 1000:1000 /data/gitea
+              volumeMounts:
+                - name: data
+                  mountPath: /data
+        nodeSelector:
+            node-role.kubernetes.io/worker: "true"
+        gitea:
+            admin:
+                email: ENC[AES256_GCM,data:CDUcWXGF6/NxTKsjhg7T6g==,iv:bIrDsciFXHNq0carhnixNiPtvqUNrxzLk8O6ORtLuOc=,tag:IjUgSTZYJ4OrcrgnLJUj1w==,type:str]
+                password: ENC[AES256_GCM,data:tWmOqeNlBxBvy08ejuwSWNj+kHA=,iv:tRuxE5lQSqOpr69MbTLFkthSYum6Dnk5PQWaLyU8Ffc=,tag:JfcIR83kxHWo9Ek2AV35Kw==,type:str]
+                passwordMode: keepUpdated
+                username: ENC[AES256_GCM,data:okj++JeCZpy19iw=,iv:gJ94yJgkvCkWyCn+ObyUhldacIWImXf+VBLit/7x97M=,tag:niFbZk4uuzlyo7jZwfZNPg==,type:str]
+            config:
+                APP_NAME: φorge
+                server:
+                    SSH_LISTEN_PORT: 2222
+                    SSH_PORT: 22
+                    ROOT_URL: https://git.phorge.fr/
+                service:
+                    DISABLE_REGISTRATION: "true"
+                ui:
+                    THEMES: phorge-dark
+                    DEFAULT_THEME: phorge-dark
+        ingress:
+            annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+            className: nginx
+            enabled: true
+            hosts:
+                - host: git.phorge.fr
+                  paths:
+                    - path: /
+            pathType: Prefix
+            tls:
+                - hosts:
+                    - git.phorge.fr
+                  secretName: gitea
+        persistence:
+            accessModes:
+                - ReadWriteOnce
+            annotations:
+                helm.sh/resource-policy: keep
+            claimName: gitea-shared-storage
+            create: true
+            enabled: true
+            labels: {}
+            mount: true
+            size: 10Gi
+            storageClass: null
+            subPath: null
+            volumeName: ""
+        postgresql:
+            enabled: true
+            global:
+                postgresql:
+                    auth:
+                        database: gitea
+                        password: ENC[AES256_GCM,data:6h8Yfsk=,iv:nNnQrYjsk87rNl39J/9/oxhzdGLSyxnEUYHhEbJnxnU=,tag:mXBmfS9OwujGP4NiiADLxA==,type:str]
+                        username: ENC[AES256_GCM,data:MEmO8Vo=,iv:g0rovgoLmobXec/y/fps4F9/zv+nKGhH6jyZA2asEoc=,tag:2zlN3U7PMySnLWzThWz+fg==,type:str]
+                    service:
+                        ports:
+                            postgresql: 5432
+            image:
+                repository: bitnamilegacy/postgresql
+            metrics:
+                image:
+                    repository: bitnamilegacy/postgres-exporter
+            primary:
+                nodeSelector:
+                    node-role.kubernetes.io/worker: "true"
+                persistence:
+                    size: 10Gi
+            volumePermissions:
+                image:
+                    repository: bitnamilegacy/os-shell
+        postgresql-ha:
+            enabled: false
+        service:
+            ssh:
+                annotations: {}
+                clusterIP: None
+                externalIPs: null
+                externalTrafficPolicy: null
+                hostPort: null
+                ipFamilies: null
+                ipFamilyPolicy: null
+                labels: {}
+                loadBalancerClass: null
+                loadBalancerIP: null
+                loadBalancerSourceRanges: []
+                nodePort: null
+                port: 22
+                type: NodePort
+        signing:
+            enabled: false
+            existingSecret: ""
+            gpgHome: /data/git/.gnupg
+            privateKey: ""
+        valkey:
+            primary:
+                nodeSelector:
+                    node-role.kubernetes.io/worker: "true"
+            enabled: true
+        valkey-cluster:
+            enabled: false
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBoRUlmcmw2VVp3K0xjVlFx
+            anJ1U2Q5TG1zVmxHR3JCSVJiUjZrZGRaK3o0CmZEVlRLTlVuTTEyRGp0WHRDTTRj
+            Y0xZV2VCSEY0ZEtvT0xhblA1cmZYRzQKLS0tIFExTW51NkxZZHczVVJCWTBia0hn
+            d0I4Q0JxSFkwWlBPOUw0TEllRHRaSncK7Uw2b+T5T3uOFbjo1oxnOhbfSbn2fOBb
+            gnwNQsulTMeBCqNjzy1McaxXhx/0vWYG1cRBqUbi2NNd9k0BGFuypw==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-01-10T21:25:25Z"
+    mac: ENC[AES256_GCM,data:WJ6xZKSyAjp8m1wuvaA+se075W0HSHv3bXX2zjVAoxYy1e6Q8FL2NvmyD4sNSy7uGeVit6TKM5E2HvmLle1RkjjOyUBzjommxcK4sSsQTyMua2whZ3cbyK0d5EeM/zuXUcC/04MuK2kWk52mnBxsiLQVKNVDX147I3eBkYq3qh8=,iv:6u0onhxVL9nwkVL9z4L32P90T+jfrR674aPSd6yIGG0=,tag:YX3nYxzBLiiklMdaYZBzmA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
+    version: 3.11.0
