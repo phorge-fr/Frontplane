@@ -9,19 +9,19 @@ roleRef:
 subjects:
     - apiGroup: rbac.authorization.k8s.io
       kind: User
-      name: leo@nonnenmacher-logel.fr
+      name: l-nmch@phorge.fr
 sops:
     age:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBPRE5mRW5EOEtpdnNFY0x3
-            aEVIWTNJQnpRV01BUnV6VEVsblk5cXhIVnlJCnJZNXpSSnZZREprTFl1eS9Za0pr
-            eU9oZmVWU0xnbzJPZFNieFVNNUNjOHcKLS0tIFJIRGw2MlNNbVI0RWd6alZ4bGZx
-            Z0pTTUJqYW5ubit5aE1RUlY3blN0djQKOqku7JHzkHaP2dBH1ddD7SGsbIiSAjO7
-            LhHYb9vgI2hD8MRwIm0kwNb6qzTMv6GfdQI3VyUcgwdAdPs3ksPcSw==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBHWnUyeGFMdWM4NWlPdEVZ
+            elFEM20vNkZKTnlXb1ROc0QvWFc1SUZpQjFzCjNxRVo3VDF3dVFEd3hpYUY3Yk1E
+            OW5NWklXRzRxbXVVL3ZFcEkranRsRUkKLS0tIERHK1pZZktSZTdiOGg2b3lmcXR3
+            R2NSaXUzaDRvSTNZWUxFa0RNZzZDREEKbo0K8O/R2RxwD4FmZqOyv8+1IB5acko6
+            NbM2auVRlBi7LKx9JQaNtBfjqDHPbMpC8Os+dih0awARMieQlHiyng==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2025-11-04T21:50:22Z"
-    mac: ENC[AES256_GCM,data:AA6Ihnh58y5vfyVGZOIzU9KRlc3MBUQR3iEk5+ddzQX0gDmx9zA0ZrSkkYEYqbz1o20rKymgunx1xI8X3lRr0b+zjJpk2xc4kubrRj45JQfaW1g6HUtS53B25kJiEIiXU7igE+bMHFcg+uY9Wdee4CywO6aCHnVJYXqeMmvejac=,iv:yJGqfVlWd8XFfZDjd2P6+tW0+ctQs1NQCsezSFwgb1E=,tag:9TOLM5LXsI2PQo4pq2zMJg==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword)$
+    lastmodified: "2026-01-10T21:22:57Z"
+    mac: ENC[AES256_GCM,data:/R2/FObjuJap1u/BZIFtxyqK2WoHlgyMlAQgpUD661Iu9fxEnoosdJ2FVSVrKGRlSeeGjenVMmzjgJ8XDlty/gkxFf7N9LXHOgZgKOufRdOshnVjbamhm5oT2IOnGr8tU7H/k2+E4tKs2VQdy5e2ZBwXmJ1lu98M1d7itx14ARU=,iv:yhIaL8C6yiMnleEwnAlUxOQtIsT5pNS+u/aWbA1+xnc=,tag:OwRWwd9UXXLcvtJn1zJgWA==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
     version: 3.11.0
