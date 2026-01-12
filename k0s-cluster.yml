@@ -15,7 +15,7 @@ spec:
         api:
           extraArgs:
             oidc-issuer-url: https://git.phorge.fr/
-            oidc-client-id: f28a11ba-d05f-498b-bb7c-3808bc3d06d7
+            oidc-client-id: b8622e31-f19d-4526-ab64-7793eb071835
             oidc-username-claim: email
           k0sApiPort: 9443
           port: 6443
