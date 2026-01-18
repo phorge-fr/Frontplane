@@ -35,5 +35,6 @@ spec:
         node-role.kubernetes.io/control-plane: "true"
       service:
         type: "LoadBalancer"
+        loadBalancerIP: "10.0.0.10"
     admissionWebhooks:
       enabled: false

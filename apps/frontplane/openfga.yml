@@ -7,14 +7,14 @@ sops:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGMlNUcVJ3NlYzYWtVUko4
-            Vi9KeDRUOE1GSk5LTU9GZ01DVVcvT0tGQngwCjRGalJScDNOaTRvWi9ZY0hGdjJn
-            UWpzS1pvdTFWaWZxcGsybUNoODVDS3cKLS0tIERxZzlmOWNwemp3SU82RjhSWkxa
-            ckNzcWxuaEZFUUlHMWZxMWVDQmZBVnMK2xbCmkW0hQFuQox7LN/8ocTb6W9ASYFU
-            /5/tYX7V/eWXGFzoAzEWKPbBz7KslyGZlHtAY9TB98uDdyoFri5Z1Q==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBpaTh1YTZ3TytKSGJ2aUdM
+            ekU0QkMzWWloMlAzRHUrWUpzZFVQbjZWSG5vCmd2OEJwVmlONE9hZ2RYbmRNY3cy
+            NGNKMUw2ZE1QTnhzZ2YxSmFneVRKMncKLS0tIHo3Zk1xdjZEQXdSU1NJeUJjTE9j
+            bDVlR015T2RvdXhUbWxvZGswNFo3NTAKGfxsemJCAgIXQrn4QUTFGPSyGRs9ihFD
+            DrP8rtorWVx67Yu/A2u5SMRJlMDcDNE2Zvm2pkKwxG80SCaDR0u4VQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-01-12T23:10:37Z"
-    mac: ENC[AES256_GCM,data:T/vBQrRQkmQ1zbpLKCA1NW29VYG+Puaw++tYaBbM2uG5zqNAYN5hzQUX9OVyoQfZP+F2XxTEoQdzSZztV5P2RWrtIq9OaVsI2snX5+CM1dh/rxdmd6wNFvmNAMggiCkNNcy/jBL0Y4QoDjAxlJGKVaMxHmCk4wYUDKw0reMpMkU=,iv:C+8h3bHnLGkvXmxc76mVFYj0BfettysjgoZB4Ht7AaI=,tag:fWmhtHXEziFduTFTsb3iVA==,type:str]
+    lastmodified: "2026-01-18T16:16:58Z"
+    mac: ENC[AES256_GCM,data:ROCVdouUE8qpcngFthjepBf9g/9BxGZEBWzpx2YVBBIHtDKuxed7n98bo91ioQXMnCG+lj9/tkZ9eQGxRC8hri54Ghr79JW1p8B+h8MQdkLhkFTOAN//WjUDjqC7mINETO87T94F+B0JBRyNobRic9B2GjuNzLDLXeNyJdcNfb4=,iv:A2c5y4nwwhe+0ry24bdIMamqULXAKjrhMLisGVB3YP4=,tag:JCLsXgqfg9CCQ76aONUD5A==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
     version: 3.11.0
 ---
@@ -32,14 +32,14 @@ sops:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGMlNUcVJ3NlYzYWtVUko4
-            Vi9KeDRUOE1GSk5LTU9GZ01DVVcvT0tGQngwCjRGalJScDNOaTRvWi9ZY0hGdjJn
-            UWpzS1pvdTFWaWZxcGsybUNoODVDS3cKLS0tIERxZzlmOWNwemp3SU82RjhSWkxa
-            ckNzcWxuaEZFUUlHMWZxMWVDQmZBVnMK2xbCmkW0hQFuQox7LN/8ocTb6W9ASYFU
-            /5/tYX7V/eWXGFzoAzEWKPbBz7KslyGZlHtAY9TB98uDdyoFri5Z1Q==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBpaTh1YTZ3TytKSGJ2aUdM
+            ekU0QkMzWWloMlAzRHUrWUpzZFVQbjZWSG5vCmd2OEJwVmlONE9hZ2RYbmRNY3cy
+            NGNKMUw2ZE1QTnhzZ2YxSmFneVRKMncKLS0tIHo3Zk1xdjZEQXdSU1NJeUJjTE9j
+            bDVlR015T2RvdXhUbWxvZGswNFo3NTAKGfxsemJCAgIXQrn4QUTFGPSyGRs9ihFD
+            DrP8rtorWVx67Yu/A2u5SMRJlMDcDNE2Zvm2pkKwxG80SCaDR0u4VQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-01-12T23:10:37Z"
-    mac: ENC[AES256_GCM,data:T/vBQrRQkmQ1zbpLKCA1NW29VYG+Puaw++tYaBbM2uG5zqNAYN5hzQUX9OVyoQfZP+F2XxTEoQdzSZztV5P2RWrtIq9OaVsI2snX5+CM1dh/rxdmd6wNFvmNAMggiCkNNcy/jBL0Y4QoDjAxlJGKVaMxHmCk4wYUDKw0reMpMkU=,iv:C+8h3bHnLGkvXmxc76mVFYj0BfettysjgoZB4Ht7AaI=,tag:fWmhtHXEziFduTFTsb3iVA==,type:str]
+    lastmodified: "2026-01-18T16:16:58Z"
+    mac: ENC[AES256_GCM,data:ROCVdouUE8qpcngFthjepBf9g/9BxGZEBWzpx2YVBBIHtDKuxed7n98bo91ioQXMnCG+lj9/tkZ9eQGxRC8hri54Ghr79JW1p8B+h8MQdkLhkFTOAN//WjUDjqC7mINETO87T94F+B0JBRyNobRic9B2GjuNzLDLXeNyJdcNfb4=,iv:A2c5y4nwwhe+0ry24bdIMamqULXAKjrhMLisGVB3YP4=,tag:JCLsXgqfg9CCQ76aONUD5A==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
     version: 3.11.0
 ---
@@ -64,13 +64,13 @@ spec:
         datastore:
             migrationType: initContainer
             engine: postgres
-            uri: ENC[AES256_GCM,data:w0+/U+rB/FIYrgw+T8QdTm1fesWLUw0jq9qxulqCKN8sK+yn1alAktC+sNOAbdRwvnn6GGRAI/MM6vAJwSAc4pTrFj2TRrPyMomNKvVMszJLSD2ZQW6aD16YxYNEBpNOV2lyj2LUECQAcnnn3bkMapiQ,iv:ZPUGN3TrVdLBDrmKj0BxTjal5clKXVcsXoXeSK62B0c=,tag:pc4VydsuILc6ey2LWZCTOQ==,type:str]
+            uri: ENC[AES256_GCM,data:ujuHv1Pdq0IIdcUbvx5s1nxw/28DV7YZVHiGNa/+mX3MyvLoTnrfyUVHcAhNXzscT2vf7k9PDi0C4bm9WBsNsPNIl8NvZewc1Q9g/JByWah4jBUj3r5UDnZDC5k/v5Uir5Dx4Awrf14m6Mv8fcNFU+wb,iv:bX2AXeRKlJ4/3u0fpBEu6EHOVzOgf1NkhfW30FbioQc=,tag:fp/ChJJy3PjuApntHjLogg==,type:str]
         postgresql:
             image:
                 tag: latest
             enabled: true
             auth:
-                postgresPassword: ENC[AES256_GCM,data:+4jU1eCs0kW1CxdaNo4TfgiG8w==,iv:EBCmsNMJl7iDxGqGRw9A8Y09z1g1AyYG3ib71N1BCTY=,tag:1+GwJQWpJtI/AUACvcxz0A==,type:str]
+                postgresPassword: ENC[AES256_GCM,data:mplMdszDSuJ3/PURQUiYCjXiWg==,iv:U97gXVR0IBlNGnHgZugtdrSEj9GTuq5ndgoVEpoOeMM=,tag:UrP9H8U5jj7ABrs98jbLpw==,type:str]
                 database: postgres
             primary:
                 nodeSelector:
@@ -79,24 +79,39 @@ spec:
                     enabled: true
                     size: 1Gi
         service:
-            type: LoadBalancer
+            type: ClusterIP
         authn:
             method: preshared
             preshared:
                 keys:
-                    - ENC[AES256_GCM,data:kl2LoisBNFjxD+sFQkFcPQ==,iv:aYi597NvxRhOK3o2wKqKccYRy1LHJA01TeULyQO95dg=,tag:Va1KNyK4KGKVlkCxrq25Aw==,type:str]
+                    - ENC[AES256_GCM,data:jwC2npx/WF9/EIS6vU145g==,iv:HMElkhFa7RiMjxgILrnS8WolWsm+UAqRNCUVQ4Tk2b0=,tag:U6zPfXYg+jA5QYUJCF2lEw==,type:str]
+        extraObjects:
+            - apiVersion: v1
+              kind: Service
+              metadata:
+                name: openfga-lb
+                namespace: openfga
+              spec:
+                type: LoadBalancer
+                loadBalancerIP: 10.0.0.12
+                selector:
+                    app.kubernetes.io/name: openfga
+                ports:
+                    - name: http
+                      port: 8080
+                      targetPort: 8080
 sops:
     age:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGMlNUcVJ3NlYzYWtVUko4
-            Vi9KeDRUOE1GSk5LTU9GZ01DVVcvT0tGQngwCjRGalJScDNOaTRvWi9ZY0hGdjJn
-            UWpzS1pvdTFWaWZxcGsybUNoODVDS3cKLS0tIERxZzlmOWNwemp3SU82RjhSWkxa
-            ckNzcWxuaEZFUUlHMWZxMWVDQmZBVnMK2xbCmkW0hQFuQox7LN/8ocTb6W9ASYFU
-            /5/tYX7V/eWXGFzoAzEWKPbBz7KslyGZlHtAY9TB98uDdyoFri5Z1Q==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBpaTh1YTZ3TytKSGJ2aUdM
+            ekU0QkMzWWloMlAzRHUrWUpzZFVQbjZWSG5vCmd2OEJwVmlONE9hZ2RYbmRNY3cy
+            NGNKMUw2ZE1QTnhzZ2YxSmFneVRKMncKLS0tIHo3Zk1xdjZEQXdSU1NJeUJjTE9j
+            bDVlR015T2RvdXhUbWxvZGswNFo3NTAKGfxsemJCAgIXQrn4QUTFGPSyGRs9ihFD
+            DrP8rtorWVx67Yu/A2u5SMRJlMDcDNE2Zvm2pkKwxG80SCaDR0u4VQ==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-01-12T23:10:37Z"
-    mac: ENC[AES256_GCM,data:T/vBQrRQkmQ1zbpLKCA1NW29VYG+Puaw++tYaBbM2uG5zqNAYN5hzQUX9OVyoQfZP+F2XxTEoQdzSZztV5P2RWrtIq9OaVsI2snX5+CM1dh/rxdmd6wNFvmNAMggiCkNNcy/jBL0Y4QoDjAxlJGKVaMxHmCk4wYUDKw0reMpMkU=,iv:C+8h3bHnLGkvXmxc76mVFYj0BfettysjgoZB4Ht7AaI=,tag:fWmhtHXEziFduTFTsb3iVA==,type:str]
+    lastmodified: "2026-01-18T16:16:58Z"
+    mac: ENC[AES256_GCM,data:ROCVdouUE8qpcngFthjepBf9g/9BxGZEBWzpx2YVBBIHtDKuxed7n98bo91ioQXMnCG+lj9/tkZ9eQGxRC8hri54Ghr79JW1p8B+h8MQdkLhkFTOAN//WjUDjqC7mINETO87T94F+B0JBRyNobRic9B2GjuNzLDLXeNyJdcNfb4=,iv:A2c5y4nwwhe+0ry24bdIMamqULXAKjrhMLisGVB3YP4=,tag:JCLsXgqfg9CCQ76aONUD5A==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username)$
     version: 3.11.0
