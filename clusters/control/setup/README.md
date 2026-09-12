@@ -32,6 +32,7 @@ export KUBECONFIG=$PWD/kubeconfig
 cilium install --version 1.19.2 \
   --helm-set ipam.operator.clusterPoolIPv4PodCIDRList="10.244.0.0/16" \
   --helm-set envoy.enabled=false \
+  --helm-set l7Proxy=false \
   --helm-set l2announcements.enabled=true \
   --helm-set bpf.masquerade=true \
   --helm-set hubble.enabled=false \
