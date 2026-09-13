@@ -25,7 +25,7 @@ spec:
             sourceRef:
                 kind: HelmRepository
                 name: kube-prometheus-stack
-            version: '91.2.0'
+            version: '91.2.1'
     interval: 1m0s
     valuesFrom:
         - kind: Secret
