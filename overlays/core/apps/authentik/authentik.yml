@@ -209,7 +209,7 @@ spec:
                 licenseKey: license_key
             image:
                 repository: ghcr.io/maxmind/geoipupdate
-                tag: v7.1.1
+                tag: v8.0.0
                 digest: ""
                 pullPolicy: IfNotPresent
             env: []
