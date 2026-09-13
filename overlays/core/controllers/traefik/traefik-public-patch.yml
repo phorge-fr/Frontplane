@@ -8,3 +8,8 @@ spec:
     service:
       annotations:
         lbipam.cilium.io/ips: "10.2.0.11"
+    ports:
+      websecure:
+        proxyProtocol:
+          trustedIPs:
+            - "10.2.0.254/32"

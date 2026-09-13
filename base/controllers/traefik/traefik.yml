@@ -84,3 +84,6 @@ spec:
               to: websecure
               scheme: https
               permanent: true
+      websecure:
+        proxyProtocol:
+          trustedIPs: []
