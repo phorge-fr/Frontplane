@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: authentik-brand
+    namespace: authentik
+data:
+    brand.yaml: |-
+        # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+        version: 1
+
+        metadata:
+          name: phorge-brand
+          labels:
+            blueprints.goauthentik.io/description: Phorge brand for auth.phorge.fr
+
+        entries:
+          - model: authentik_brands.brand
+            id: phorge-brand
+            identifiers:
+              domain: auth.phorge.fr
+            attrs:
+              default: true
+              branding_title: Phorge
+              branding_logo: https://avatars.githubusercontent.com/u/187407936
+              branding_favicon: /static/dist/assets/icons/icon.png
+              branding_default_flow_background: /static/dist/assets/images/user_default.png
+              branding_custom_css: ""
+              attributes:
+                settings:
+                  locale: en

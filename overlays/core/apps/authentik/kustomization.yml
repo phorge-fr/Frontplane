@@ -4,3 +4,4 @@ resources:
     - authentik.yml
     - blueprint-grafana.yml
     - blueprint-forgejo.yml
+    - blueprint-brand.yml
