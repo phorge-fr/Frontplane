@@ -2,46 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
     name: kube-prometheus-stack
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
----
-apiVersion: v1
-kind: Secret
-metadata:
-    name: grafana-oauth-secret
-    namespace: kube-prometheus-stack
-type: Opaque
-stringData:
-    GF_AUTH_GENERIC_OAUTH_CLIENT_ID: ENC[AES256_GCM,data:OnPs9lgODdWatRE5Gi0DZUAD1KdleePPpanyYKtGexQlEwDp,iv:hXdnfBKOaez7jZ4GAfIBERaVthkmdaHrHrT0E4WsZQ8=,tag:oXSkT8p03mkFETba3j041A==,type:str]
-    GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET: ENC[AES256_GCM,data:BwDqy/7LV8LiwjcV0YGEXWBMbeghBQb2dGszC435dW+c7yfPlx6rF8H02itI5bodOZ5vDDJPatE=,iv:oG5OihMZTxQnwMugkJG1gU9E5aSTyhgViZf2XcY6JRk=,tag:yox9ZGnMVh4HaksbT1wQYg==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -52,21 +12,6 @@ spec:
     interval: 1m0s
     timeout: 15m0s
     url: https://prometheus-community.github.io/helm-charts
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -80,8 +25,13 @@ spec:
             sourceRef:
                 kind: HelmRepository
                 name: kube-prometheus-stack
-            version: '*'
+            version: '91.1.0'
     interval: 1m0s
+    valuesFrom:
+        - kind: Secret
+          name: grafana-oauth-secret
+          valuesKey: adminPassword
+          targetPath: grafana.adminPassword
     values:
         grafana:
             envFromSecret: grafana-oauth-secret
@@ -99,13 +49,12 @@ spec:
                     login_attribute_path: preferred_username
                     name_attribute_path: name
                     email_attribute_path: email
-                    role_attribute_path: contains(groups[*], 'grafana-admins') && 'Admin' || 'Viewer'
+                    role_attribute_path: contains(groups[*], 'grafana-admins') && 'Admin' || contains(groups[*], 'grafana-viewers') && 'Viewer' || 'None'
                     use_pkce: true
                 server:
                     domain: monitoring.phorge.fr
                     root_url: https://monitoring.phorge.fr/
             enabled: true
-            adminPassword: ENC[AES256_GCM,data:YBu6WhmMEY/ZvrdK5QKOHN+xDuAu9u7i,iv:cMhvgvDCm5vB6o9brQ5+zbbbjvVcH8PHSZ/5kDTXEKU=,tag:ztOEaQkBpxC9XuwB2TsMdw==,type:str]
             service:
                 type: ClusterIP
             ingress:
@@ -153,44 +102,6 @@ spec:
                             resources:
                                 requests:
                                     storage: 40Gi
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
----
-apiVersion: v1
-data:
-    users: ENC[AES256_GCM,data:FL2H/pkkB5gpt5/vMQuOYssT04M8XNjrtDF7aTseQA7Xt2VpyTA0wvcsSSsSyBLVXBO9zROdzGEw0dLgYPCRiSQIzfg1fUwaCj8PgwVQaZq2xUvdmh4bkDxIy+TO223qK8dm5//zbJzq3BpnXDrP74oSJZycte/+YOEbuZXavNpRy1w2uv2h+fwU0GIaKKHQnCOsZcbdGj7SKU3TUHc0shK/4wbJjVguOudmz6U9YufxfjV2O31kXwf+80vAFSe6cznt4ChchpZZUudA+39VPGaeahzqmuLfsyPGwR65xaOJJy+u4a4H4Pa+otxwU0mojC3ufMoUUkAeambJCqFqgT4PcyNoPvhmXZ7w9w==,iv:JNJP76r/NLsm2FrAzzV7XuEQsl+Cfsium3KL2N0g0gU=,tag:U4OmnnxOag6UvD/uPNK1Qw==,type:str]
-kind: Secret
-metadata:
-    name: prometheus-basic-auth-secret
-    namespace: kube-prometheus-stack
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -199,22 +110,7 @@ metadata:
     namespace: kube-prometheus-stack
 spec:
     basicAuth:
-        secret: ENC[AES256_GCM,data:abY3ej1ej+ofKXOSTmAH8stt89Mn9P3DqCgg3g==,iv:TtvbQHOB3PYsFB/VzBzZX1cybhZQxb5iyhAJ6/Nmhn8=,tag:uxLn0Yq+caagQnlYqSpacw==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
+        secret: prometheus-basic-auth-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -242,18 +138,3 @@ spec:
                         name: kube-prometheus-stack-prometheus
                         port:
                             number: 9090
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5UjVZM3N3dkVpQzZLeXhH
-            RGRZQi9PVzVhNnBWTzhZZjFmS1JVU1ByVldzCnZJeVB0VWIzMmtaa2dKN08wRHkv
-            alBidGhOU1l3WlFWTWduWmUvN3p2alEKLS0tIHhQRFcvSExkVEVLczJaSFFYY3JC
-            Q1F5WU1qdGJReEFRWVJTdWRSQ1RkT3MKgvlMEdsPoP+jrRVatIvtca2NuRUbFoZh
-            228oHbCL8wuxMQBtg7geE+ht2EfV6Ux6+TwbluW/4h1lB2cHOtW+9A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-07-03T23:45:02Z"
-    mac: ENC[AES256_GCM,data:dxWRAgWaM2KheF7GpS8tk5wTRuvZw0TogNWX2MguFLAsg/f7RzzVGTGtVyrq03dcF+D4SZqLjeMKmKNqhPHnKKPQ0tdzSLrbEwJlToyFKVe6J6v7V7g1GUSK6Q4N0M8ywLCOS9EoNLV4YQWkjKsV9nfmCU+YYX1Y/JERrml+mmE=,iv:BqDe7Y7NbAu8Ex4FyMGqmcGO3Na/sSiujzAJpp2QXR4=,tag:ObOWZwoSUem66IwRzvYe9Q==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0

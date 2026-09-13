@@ -2,21 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
     name: authentik
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5R2JCQlBxWWprOE1oSVpV
-            dUdlOXUzTjIxL3JESGgxVnVLcDBPTnE4WGxJCnhsM1FITnYrbUlWN043bGptQXU1
-            VWEyb0xZZFhTeXpUZlY0K2g0d1gwVDQKLS0tIElBRk9QQUtVZlkvbkYxVUVmcHAv
-            RVVqOXlaWDNCMlJJUHhJckxDd0g3aGcKbB9lAxqyEmZ5nWOFCHykMgFkJs0MuDES
-            w1rcZQTq3uu390+FSrkqIPOsqUBz2iPAHu+buXNPJBsFop+wueg3vQ==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:05Z"
-    mac: ENC[AES256_GCM,data:lWJbTFC0J7m3r9xsktXNdsgNxbVf6LdJA++kuV3e5wpSBJKovHI8fz/MDEbQNEybVyjudR/H+Apdr69YeJq/N7LkrqtH1S9e3nVXAzBBu1V/kpYMrPTadePU86gqIdegvshlarcuSTst8aDSkfhVC4TEqGcgVPK9OIvzabz1yfk=,iv:gDXdXlmusIBV3eNpm8/pQE2IoIIq3yafrprqypRmcAY=,tag:yXGmMh1vmLwsbE4ujdoJ1w==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -27,21 +12,6 @@ spec:
     interval: 1m0s
     timeout: 1m0s
     url: https://charts.goauthentik.io
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5R2JCQlBxWWprOE1oSVpV
-            dUdlOXUzTjIxL3JESGgxVnVLcDBPTnE4WGxJCnhsM1FITnYrbUlWN043bGptQXU1
-            VWEyb0xZZFhTeXpUZlY0K2g0d1gwVDQKLS0tIElBRk9QQUtVZlkvbkYxVUVmcHAv
-            RVVqOXlaWDNCMlJJUHhJckxDd0g3aGcKbB9lAxqyEmZ5nWOFCHykMgFkJs0MuDES
-            w1rcZQTq3uu390+FSrkqIPOsqUBz2iPAHu+buXNPJBsFop+wueg3vQ==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:05Z"
-    mac: ENC[AES256_GCM,data:lWJbTFC0J7m3r9xsktXNdsgNxbVf6LdJA++kuV3e5wpSBJKovHI8fz/MDEbQNEybVyjudR/H+Apdr69YeJq/N7LkrqtH1S9e3nVXAzBBu1V/kpYMrPTadePU86gqIdegvshlarcuSTst8aDSkfhVC4TEqGcgVPK9OIvzabz1yfk=,iv:gDXdXlmusIBV3eNpm8/pQE2IoIIq3yafrprqypRmcAY=,tag:yXGmMh1vmLwsbE4ujdoJ1w==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -58,6 +28,19 @@ spec:
             version: 2026.8.2
     interval: 1m0s
     timeout: 10m0s
+    valuesFrom:
+        - kind: Secret
+          name: authentik-secrets
+          valuesKey: secretKey
+          targetPath: authentik.secret_key
+        - kind: Secret
+          name: authentik-secrets
+          valuesKey: postgresPassword
+          targetPath: authentik.postgresql.password
+        - kind: Secret
+          name: authentik-secrets
+          valuesKey: postgresPassword
+          targetPath: postgresql.auth.password
     values:
         global:
             security:
@@ -78,7 +61,6 @@ spec:
         authentik:
             enabled: true
             log_level: info
-            secret_key: ENC[AES256_GCM,data:yLIQijArSUkDtfKxjCJZaBML0OJQlhoK6aYoEMe5XJ/06175nK4mJuWwRj9V9iWF2wJBwVYglalU8RZGqFY5rQ==,iv:dY7Pzo+A4ztbIDsbc+QodtHDltK/IW7HMvSVBOaDHj0=,tag:lkb4nz3H5ulbxQNiM3T8EA==,type:str]
             existingSecret:
                 secretName: ""
             events:
@@ -89,12 +71,12 @@ spec:
                 path: /
             email:
                 host: ""
-                port: ENC[AES256_GCM,data:2gBo,iv:gsxO7Uz07xvcNOPHsSlsvBvJHxUblPoJjlNjSub9wjQ=,tag:g5m2cZHcZcLcmseh+Ghjnw==,type:int]
+                port: 587
                 username: ""
                 password: ""
-                use_tls: ENC[AES256_GCM,data:ToTRd9s=,iv:GsQnhPEP/7GdPBNKVh+vdQr2TQJNfS0qsdmv2FTmlHk=,tag:c2bl9Oq/8fbV8PAqJejuaw==,type:bool]
-                use_ssl: ENC[AES256_GCM,data:DZ3TBqk=,iv:Iml5EH0MJXsuHNpMmI1qbiWreIPYWi8k+rgyLMaR7j0=,tag:HtT66vdOdrKCPgHz02nG3g==,type:bool]
-                timeout: ENC[AES256_GCM,data:hMY=,iv:zeRJ/TQ/hbxTELcYgepNx0v+xTBsNpTm+PGJCozsAYc=,tag:q1H/lPQ84kZBDnHtKH/PYg==,type:int]
+                use_tls: false
+                use_ssl: false
+                timeout: 30
                 from: ""
             outposts:
                 container_image_base: ghcr.io/goauthentik/%(type)s:%(version)s
@@ -106,7 +88,6 @@ spec:
                 host: '{{ .Release.Name }}-postgresql'
                 name: authentik
                 user: authentik
-                password: ENC[AES256_GCM,data:7CQNyiWNiv6BLxO4x9oYplZbQOVz0HcqoJ8oS/9xKQ==,iv:1EuQ2rWXN8nZHs2h3z2G9uMtEh0B/xLT/lcy8U3yUG4=,tag:xrOtBzeBaSR89qhBhCrjBQ==,type:str]
                 port: 5432
         server:
             enabled: true
@@ -211,11 +192,11 @@ spec:
                     labels: {}
                     annotations: {}
         serviceAccount:
-            create: ENC[AES256_GCM,data:uCAzyg==,iv:6W5WgrimZALKfLtLHIhmExd1/07XD4TXjsGU69olfGY=,tag:s7POIAnGquzHmh7tPc5zXQ==,type:bool]
+            create: true
             annotations: {}
             serviceAccountSecret:
-                enabled: ENC[AES256_GCM,data:dGw1fNE=,iv:uPY2km7qEABhRgytVap/nt8qOj3MvOHvkM9uQa8YjYY=,tag:30hp0MbAg6siJotKpmjaqQ==,type:bool]
-            fullnameOverride: ENC[AES256_GCM,data:lZL7DHZjpRrb,iv:vMegb2re97OeouS11PrY6g1RNbm1gtWiKlSCzKuO3/U=,tag:wiMV11yWLlNr44t3cYgMfg==,type:str]
+                enabled: false
+            fullnameOverride: authentik
         geoip:
             enabled: false
             editionIds: GeoLite2-City GeoLite2-ASN
@@ -251,9 +232,8 @@ spec:
                 repository: library/postgres
                 tag: 17.10-bookworm
             auth:
-                username: ENC[AES256_GCM,data:IZOJgFvaabfT,iv:oQg9fQikJgu/ZrRz6MligTYBoHEmFCumsUzdtuo4igI=,tag:Ql4nq6ZSvnWjNLN9U9vQeQ==,type:str]
+                username: authentik
                 database: authentik
-                password: ENC[AES256_GCM,data:ge+2vLfaHPsgom/khO0+01cOjna++uV0/OHwoqkpXQ==,iv:t6JS04yIF6ZnKCjrNHRzAmIowlAfzg5BcYBfx4gLV5c=,tag:yV74q2bAWR0vkMAopEqxJQ==,type:str]
             primary:
                 args:
                     - -c
@@ -310,18 +290,3 @@ spec:
         redis:
             enabled: true
         additionalObjects: []
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB5R2JCQlBxWWprOE1oSVpV
-            dUdlOXUzTjIxL3JESGgxVnVLcDBPTnE4WGxJCnhsM1FITnYrbUlWN043bGptQXU1
-            VWEyb0xZZFhTeXpUZlY0K2g0d1gwVDQKLS0tIElBRk9QQUtVZlkvbkYxVUVmcHAv
-            RVVqOXlaWDNCMlJJUHhJckxDd0g3aGcKbB9lAxqyEmZ5nWOFCHykMgFkJs0MuDES
-            w1rcZQTq3uu390+FSrkqIPOsqUBz2iPAHu+buXNPJBsFop+wueg3vQ==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:05Z"
-    mac: ENC[AES256_GCM,data:lWJbTFC0J7m3r9xsktXNdsgNxbVf6LdJA++kuV3e5wpSBJKovHI8fz/MDEbQNEybVyjudR/H+Apdr69YeJq/N7LkrqtH1S9e3nVXAzBBu1V/kpYMrPTadePU86gqIdegvshlarcuSTst8aDSkfhVC4TEqGcgVPK9OIvzabz1yfk=,iv:gDXdXlmusIBV3eNpm8/pQE2IoIIq3yafrprqypRmcAY=,tag:yXGmMh1vmLwsbE4ujdoJ1w==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0

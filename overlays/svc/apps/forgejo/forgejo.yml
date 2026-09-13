@@ -2,21 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
     name: forgejo
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJdTVTRDhHcUFTT3pDODBN
-            TUg3R1JPbHdkRWpBNzE0RHZIc2VWWEhjODNJCkJRMEVuSXNCd3NUR1JQdytMbEZo
-            MHM2aDFQUjlKVnY2V3Bybk5OVjRtVHMKLS0tIE5hN1ZpbjZBQkNYZmF6WTJkUlJN
-            Ym5HRFVlSDNFRTVvL2lwcEtRdXFCc00KCuRM136AgTGUBzeJ4akULdhWOV51rc23
-            DO4fQjvlqd8zGj3kUH4DJSzfVun7dkBCy5XhCwElHdMgkSYsRj/YSg==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:30Z"
-    mac: ENC[AES256_GCM,data:Us97iVG13yvO5LuRFAuzbb40CXWPD7QFnkxY3z3yP9ctF17xbFv3UcnnRgFR4/iei3J8azG3VkhoFDkNGV733Cv7Ae8Amr9p72pdP2vzZ9YFblnaeb67GpoKX5ohHrKnotE00vfiJjKSfHOfKoSWZnAArMiNZVc4VNjcS6k2me4=,iv:iKgVa1QdZcIYcb5TVhPGZUA+ULHeYLGdk7m7qYoKKV8=,tag:j2D+UdPVCInFm1TWmB91Wg==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -28,21 +13,6 @@ spec:
     timeout: 1m0s
     type: oci
     url: oci://code.forgejo.org/forgejo-helm
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJdTVTRDhHcUFTT3pDODBN
-            TUg3R1JPbHdkRWpBNzE0RHZIc2VWWEhjODNJCkJRMEVuSXNCd3NUR1JQdytMbEZo
-            MHM2aDFQUjlKVnY2V3Bybk5OVjRtVHMKLS0tIE5hN1ZpbjZBQkNYZmF6WTJkUlJN
-            Ym5HRFVlSDNFRTVvL2lwcEtRdXFCc00KCuRM136AgTGUBzeJ4akULdhWOV51rc23
-            DO4fQjvlqd8zGj3kUH4DJSzfVun7dkBCy5XhCwElHdMgkSYsRj/YSg==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:30Z"
-    mac: ENC[AES256_GCM,data:Us97iVG13yvO5LuRFAuzbb40CXWPD7QFnkxY3z3yP9ctF17xbFv3UcnnRgFR4/iei3J8azG3VkhoFDkNGV733Cv7Ae8Amr9p72pdP2vzZ9YFblnaeb67GpoKX5ohHrKnotE00vfiJjKSfHOfKoSWZnAArMiNZVc4VNjcS6k2me4=,iv:iKgVa1QdZcIYcb5TVhPGZUA+ULHeYLGdk7m7qYoKKV8=,tag:j2D+UdPVCInFm1TWmB91Wg==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -69,10 +39,9 @@ spec:
             cp -r /tmp/gitea-phorge-theme-main/* /data/gitea/
         gitea:
             admin:
-                email: ENC[AES256_GCM,data:pBYdt2K0ZEUOCobf13gwIQ==,iv:lW05LpZJDCXlgx2fp5v6OZvO8fY+Yqd+VdBmJ45OIss=,tag:jgLbFQTuJaOE4fw+y4GCjA==,type:str]
-                password: ENC[AES256_GCM,data:YOE9MHJdCvKU2F1Ndt1eKZCk1gs=,iv:f65+vQYe6a+/T3KvIz+S0yptxResmo+034xJFVC00Is=,tag:NTxxd94wAsXrc3Le6V94Zw==,type:str]
+                email: l-nmch@phorge.fr
+                existingSecret: forgejo-admin-secret
                 passwordMode: keepUpdated
-                username: ENC[AES256_GCM,data:+7DJI2m0fdY4ZzE=,iv:PZ18bdiTh5UXEJ0RwqhTQj++tIRu+FS9QKD6qq6FSmg=,tag:ahVqbray0gS9IGGFXIAcUg==,type:str]
             config:
                 APP_NAME: φorge
                 server:
@@ -142,18 +111,3 @@ spec:
             existingSecret: ""
             gpgHome: /data/git/.gnupg
             privateKey: ""
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBJdTVTRDhHcUFTT3pDODBN
-            TUg3R1JPbHdkRWpBNzE0RHZIc2VWWEhjODNJCkJRMEVuSXNCd3NUR1JQdytMbEZo
-            MHM2aDFQUjlKVnY2V3Bybk5OVjRtVHMKLS0tIE5hN1ZpbjZBQkNYZmF6WTJkUlJN
-            Ym5HRFVlSDNFRTVvL2lwcEtRdXFCc00KCuRM136AgTGUBzeJ4akULdhWOV51rc23
-            DO4fQjvlqd8zGj3kUH4DJSzfVun7dkBCy5XhCwElHdMgkSYsRj/YSg==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-13T13:39:30Z"
-    mac: ENC[AES256_GCM,data:Us97iVG13yvO5LuRFAuzbb40CXWPD7QFnkxY3z3yP9ctF17xbFv3UcnnRgFR4/iei3J8azG3VkhoFDkNGV733Cv7Ae8Amr9p72pdP2vzZ9YFblnaeb67GpoKX5ohHrKnotE00vfiJjKSfHOfKoSWZnAArMiNZVc4VNjcS6k2me4=,iv:iKgVa1QdZcIYcb5TVhPGZUA+ULHeYLGdk7m7qYoKKV8=,tag:j2D+UdPVCInFm1TWmB91Wg==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
