@@ -5,3 +5,4 @@ age.agekey
 .env
 k0s_backup_*
 kubeconfig
+.claude
