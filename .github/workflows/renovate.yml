@@ -20,6 +20,7 @@ jobs:
         uses: renovatebot/github-action@v46.2.6
         env:
           RENOVATE_REPOSITORIES: '["phorge-fr/Frontplane"]'
+          LOG_LEVEL: debug
         with:
           configurationFile: renovate.json
           token: '${{ secrets.GITHUB_TOKEN }}'
