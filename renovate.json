@@ -7,8 +7,6 @@
     "baseBranches": [
         "phorge-rev01"
     ],
-    "prHourlyLimit": 0,
-    "prConcurrentLimit": 0,
     "flux": {
         "managerFilePatterns": [
             "/^(base|overlays)/.+\\.ya?ml$/"
