@@ -30,6 +30,8 @@ spec:
     interval: 1m0s
     timeout: 10m0s
     values:
+        image:
+            tag: 16.0.4-rootless
         securityContext:
             fsGroupChangePolicy: OnRootMismatch
         initPreScript: |
