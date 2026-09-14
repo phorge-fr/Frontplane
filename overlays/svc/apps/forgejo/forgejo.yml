@@ -35,10 +35,13 @@ spec:
         podSecurityContext:
             fsGroupChangePolicy: OnRootMismatch
         initPreScript: |
-            wget -O /tmp/main.zip https://github.com/phorge-fr/gitea-phorge-theme/archive/refs/heads/main.zip
-            unzip -n /tmp/main.zip -d /tmp/
-            mkdir -p /data/gitea
-            cp -r /tmp/gitea-phorge-theme-main/* /data/gitea/
+            if [ ! -f /data/gitea/.phorge-theme-installed ]; then
+                wget -O /tmp/main.zip https://github.com/phorge-fr/gitea-phorge-theme/archive/refs/heads/main.zip
+                unzip -n /tmp/main.zip -d /tmp/
+                mkdir -p /data/gitea
+                cp -r /tmp/gitea-phorge-theme-main/* /data/gitea/
+                touch /data/gitea/.phorge-theme-installed
+            fi
         gitea:
             admin:
                 email: l-nmch@phorge.fr
