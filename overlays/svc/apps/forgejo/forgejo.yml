@@ -32,7 +32,7 @@ spec:
     values:
         image:
             tag: 16.0.4-rootless
-        securityContext:
+        podSecurityContext:
             fsGroupChangePolicy: OnRootMismatch
         initPreScript: |
             wget -O /tmp/main.zip https://github.com/phorge-fr/gitea-phorge-theme/archive/refs/heads/main.zip
