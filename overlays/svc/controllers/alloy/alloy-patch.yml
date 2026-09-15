@@ -1,0 +1,13 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: alloy
+    namespace: alloy
+spec:
+    values:
+        alloy:
+            extraEnv:
+                - name: CLUSTER_NAME
+                  value: svc
+                - name: ALLOY_BASIC_AUTH_USERNAME
+                  value: alloy

@@ -1,0 +1,139 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: alloy
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+    name: alloy
+    namespace: alloy
+spec:
+    interval: 1h0s
+    url: https://grafana.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: alloy
+    namespace: alloy
+spec:
+    chart:
+        spec:
+            chart: alloy
+            version: '1.12.1'
+            sourceRef:
+                kind: HelmRepository
+                name: alloy
+    interval: 1h0s
+    timeout: 5m0s
+    values:
+        alloy:
+            configMap:
+                create: true
+                content: |
+                    logging {
+                        level = "info"
+                    }
+
+                    discovery.kubernetes "nodes" {
+                        role = "node"
+                    }
+
+                    discovery.relabel "cadvisor" {
+                        targets = discovery.kubernetes.nodes.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_node_address_InternalIP"]
+                            target_label  = "__address__"
+                            replacement   = "$1:10250"
+                        }
+                        rule {
+                            target_label = "__metrics_path__"
+                            replacement  = "/metrics/cadvisor"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_node_name"]
+                            target_label  = "node"
+                        }
+                    }
+
+                    prometheus.scrape "cadvisor" {
+                        targets           = discovery.relabel.cadvisor.output
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            insecure_skip_verify = true
+                        }
+
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.exporter.unix "node" {}
+
+                    prometheus.scrape "node" {
+                        targets    = prometheus.exporter.unix.node.targets
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.remote_write "core" {
+                        endpoint {
+                            url = "https://prometheus.core.phorge/api/v1/write"
+
+                            basic_auth {
+                                username = sys.env("ALLOY_BASIC_AUTH_USERNAME")
+                                password = sys.env("ALLOY_BASIC_AUTH_PASSWORD")
+                            }
+                        }
+
+                        external_labels = {
+                            cluster = sys.env("CLUSTER_NAME"),
+                        }
+                    }
+
+                    discovery.kubernetes "pods" {
+                        role = "pod"
+                    }
+
+                    discovery.relabel "pods" {
+                        targets = discovery.kubernetes.pods.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_namespace"]
+                            target_label  = "namespace"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_name"]
+                            target_label  = "pod"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_container_name"]
+                            target_label  = "container"
+                        }
+                    }
+
+                    loki.source.kubernetes "pods" {
+                        targets    = discovery.relabel.pods.output
+                        forward_to = [loki.write.core.receiver]
+                    }
+
+                    loki.write "core" {
+                        endpoint {
+                            url = "https://loki.core.phorge/loki/api/v1/push"
+
+                            basic_auth {
+                                username = sys.env("ALLOY_BASIC_AUTH_USERNAME")
+                                password = sys.env("ALLOY_BASIC_AUTH_PASSWORD")
+                            }
+                        }
+
+                        external_labels = {
+                            cluster = sys.env("CLUSTER_NAME"),
+                        }
+                    }
+            envFrom:
+                - secretRef:
+                      name: alloy-secrets
+        controller:
+            type: daemonset
