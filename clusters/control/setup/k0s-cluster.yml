@@ -5,7 +5,7 @@ metadata:
   user: phorge-admin
 spec:
   k0s:
-    version: 1.36.1+k0s.0
+    version: 1.36.4+k0s.0
     config:
       apiVersion: k0s.k0sproject.io/v1beta1
       kind: Cluster
