@@ -6,3 +6,4 @@ resources:
   - traefik
   - crossplane
   - alloy
+  - ../../../base/controllers/kube-state-metrics

@@ -5,3 +5,4 @@ resources:
   - ../../../base/controllers/csi-driver-nfs
   - traefik
   - alloy
+  - ../../../base/controllers/kube-state-metrics

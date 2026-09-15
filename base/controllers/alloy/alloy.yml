@@ -77,7 +77,35 @@ spec:
                     }
 
                     prometheus.scrape "cadvisor" {
+                        job_name          = "kubelet"
                         targets           = discovery.relabel.cadvisor.output
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            insecure_skip_verify = true
+                        }
+
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    discovery.relabel "kubelet" {
+                        targets = discovery.kubernetes.nodes.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_node_address_InternalIP"]
+                            target_label  = "__address__"
+                            replacement   = "$1:10250"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_node_name"]
+                            target_label  = "node"
+                        }
+                    }
+
+                    prometheus.scrape "kubelet" {
+                        job_name          = "kubelet"
+                        targets           = discovery.relabel.kubelet.output
                         scheme            = "https"
                         bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
 
@@ -90,8 +118,64 @@ spec:
 
                     prometheus.exporter.unix "node" {}
 
+                    discovery.relabel "node" {
+                        targets = prometheus.exporter.unix.node.targets
+
+                        rule {
+                            target_label = "job"
+                            replacement  = "node-exporter"
+                        }
+                    }
+
                     prometheus.scrape "node" {
-                        targets    = prometheus.exporter.unix.node.targets
+                        job_name   = "node-exporter"
+                        targets    = discovery.relabel.node.output
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    discovery.kubernetes "coredns_pods" {
+                        role = "pod"
+                        namespaces {
+                            names = ["kube-system"]
+                        }
+                        selectors {
+                            role  = "pod"
+                            label = "k8s-app=kube-dns"
+                        }
+                    }
+
+                    discovery.relabel "coredns" {
+                        targets = discovery.kubernetes.coredns_pods.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_ip"]
+                            target_label  = "__address__"
+                            replacement   = "$1:9153"
+                        }
+                    }
+
+                    prometheus.scrape "coredns" {
+                        job_name   = "coredns"
+                        targets    = discovery.relabel.coredns.output
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.scrape "apiserver" {
+                        job_name          = "apiserver"
+                        targets           = [{"__address__" = "kubernetes.default.svc:443"}]
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+                        }
+
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.scrape "kube_state_metrics" {
+                        job_name   = "kube-state-metrics"
+                        targets    = [{"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"}]
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
