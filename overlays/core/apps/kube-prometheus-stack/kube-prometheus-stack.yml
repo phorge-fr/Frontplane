@@ -102,6 +102,24 @@ spec:
                             resources:
                                 requests:
                                     storage: 40Gi
+        kubeApiServer:
+            serviceMonitor:
+                metricRelabelings:
+                    # apiserver_*/etcd_* _bucket histograms alone account for ~50%
+                    # of this Prometheus' total series (~160k of ~330k). Drop them
+                    # entirely, keep _sum/_count so rate/average latency stays
+                    # available.
+                    - action: drop
+                      sourceLabels:
+                          - __name__
+                      regex: (apiserver|etcd)_.*_bucket
+        kubeEtcd:
+            serviceMonitor:
+                metricRelabelings:
+                    - action: drop
+                      sourceLabels:
+                          - __name__
+                      regex: (apiserver|etcd)_.*_bucket
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
