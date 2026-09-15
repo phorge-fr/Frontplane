@@ -170,7 +170,20 @@ spec:
                             ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
                         }
 
+                        forward_to = [prometheus.relabel.apiserver_filter.receiver]
+                    }
+
+                    // apiserver/etcd histogram _bucket series are the dominant source of
+                    // cardinality (~36k of ~72k total series observed on a 3-node cluster).
+                    // Drop them, keep _sum/_count so rate/average latency stays available.
+                    prometheus.relabel "apiserver_filter" {
                         forward_to = [prometheus.remote_write.core.receiver]
+
+                        rule {
+                            source_labels = ["__name__"]
+                            regex         = ".*_bucket"
+                            action        = "drop"
+                        }
                     }
 
                     prometheus.scrape "kube_state_metrics" {
