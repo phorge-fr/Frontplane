@@ -8,140 +8,66 @@ metadata:
 data:
     forgejo.json: |
         {
-          "title": "Gitea",
-          "uid": "nNq1Iw5Gz",
-          "description": "Monitor Gitea server (official dashboard 13192, adapted: job=\"gitea\" -> job=\"forgejo/forgejo\", dropped the Actions panel since gitea_actions isn't exposed on this Forgejo version)",
+          "title": "Gitea Server Monitor",
+          "uid": "forgejo-overview",
+          "description": "Official dashboard 17802, adapted: job=\"gitea-http\" -> job=\"forgejo/forgejo\", PVC panel hardcoded to our forgejo-shared-storage claim on svc (dropped the $cluster/$namespace/$volume/metrics_path template vars), dropped Issues by Repository/by Label (gitea_issues_by_repository/by_label aren't exposed on this Forgejo version).",
           "tags": ["forgejo"],
           "timezone": "browser",
           "schemaVersion": 39,
           "version": 1,
-          "refresh": "1m",
           "panels": [
+            { "id": 37, "title": "General", "type": "row", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 } },
             {
               "id": 31,
-              "title": "Resident memory",
+              "title": "Memory Usage",
               "type": "timeseries",
-              "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+              "gridPos": { "h": 7, "w": 8, "x": 0, "y": 1 },
+              "fieldConfig": { "defaults": { "unit": "bytes" } },
               "targets": [{ "expr": "process_resident_memory_bytes{job=\"forgejo/forgejo\"}" }]
             },
             {
               "id": 32,
-              "title": "CPU time",
+              "title": "CPU Usage",
               "type": "timeseries",
-              "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
-              "targets": [{ "expr": "process_cpu_seconds_total{job=\"forgejo/forgejo\"}" }]
+              "gridPos": { "h": 7, "w": 8, "x": 8, "y": 1 },
+              "targets": [{ "expr": "irate(process_cpu_seconds_total{job=\"forgejo/forgejo\"}[1m])" }]
             },
             {
               "id": 33,
-              "title": "Open FDs",
+              "title": "PVC Storage (forgejo-shared-storage)",
               "type": "timeseries",
-              "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
-              "targets": [{ "expr": "process_open_fds{job=\"forgejo/forgejo\"}" }]
+              "gridPos": { "h": 7, "w": 8, "x": 16, "y": 1 },
+              "fieldConfig": { "defaults": { "unit": "bytes" } },
+              "targets": [
+                {
+                  "expr": "kubelet_volume_stats_capacity_bytes{cluster=\"svc\", namespace=\"forgejo\", persistentvolumeclaim=\"forgejo-shared-storage\"} - kubelet_volume_stats_available_bytes{cluster=\"svc\", namespace=\"forgejo\", persistentvolumeclaim=\"forgejo-shared-storage\"}",
+                  "legendFormat": "used"
+                },
+                {
+                  "expr": "kubelet_volume_stats_available_bytes{cluster=\"svc\", namespace=\"forgejo\", persistentvolumeclaim=\"forgejo-shared-storage\"}",
+                  "legendFormat": "available"
+                }
+              ]
             },
             {
-              "id": 2,
-              "title": "Number of Accesses",
+              "id": 34,
+              "title": "Uptime",
               "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 0, "y": 6 },
-              "targets": [{ "expr": "gitea_accesses" }]
+              "gridPos": { "h": 3, "w": 3, "x": 0, "y": 8 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [{ "expr": "time() - max(process_start_time_seconds{job=\"forgejo/forgejo\"})" }]
             },
-            {
-              "id": 18,
-              "title": "Number of Repositories",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 6, "y": 6 },
-              "targets": [{ "expr": "gitea_repositories" }]
-            },
-            {
-              "id": 24,
-              "title": "Number of Users",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 12, "y": 6 },
-              "targets": [{ "expr": "gitea_users" }]
-            },
-            {
-              "id": 5,
-              "title": "Number of Issues",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 18, "y": 6 },
-              "targets": [{ "expr": "gitea_issues" }]
-            },
-            {
-              "id": 10,
-              "title": "Number of Labels",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 10 },
-              "targets": [{ "expr": "gitea_labels" }]
-            },
-            {
-              "id": 21,
-              "title": "Number of Organizations",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 10 },
-              "targets": [{ "expr": "gitea_organizations" }]
-            },
-            {
-              "id": 16,
-              "title": "Number of Teams",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 10 },
-              "targets": [{ "expr": "gitea_teams" }]
-            },
-            {
-              "id": 8,
-              "title": "Number of Follows",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 10 },
-              "targets": [{ "expr": "gitea_follows" }]
-            },
-            {
-              "id": 20,
-              "title": "Number of PublicKeys",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 10 },
-              "targets": [{ "expr": "gitea_publickeys" }]
-            },
-            {
-              "id": 17,
-              "title": "Number of Stars",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 20, "y": 10 },
-              "targets": [{ "expr": "gitea_stars" }]
-            },
-            {
-              "id": 14,
-              "title": "Number of Webhooks",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 14 },
-              "targets": [{ "expr": "gitea_webhooks" }]
-            },
-            {
-              "id": 19,
-              "title": "Number of Releases",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 14 },
-              "targets": [{ "expr": "gitea_releases" }]
-            },
-            {
-              "id": 7,
-              "title": "Number of Comments",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 14 },
-              "targets": [{ "expr": "gitea_comments" }]
-            },
-            {
-              "id": 3,
-              "title": "Number of Milestones",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 14 },
-              "targets": [{ "expr": "gitea_milestones" }]
-            },
-            {
-              "id": 25,
-              "title": "Number of Watches",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 14 },
-              "targets": [{ "expr": "gitea_watches" }]
-            }
+            { "id": 21, "title": "Organizations", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 3, "y": 8 }, "targets": [{ "expr": "gitea_organizations" }] },
+            { "id": 16, "title": "Teams", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 6, "y": 8 }, "targets": [{ "expr": "gitea_teams" }] },
+            { "id": 24, "title": "Users", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 9, "y": 8 }, "targets": [{ "expr": "gitea_users" }] },
+            { "id": 3, "title": "Milestones", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 12, "y": 8 }, "targets": [{ "expr": "gitea_milestones" }] },
+            { "id": 17, "title": "Stars", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 15, "y": 8 }, "targets": [{ "expr": "gitea_stars" }] },
+            { "id": 25, "title": "Watches", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 18, "y": 8 }, "targets": [{ "expr": "gitea_watches" }] },
+            { "id": 18, "title": "Repositories", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 3, "y": 11 }, "targets": [{ "expr": "gitea_repositories" }] },
+            { "id": 19, "title": "Releases", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 6, "y": 11 }, "targets": [{ "expr": "gitea_releases" }] },
+            { "id": 5, "title": "Issues Open", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 9, "y": 11 }, "targets": [{ "expr": "gitea_issues_open" }] },
+            { "id": 35, "title": "Issues Closed", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 12, "y": 11 }, "targets": [{ "expr": "gitea_issues_closed" }] },
+            { "id": 10, "title": "Labels", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 15, "y": 11 }, "targets": [{ "expr": "gitea_labels" }] },
+            { "id": 7, "title": "Comments", "type": "stat", "gridPos": { "h": 3, "w": 3, "x": 18, "y": 11 }, "targets": [{ "expr": "gitea_comments" }] }
           ]
         }
