@@ -8,107 +8,140 @@ metadata:
 data:
     forgejo.json: |
         {
-          "title": "Forgejo",
-          "uid": "forgejo-overview",
+          "title": "Gitea",
+          "uid": "nNq1Iw5Gz",
+          "description": "Monitor Gitea server (official dashboard 13192, adapted: job=\"gitea\" -> job=\"forgejo/forgejo\", dropped the Actions panel since gitea_actions isn't exposed on this Forgejo version)",
           "tags": ["forgejo"],
           "timezone": "browser",
           "schemaVersion": 39,
           "version": 1,
+          "refresh": "1m",
           "panels": [
             {
-              "id": 1,
-              "title": "Repositories",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
-              "targets": [{ "expr": "gitea_repositories" }]
+              "id": 31,
+              "title": "Resident memory",
+              "type": "timeseries",
+              "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+              "targets": [{ "expr": "process_resident_memory_bytes{job=\"forgejo/forgejo\"}" }]
+            },
+            {
+              "id": 32,
+              "title": "CPU time",
+              "type": "timeseries",
+              "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+              "targets": [{ "expr": "process_cpu_seconds_total{job=\"forgejo/forgejo\"}" }]
+            },
+            {
+              "id": 33,
+              "title": "Open FDs",
+              "type": "timeseries",
+              "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+              "targets": [{ "expr": "process_open_fds{job=\"forgejo/forgejo\"}" }]
             },
             {
               "id": 2,
-              "title": "Users",
+              "title": "Number of Accesses",
               "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+              "gridPos": { "h": 4, "w": 6, "x": 0, "y": 6 },
+              "targets": [{ "expr": "gitea_accesses" }]
+            },
+            {
+              "id": 18,
+              "title": "Number of Repositories",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 6, "y": 6 },
+              "targets": [{ "expr": "gitea_repositories" }]
+            },
+            {
+              "id": 24,
+              "title": "Number of Users",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 12, "y": 6 },
               "targets": [{ "expr": "gitea_users" }]
             },
             {
-              "id": 3,
-              "title": "Organizations",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
-              "targets": [{ "expr": "gitea_organizations" }]
-            },
-            {
-              "id": 4,
-              "title": "Open issues",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
-              "targets": [{ "expr": "gitea_issues_open" }]
-            },
-            {
               "id": 5,
-              "title": "Webhooks",
+              "title": "Number of Issues",
               "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
-              "targets": [{ "expr": "gitea_webhooks" }]
-            },
-            {
-              "id": 6,
-              "title": "Pending hook tasks",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
-              "targets": [{ "expr": "gitea_hooktasks" }]
-            },
-            {
-              "id": 7,
-              "title": "Repositories / users / issues over time",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
-              "targets": [
-                { "expr": "gitea_repositories", "legendFormat": "repositories" },
-                { "expr": "gitea_users", "legendFormat": "users" },
-                { "expr": "gitea_issues_open", "legendFormat": "open issues" }
-              ]
-            },
-            {
-              "id": 8,
-              "title": "Code search (zoekt) duration p50/p95",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
-              "fieldConfig": { "defaults": { "unit": "s" } },
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.5, sum(rate(zoekt_search_duration_seconds_bucket[5m])) by (le))",
-                  "legendFormat": "p50"
-                },
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(zoekt_search_duration_seconds_bucket[5m])) by (le))",
-                  "legendFormat": "p95"
-                }
-              ]
-            },
-            {
-              "id": 9,
-              "title": "Process memory (RSS)",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
-              "fieldConfig": { "defaults": { "unit": "bytes" } },
-              "targets": [
-                {
-                  "expr": "process_resident_memory_bytes{job=\"forgejo/forgejo\"}",
-                  "legendFormat": "RSS"
-                }
-              ]
+              "gridPos": { "h": 4, "w": 6, "x": 18, "y": 6 },
+              "targets": [{ "expr": "gitea_issues" }]
             },
             {
               "id": 10,
-              "title": "Goroutines",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
-              "targets": [
-                {
-                  "expr": "go_goroutines{job=\"forgejo/forgejo\"}",
-                  "legendFormat": "goroutines"
-                }
-              ]
+              "title": "Number of Labels",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 10 },
+              "targets": [{ "expr": "gitea_labels" }]
+            },
+            {
+              "id": 21,
+              "title": "Number of Organizations",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 10 },
+              "targets": [{ "expr": "gitea_organizations" }]
+            },
+            {
+              "id": 16,
+              "title": "Number of Teams",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 10 },
+              "targets": [{ "expr": "gitea_teams" }]
+            },
+            {
+              "id": 8,
+              "title": "Number of Follows",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 10 },
+              "targets": [{ "expr": "gitea_follows" }]
+            },
+            {
+              "id": 20,
+              "title": "Number of PublicKeys",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 10 },
+              "targets": [{ "expr": "gitea_publickeys" }]
+            },
+            {
+              "id": 17,
+              "title": "Number of Stars",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 20, "y": 10 },
+              "targets": [{ "expr": "gitea_stars" }]
+            },
+            {
+              "id": 14,
+              "title": "Number of Webhooks",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 14 },
+              "targets": [{ "expr": "gitea_webhooks" }]
+            },
+            {
+              "id": 19,
+              "title": "Number of Releases",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 14 },
+              "targets": [{ "expr": "gitea_releases" }]
+            },
+            {
+              "id": 7,
+              "title": "Number of Comments",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 14 },
+              "targets": [{ "expr": "gitea_comments" }]
+            },
+            {
+              "id": 3,
+              "title": "Number of Milestones",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 14 },
+              "targets": [{ "expr": "gitea_milestones" }]
+            },
+            {
+              "id": 25,
+              "title": "Number of Watches",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 14 },
+              "targets": [{ "expr": "gitea_watches" }]
             }
           ]
         }
