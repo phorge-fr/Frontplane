@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - ../../../base/controllers/cert-manager
   - ../../../base/controllers/csi-driver-nfs
+  - ../../../base/controllers/prometheus-operator-crds
   - traefik
   - crossplane
   - alloy

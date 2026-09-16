@@ -192,6 +192,14 @@ spec:
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
+                    // Watches PodMonitor CRDs cluster-wide and scrapes whatever they
+                    // reference -- requires the prometheus-operator CRDs to be installed
+                    // (base/controllers/prometheus-operator-crds), but not the operator
+                    // itself: Alloy interprets the CRDs natively.
+                    prometheus.operator.podmonitors "pods" {
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
                     prometheus.remote_write "core" {
                         endpoint {
                             url = "https://prometheus.core.phorge/api/v1/write"

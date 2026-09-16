@@ -43,6 +43,8 @@ spec:
                 touch /data/gitea/.phorge-theme-installed
             fi
         gitea:
+            metrics:
+                enabled: true
             admin:
                 email: l-nmch@phorge.fr
                 existingSecret: forgejo-admin-secret
@@ -116,3 +118,17 @@ spec:
             existingSecret: ""
             gpgHome: /data/git/.gnupg
             privateKey: ""
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+    name: forgejo
+    namespace: forgejo
+spec:
+    selector:
+        matchLabels:
+            app.kubernetes.io/name: forgejo
+    podMetricsEndpoints:
+        - port: http
+          path: /metrics
+          interval: 30s
