@@ -14,9 +14,14 @@ The **SVC** cluster hosts all publicly accessible "self-hosted" service such as 
 
 ### 1. Deploy the cluster
 
+`k0s-cluster.yml` has its `authPass` (VRRP/Keepalived) field SOPS-encrypted -- decrypt it in place before running `k0sctl` (it doesn't understand SOPS syntax), then re-encrypt it once you're done:
+
 ```bash
 cd clusters/svc/setup
+source ../../../.env
+sops -d --in-place k0s-cluster.yml
 k0sctl apply -c k0s-cluster.yml
+sops -e --in-place k0s-cluster.yml
 ```
 
 ### 2. Retrieve the kubeconfig
