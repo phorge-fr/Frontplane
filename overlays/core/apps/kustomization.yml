@@ -4,4 +4,5 @@ resources:
     - authentik
     - kube-prometheus-stack
     - loki
+    - openfga
     - uptime-kuma
