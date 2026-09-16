@@ -27,3 +27,9 @@ spec:
                 name: prometheus-community
     interval: 1h0s
     timeout: 5m0s
+    values:
+        updateStrategy:
+            type: RollingUpdate
+            rollingUpdate:
+                maxUnavailable: 0
+                maxSurge: 1

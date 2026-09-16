@@ -35,6 +35,11 @@ spec:
     values:
         grafana:
             envFromSecret: grafana-oauth-secret
+            deploymentStrategy:
+                type: RollingUpdate
+                rollingUpdate:
+                    maxUnavailable: 0
+                    maxSurge: 1
             grafana.ini:
                 auth.generic_oauth:
                     enabled: true
@@ -102,6 +107,12 @@ spec:
                             resources:
                                 requests:
                                     storage: 40Gi
+        kubeStateMetrics:
+            updateStrategy:
+                type: RollingUpdate
+                rollingUpdate:
+                    maxUnavailable: 0
+                    maxSurge: 1
         kubeApiServer:
             serviceMonitor:
                 metricRelabelings:

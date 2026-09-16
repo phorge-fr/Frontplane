@@ -31,6 +31,20 @@ spec:
       interval: 12h
   values:
     fullnameOverride: traefik-local
+    deployment:
+      replicas: 2
+    podDisruptionBudget:
+      enabled: true
+      maxUnavailable: 1
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: traefik-local-traefik
+              topologyKey: kubernetes.io/hostname
     ingressClass:
       enabled: true
       isDefaultClass: false
@@ -65,6 +79,20 @@ spec:
       interval: 12h
   values:
     fullnameOverride: traefik-public
+    deployment:
+      replicas: 2
+    podDisruptionBudget:
+      enabled: true
+      maxUnavailable: 1
+    affinity:
+      podAntiAffinity:
+        preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/instance: traefik-public-traefik
+              topologyKey: kubernetes.io/hostname
     ingressClass:
       enabled: true
       isDefaultClass: false
