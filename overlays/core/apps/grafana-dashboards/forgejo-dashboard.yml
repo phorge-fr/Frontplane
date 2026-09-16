@@ -1,0 +1,114 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: forgejo-dashboard
+    namespace: kube-prometheus-stack
+    labels:
+        grafana_dashboard: "1"
+data:
+    forgejo.json: |
+        {
+          "title": "Forgejo",
+          "uid": "forgejo-overview",
+          "tags": ["forgejo"],
+          "timezone": "browser",
+          "schemaVersion": 39,
+          "version": 1,
+          "panels": [
+            {
+              "id": 1,
+              "title": "Repositories",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+              "targets": [{ "expr": "gitea_repositories" }]
+            },
+            {
+              "id": 2,
+              "title": "Users",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+              "targets": [{ "expr": "gitea_users" }]
+            },
+            {
+              "id": 3,
+              "title": "Organizations",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+              "targets": [{ "expr": "gitea_organizations" }]
+            },
+            {
+              "id": 4,
+              "title": "Open issues",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+              "targets": [{ "expr": "gitea_issues_open" }]
+            },
+            {
+              "id": 5,
+              "title": "Webhooks",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+              "targets": [{ "expr": "gitea_webhooks" }]
+            },
+            {
+              "id": 6,
+              "title": "Pending hook tasks",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+              "targets": [{ "expr": "gitea_hooktasks" }]
+            },
+            {
+              "id": 7,
+              "title": "Repositories / users / issues over time",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+              "targets": [
+                { "expr": "gitea_repositories", "legendFormat": "repositories" },
+                { "expr": "gitea_users", "legendFormat": "users" },
+                { "expr": "gitea_issues_open", "legendFormat": "open issues" }
+              ]
+            },
+            {
+              "id": 8,
+              "title": "Code search (zoekt) duration p50/p95",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum(rate(zoekt_search_duration_seconds_bucket[5m])) by (le))",
+                  "legendFormat": "p50"
+                },
+                {
+                  "expr": "histogram_quantile(0.95, sum(rate(zoekt_search_duration_seconds_bucket[5m])) by (le))",
+                  "legendFormat": "p95"
+                }
+              ]
+            },
+            {
+              "id": 9,
+              "title": "Process memory (RSS)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+              "fieldConfig": { "defaults": { "unit": "bytes" } },
+              "targets": [
+                {
+                  "expr": "process_resident_memory_bytes{job=\"forgejo/forgejo\"}",
+                  "legendFormat": "RSS"
+                }
+              ]
+            },
+            {
+              "id": 10,
+              "title": "Goroutines",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+              "targets": [
+                {
+                  "expr": "go_goroutines{job=\"forgejo/forgejo\"}",
+                  "legendFormat": "goroutines"
+                }
+              ]
+            }
+          ]
+        }

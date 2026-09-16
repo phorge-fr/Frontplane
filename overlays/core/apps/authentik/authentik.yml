@@ -121,7 +121,7 @@ spec:
                 sessionAffinity: ""
                 sessionAffinityConfig: {}
             metrics:
-                enabled: false
+                enabled: true
                 service:
                     type: ClusterIP
                     clusterIP: ""
@@ -130,7 +130,7 @@ spec:
                     servicePort: 9300
                     portName: metrics
                 serviceMonitor:
-                    enabled: false
+                    enabled: true
                     interval: 30s
                     scrapeTimeout: 3s
                     relabelings: []
@@ -139,7 +139,8 @@ spec:
                     scheme: ""
                     tlsConfig: {}
                     namespace: ""
-                    labels: {}
+                    labels:
+                        release: kube-prometheus-stack
                     annotations: {}
             ingress:
                 enabled: true
@@ -171,7 +172,7 @@ spec:
                 http: 9000
                 metrics: 9300
             metrics:
-                enabled: false
+                enabled: true
                 service:
                     type: ClusterIP
                     clusterIP: ""
@@ -180,7 +181,7 @@ spec:
                     servicePort: 9300
                     portName: metrics
                 serviceMonitor:
-                    enabled: false
+                    enabled: true
                     interval: 30s
                     scrapeTimeout: 3s
                     relabelings: []
@@ -189,7 +190,8 @@ spec:
                     scheme: ""
                     tlsConfig: {}
                     namespace: ""
-                    labels: {}
+                    labels:
+                        release: kube-prometheus-stack
                     annotations: {}
         serviceAccount:
             create: true
@@ -290,3 +292,154 @@ spec:
         redis:
             enabled: true
         additionalObjects: []
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: authentik-dashboard
+    namespace: kube-prometheus-stack
+    labels:
+        grafana_dashboard: "1"
+data:
+    authentik.json: |
+        {
+          "title": "Authentik",
+          "uid": "authentik-overview",
+          "tags": ["authentik"],
+          "timezone": "browser",
+          "schemaVersion": 39,
+          "version": 1,
+          "panels": [
+            {
+              "id": 1,
+              "title": "Connected outposts",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+              "targets": [{ "expr": "authentik_outposts_connected" }]
+            },
+            {
+              "id": 2,
+              "title": "Queued tasks",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+              "targets": [{ "expr": "authentik_tasks_queued" }]
+            },
+            {
+              "id": 3,
+              "title": "HTTP request rate (server)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+              "targets": [
+                {
+                  "expr": "sum by (method) (rate(django_http_requests_total_by_method_total{job=\"authentik-server-metrics\"}[5m]))",
+                  "legendFormat": "{{method}}"
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "HTTP response codes (server)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+              "targets": [
+                {
+                  "expr": "sum by (status) (rate(django_http_responses_total_by_status_total{job=\"authentik-server-metrics\"}[5m]))",
+                  "legendFormat": "{{status}}"
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Request latency p50/p95 (server)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
+                  "legendFormat": "p50"
+                },
+                {
+                  "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
+                  "legendFormat": "p95"
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Login/auth flow execution time p50/p95",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le))",
+                  "legendFormat": "p50"
+                },
+                {
+                  "expr": "histogram_quantile(0.95, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le))",
+                  "legendFormat": "p95"
+                }
+              ]
+            },
+            {
+              "id": 7,
+              "title": "DB query duration p50/p95",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum(rate(django_db_query_duration_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
+                  "legendFormat": "p50"
+                },
+                {
+                  "expr": "histogram_quantile(0.95, sum(rate(django_db_query_duration_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
+                  "legendFormat": "p95"
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "title": "Policy engine execution time p50/p95",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum(rate(authentik_policies_execution_time_bucket[5m])) by (le))",
+                  "legendFormat": "p50"
+                },
+                {
+                  "expr": "histogram_quantile(0.95, sum(rate(authentik_policies_execution_time_bucket[5m])) by (le))",
+                  "legendFormat": "p95"
+                }
+              ]
+            },
+            {
+              "id": 9,
+              "title": "Process memory (server + worker)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+              "fieldConfig": { "defaults": { "unit": "bytes" } },
+              "targets": [
+                {
+                  "expr": "process_resident_memory_bytes{job=~\"authentik-.*-metrics\"}",
+                  "legendFormat": "{{job}}"
+                }
+              ]
+            },
+            {
+              "id": 10,
+              "title": "Worker pool size",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+              "targets": [
+                {
+                  "expr": "authentik_admin_workers",
+                  "legendFormat": "workers"
+                }
+              ]
+            }
+          ]
+        }
