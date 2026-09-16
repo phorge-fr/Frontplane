@@ -303,141 +303,100 @@ metadata:
 data:
     authentik.json: |
         {
-          "title": "Authentik",
-          "uid": "authentik-overview",
+          "title": "authentik",
+          "uid": "NJrtrc3Gk",
+          "description": "Official authentik dashboard 14837, adapted: the Task status/Cached policies/System task duration panels used authentik_system_tasks and authentik_models, which no longer exist on this authentik version -- replaced with authentik_tasks_queued/authentik_tasks_workers and authentik_flows_execution_stage_time.",
           "tags": ["authentik"],
           "timezone": "browser",
           "schemaVersion": 39,
           "version": 1,
           "panels": [
             {
-              "id": 1,
-              "title": "Connected outposts",
-              "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
-              "targets": [{ "expr": "authentik_outposts_connected" }]
-            },
-            {
               "id": 2,
-              "title": "Queued tasks",
+              "title": "PolicyEngine Execution time by binding type",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+              "fieldConfig": { "defaults": { "unit": "ms" } },
+              "targets": [
+                {
+                  "expr": "avg by(binding_target_name, binding_target_type) (rate(authentik_policies_execution_time_sum[5m]) / rate(authentik_policies_execution_time_count[5m]))"
+                }
+              ]
+            },
+            {
+              "id": 11,
+              "title": "PolicyEngine Execution time by binding target",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+              "fieldConfig": { "defaults": { "unit": "ms" } },
+              "targets": [
+                {
+                  "expr": "avg by(object_name, object_type) (rate(authentik_policies_execution_time_sum[5m]) / rate(authentik_policies_execution_time_count[5m]))"
+                }
+              ]
+            },
+            {
+              "id": 100,
+              "title": "Queued / worker tasks",
               "type": "stat",
-              "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
-              "targets": [{ "expr": "authentik_tasks_queued" }]
-            },
-            {
-              "id": 3,
-              "title": "HTTP request rate (server)",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+              "gridPos": { "h": 4, "w": 6, "x": 0, "y": 8 },
               "targets": [
-                {
-                  "expr": "sum by (method) (rate(django_http_requests_total_by_method_total{job=\"authentik-server-metrics\"}[5m]))",
-                  "legendFormat": "{{method}}"
-                }
-              ]
-            },
-            {
-              "id": 4,
-              "title": "HTTP response codes (server)",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
-              "targets": [
-                {
-                  "expr": "sum by (status) (rate(django_http_responses_total_by_status_total{job=\"authentik-server-metrics\"}[5m]))",
-                  "legendFormat": "{{status}}"
-                }
-              ]
-            },
-            {
-              "id": 5,
-              "title": "Request latency p50/p95 (server)",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
-              "fieldConfig": { "defaults": { "unit": "s" } },
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.5, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
-                  "legendFormat": "p50"
-                },
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(django_http_requests_latency_including_middlewares_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
-                  "legendFormat": "p95"
-                }
+                { "expr": "authentik_tasks_queued", "legendFormat": "queued" },
+                { "expr": "authentik_tasks_workers", "legendFormat": "workers" }
               ]
             },
             {
               "id": 6,
-              "title": "Login/auth flow execution time p50/p95",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
-              "fieldConfig": { "defaults": { "unit": "s" } },
-              "targets": [
-                {
-                  "expr": "histogram_quantile(0.5, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le))",
-                  "legendFormat": "p50"
-                },
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le))",
-                  "legendFormat": "p95"
-                }
-              ]
+              "title": "Cached policies",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 6, "y": 8 },
+              "targets": [{ "expr": "authentik_policies_cached" }]
             },
             {
-              "id": 7,
-              "title": "DB query duration p50/p95",
+              "id": 4,
+              "title": "Connected Workers",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 12, "y": 8 },
+              "fieldConfig": {
+                "defaults": {
+                  "mappings": [{ "type": "value", "options": { "0": { "text": "None" } } }]
+                }
+              },
+              "targets": [{ "expr": "avg(authentik_admin_workers)" }]
+            },
+            {
+              "id": 101,
+              "title": "Connected outposts",
+              "type": "stat",
+              "gridPos": { "h": 4, "w": 6, "x": 18, "y": 8 },
+              "targets": [{ "expr": "authentik_outposts_connected" }]
+            },
+            {
+              "id": 15,
+              "title": "Flow stage execution time by flow (p50/p95)",
               "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
-              "fieldConfig": { "defaults": { "unit": "s" } },
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+              "fieldConfig": { "defaults": { "unit": "ms" } },
               "targets": [
                 {
-                  "expr": "histogram_quantile(0.5, sum(rate(django_db_query_duration_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
-                  "legendFormat": "p50"
+                  "expr": "histogram_quantile(0.5, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le, flow_slug))",
+                  "legendFormat": "{{flow_slug}} p50"
                 },
                 {
-                  "expr": "histogram_quantile(0.95, sum(rate(django_db_query_duration_seconds_bucket{job=\"authentik-server-metrics\"}[5m])) by (le))",
-                  "legendFormat": "p95"
+                  "expr": "histogram_quantile(0.95, sum(rate(authentik_flows_execution_stage_time_bucket[5m])) by (le, flow_slug))",
+                  "legendFormat": "{{flow_slug}} p95"
                 }
               ]
             },
             {
               "id": 8,
-              "title": "Policy engine execution time p50/p95",
+              "title": "FlowPlanner time by flow",
               "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
-              "fieldConfig": { "defaults": { "unit": "s" } },
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+              "fieldConfig": { "defaults": { "unit": "ms" } },
               "targets": [
                 {
-                  "expr": "histogram_quantile(0.5, sum(rate(authentik_policies_execution_time_bucket[5m])) by (le))",
-                  "legendFormat": "p50"
-                },
-                {
-                  "expr": "histogram_quantile(0.95, sum(rate(authentik_policies_execution_time_bucket[5m])) by (le))",
-                  "legendFormat": "p95"
-                }
-              ]
-            },
-            {
-              "id": 9,
-              "title": "Process memory (server + worker)",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
-              "fieldConfig": { "defaults": { "unit": "bytes" } },
-              "targets": [
-                {
-                  "expr": "process_resident_memory_bytes{job=~\"authentik-.*-metrics\"}",
-                  "legendFormat": "{{job}}"
-                }
-              ]
-            },
-            {
-              "id": 10,
-              "title": "Worker pool size",
-              "type": "timeseries",
-              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
-              "targets": [
-                {
-                  "expr": "authentik_admin_workers",
-                  "legendFormat": "workers"
+                  "expr": "avg by (flow_slug) (rate(authentik_flows_plan_time_sum[5m]) / rate(authentik_flows_plan_time_count[5m]))"
                 }
               ]
             }
