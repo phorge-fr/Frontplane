@@ -1,78 +1,94 @@
 apiVersion: k0sctl.k0sproject.io/v1beta1
 kind: Cluster
 metadata:
-  name: control
-  user: phorge-admin
+    name: control
+    user: phorge-admin
 spec:
-  k0s:
-    version: 1.36.4+k0s.0
-    config:
-      apiVersion: k0s.k0sproject.io/v1beta1
-      kind: Cluster
-      metadata:
-        name: k0s
-      spec:
-        api:
-          k0sApiPort: 9443
-          port: 6443
-          sans:
-            - 10.1.0.4
-        network:
-          provider: custom
-          kubeProxy:
-            disabled: true
-          podCIDR: 10.244.0.0/16
-          serviceCIDR: 10.96.0.0/12
-          controlPlaneLoadBalancing:
-            enabled: true
-            type: Keepalived
-            keepalived:
-              vrrpInstances:
-                - virtualIPs: ["10.1.0.4/24"]
-                  authPass: "@Ph0rg3@"
-                  interface: eth0
-          nodeLocalLoadBalancing:
-            enabled: true
-            type: Traefik
-        storage:
-          type: etcd
-          etcd:
-            extraArgs:
-              listen-peer-urls: https://0.0.0.0:2380
-              listen-client-urls: https://0.0.0.0:2379
-        telemetry:
-          enabled: false
-  hosts:
-    - ssh:
-        address: 10.1.0.1
-        user: root
-        port: 22
-      role: controller+worker
-      installFlags:
-        - --disable-components=konnectivity-server
-        - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
-      noTaints: true
-      privateAddress: 10.1.0.1
-      privateInterface: eth0
-    - ssh:
-        address: 10.1.0.2
-        user: root
-        port: 22
-      role: controller+worker
-      installFlags:
-        - --disable-components=konnectivity-server
-        - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
-      noTaints: true
-      privateAddress: 10.1.0.2
-      privateInterface: eth0
-    - ssh:
-        address: 10.1.0.3
-        user: root
-        port: 22
-      role: controller+worker
-      installFlags:
-        - --disable-components=konnectivity-server
-        - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
-      noTaints: true
-      privateAddress: 10.1.0.3
-      privateInterface: eth0
+    k0s:
+        version: 1.36.4+k0s.0
+        config:
+            apiVersion: k0s.k0sproject.io/v1beta1
+            kind: Cluster
+            metadata:
+                name: k0s
+            spec:
+                api:
+                    k0sApiPort: 9443
+                    port: 6443
+                    sans:
+                        - 10.1.0.4
+                network:
+                    provider: custom
+                    kubeProxy:
+                        disabled: true
+                    podCIDR: 10.244.0.0/16
+                    serviceCIDR: 10.96.0.0/12
+                    controlPlaneLoadBalancing:
+                        enabled: true
+                        type: Keepalived
+                        keepalived:
+                            vrrpInstances:
+                                - virtualIPs:
+                                    - 10.1.0.4/24
+                                  authPass: ENC[AES256_GCM,data:8bDO0uR5WK0=,iv:NKmI1hIR+mHp5rYPCvhkHYm9qmiPgZlAgHHITFiXfcQ=,tag:6/ctVfxK5jUU9a21cL5oMg==,type:str]
+                                  interface: eth0
+                    nodeLocalLoadBalancing:
+                        enabled: true
+                        type: Traefik
+                storage:
+                    type: etcd
+                    etcd:
+                        extraArgs:
+                            listen-peer-urls: https://0.0.0.0:2380
+                            listen-client-urls: https://0.0.0.0:2379
+                telemetry:
+                    enabled: false
+    hosts:
+        - ssh:
+            address: 10.1.0.1
+            user: root
+            port: 22
+          role: controller+worker
+          installFlags:
+            - --disable-components=konnectivity-server
+            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+          noTaints: true
+          privateAddress: 10.1.0.1
+          privateInterface: eth0
+        - ssh:
+            address: 10.1.0.2
+            user: root
+            port: 22
+          role: controller+worker
+          installFlags:
+            - --disable-components=konnectivity-server
+            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+          noTaints: true
+          privateAddress: 10.1.0.2
+          privateInterface: eth0
+        - ssh:
+            address: 10.1.0.3
+            user: root
+            port: 22
+          role: controller+worker
+          installFlags:
+            - --disable-components=konnectivity-server
+            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+          noTaints: true
+          privateAddress: 10.1.0.3
+          privateInterface: eth0
+sops:
+    age:
+        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
+          enc: |
+            -----BEGIN AGE ENCRYPTED FILE-----
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3YkEyVEgxVHJ2L1FNeXRP
+            U1hJdTM1UXMvaFhCMGNnSFMvKzlVTUdFa1VjCmFlK2FJMUlvY3NUVnpHbzZGTVNx
+            YlRKNHpIOGJwQVc0Q3hRWUxOQTBoWGsKLS0tIGJPQXc3QVo2blhmSTd5SWxEWUxJ
+            NGFGODFsL1FuYzNSdndoRmExNkU0M2cKOHXxPvI6KqirDMMjnS0WqSTw+YeXOpvY
+            iiXzB24OgdsVhoIhGlA0ivLBtazgVuAXVt2Ty+URSxjDzKwd9S/plQ==
+            -----END AGE ENCRYPTED FILE-----
+    lastmodified: "2026-09-16T13:36:55Z"
+    mac: ENC[AES256_GCM,data:Knax5Dr4wfZfm7rqPJofqWrtFOkR/tYpWWDSnyDLV5BnEmu+eLWLrxL1O1pVRHnujXT2AD3SPHY1aVk2V3Ho3W61gA49g5lJHWH007V8Tv1pi4bd8Oduj4MQMDGgFWu7YelUR9zP3N0z0wGamL3I+UmVhifcewOeVQqeqZ76T2Y=,iv:sEDkdgeUp1rsXNEjgaw5tWA/Ro6kMIFQGXsFd5PIdBM=,tag:IZw2i86rgkQrDi5boVxmEQ==,type:str]
+    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
+    version: 3.11.0
