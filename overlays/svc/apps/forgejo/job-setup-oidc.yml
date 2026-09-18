@@ -12,7 +12,7 @@ spec:
         spec:
             containers:
                 - name: forgejo-oidc-setup
-                  image: code.forgejo.org/forgejo/forgejo:16.0.4-rootless
+                  image: code.forgejo.org/forgejo/forgejo:16.0.5-rootless
                   command:
                     - /bin/sh
                     - -c
