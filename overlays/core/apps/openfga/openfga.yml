@@ -2,45 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
     name: openfga
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
----
-apiVersion: v1
-kind: Secret
-metadata:
-    name: openfga-postgres-secret
-    namespace: openfga
-type: Opaque
-stringData:
-    postgresPassword: ENC[AES256_GCM,data:7A4pscWsHAfC86vF6dFt4tyrjxm3pQI4re7aPyLSA1Y=,iv:gdpSxDNpgxzeltFKsa02NhiDhUOvidjPe+14ctPncpI=,tag:Wq7IzyGLzO6OGccBGB9x0A==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -54,21 +15,6 @@ spec:
     resources:
         requests:
             storage: 5Gi
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -103,7 +49,7 @@ spec:
                       valueFrom:
                         secretKeyRef:
                             name: openfga-postgres-secret
-                            key: ENC[AES256_GCM,data:isbBzq+Q98BUx2c9wGzKYA==,iv:n35f1ynD9AIJFNB/cw2JxNTnFY3xApC5vY+9G2f4Ehw=,tag:ijkfaxFEA2QMSDISqv0ZFQ==,type:str]
+                            key: postgresPassword
                     - name: PGDATA
                       value: /var/lib/postgresql/data/pgdata
                   ports:
@@ -139,21 +85,6 @@ spec:
                 - name: data
                   persistentVolumeClaim:
                     claimName: openfga-postgres-pvc
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: v1
 kind: Service
@@ -166,46 +97,6 @@ spec:
     ports:
         - port: 5432
           targetPort: 5432
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
----
-apiVersion: v1
-kind: Secret
-metadata:
-    name: openfga-secrets
-    namespace: openfga
-type: Opaque
-stringData:
-    datastoreUri: ENC[AES256_GCM,data:ietFSCE3hMgU7b9nAU7DiDtLds+dAaMiwzh9Z7jMAh8eT6OeOhuzXv6QXCE+2apyZyKCqXQvPTmAUr/SwwUA0d4D5jK7ZY3r6+oo/AJARF1AnInXp2xRRhVqZ5sbu7mbzA==,iv:QRtCn9VccF/PrvwU6kpVIu7T4CGHNOR6AjeSmKnr5X8=,tag:XJPzgP84LpzPZuGkAVC7rg==,type:str]
-    keys: ENC[AES256_GCM,data:KQzaE9CZwSX0Y7HZ3fS7U5Qc60gpU/VLVA6dDwKX98WQzTCf5CuQmg==,iv:b2oG2TUJnohlgfSSb4VcgIBfpzCXIS5eougHfAAE6bY=,tag:pDs6vYVv2vLuae2XkbGq9A==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -215,21 +106,6 @@ metadata:
 spec:
     interval: 1h0s
     url: https://openfga.github.io/helm-charts
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -257,7 +133,7 @@ spec:
         authn:
             method: preshared
             preshared:
-                keysSecret: ENC[AES256_GCM,data:I++iOvIUGXE/LQsSsplX,iv:74Tp/dykct7mPBdl8oWPswsRYKDUgb9wwPKEfTau7Nc=,tag:H5Qhj/B48Sg8BTxBfAvuZQ==,type:str]
+                keysSecret: openfga-secrets
         playground:
             enabled: false
         service:
@@ -265,21 +141,6 @@ spec:
         telemetry:
             metrics:
                 enableRPCHistograms: true
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -288,45 +149,7 @@ metadata:
     namespace: openfga
 spec:
     basicAuth:
-        secret: ENC[AES256_GCM,data:iIjz3T8ZpJe086jo5W1Tv6B0jTfPdedMOg==,iv:dSEDqDUJTUv5NViIxXH+8+Ye40aj3YJ3L5gqOrf2dqQ=,tag:NFQRc17W6fBXwaKUE/q+yg==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
----
-apiVersion: v1
-kind: Secret
-metadata:
-    name: openfga-basic-auth-secret
-    namespace: openfga
-data:
-    users: ENC[AES256_GCM,data:LUEaaurKsurLOwa/P0EcGlgz0Dyl44uonzIdLRLIDv/D/0v22EPj9bzzLbuJJgDoitKWqLPVcHNlrnIoOOcrLBrnoIVelWZBJRtN1KZiHXk3Z3HOOwoCTLI6ewM=,iv:XLa25L2KObZON59bIUln/TVMc8g0qNemslcPxQ5dzt4=,tag:XCowlWPBJZf9kQ4Ihke3+Q==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
+        secret: openfga-basic-auth-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -354,21 +177,6 @@ spec:
                         name: openfga
                         port:
                             number: 8080
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
@@ -385,21 +193,6 @@ spec:
         - port: metrics
           path: /metrics
           interval: 30s
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -409,19 +202,137 @@ metadata:
     labels:
         grafana_dashboard: "1"
 data:
-    openfga.json: ENC[AES256_GCM,data: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,iv:YHRvzqcY3rwLUopLBFqiU781tCJO1B0AYqykQo1Qky0=,tag:A+uPfcSb7+Xbi3xEDERWHQ==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBZUHJONkd3dG5GMTdBRnZo
-            dFJQMUZPZFVOekJSeXFJV1l0MTlvYmM4ZkdVCjRMTGRJMURkZUdCMXJ1S3FqcjJv
-            d3phUWNSc1BtM3FvdC92QUJBRGhrdDQKLS0tIEtyS1BhbFFOdHgyYmlwNWxMcmph
-            UnlWaTQ1RURQUXNsanBPc2ZLS0xmSncKblvXvlsyP4LObf1cjiL+4tXr6MYhKv/Y
-            skpkN2NaDy/TWMX/mjP1T268QNSefpE2kd030g60b9wVr3Rl1fnR6A==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T16:08:19Z"
-    mac: ENC[AES256_GCM,data:0J/6trEeCUF88prrV5arkIMsS4O5wATDpIk1TdiYxFn2rrdpXcsfKv544CPIFBK3qoNwiwCix4Ndeer0t1J0fxN0IxEpoITUJOQgf5O5JYKaCB/zQXNhLUCx/fJcYG4chDr91nNfLMmBCDuUMIJqmLLdf/h64AXXDg6wYBnEnrg=,iv:nMaEzHHvEAu5q/SI4jpuynrh6VHdMduko1qZDT2m0dY=,tag:AFKSnwAxggIWWrV8vOzYMA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
-    version: 3.11.0
+    openfga.json: |
+        {
+          "title": "OpenFGA Dashboard",
+          "uid": "openfga-overview",
+          "description": "Official dashboard from github.com/openfga/openfga/telemetry/grafana/dashboards/openfga.json. Enabled telemetry.metrics.enableRPCHistograms (was off by default, no cost otherwise) to get real p50/p90/p99 request latency instead of dropping those panels. Fixed the cache hit ratio panel's metric names to match this OpenFGA version (openfga_check_cache_hit_count / openfga_check_cache_total_count, no _total suffix). Dropped the SQL metrics panel: go_sql_* isn't exposed by this OpenFGA build at all.",
+          "tags": ["openfga"],
+          "timezone": "browser",
+          "schemaVersion": 39,
+          "version": 1,
+          "panels": [
+            { "id": 100, "title": "Server Metrics", "type": "row", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 } },
+            {
+              "id": 1,
+              "title": "p50 Request Duration by Method",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 0, "y": 1 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.5, sum by(le, grpc_method, grpc_service) (rate(grpc_server_handling_seconds_bucket{job=\"openfga\", grpc_type=\"unary\", grpc_service=\"openfga.v1.OpenFGAService\"}[2m])))",
+                  "legendFormat": "{{grpc_method}}"
+                }
+              ]
+            },
+            {
+              "id": 2,
+              "title": "p90 Request Duration by Method",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 8, "y": 1 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.9, sum by(le, grpc_method, grpc_service) (rate(grpc_server_handling_seconds_bucket{job=\"openfga\", grpc_type=\"unary\", grpc_service=\"openfga.v1.OpenFGAService\"}[2m])))",
+                  "legendFormat": "{{grpc_method}}"
+                }
+              ]
+            },
+            {
+              "id": 3,
+              "title": "p99 Request Duration by Method",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 16, "y": 1 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                {
+                  "expr": "histogram_quantile(0.99, sum by(le, grpc_method, grpc_service) (rate(grpc_server_handling_seconds_bucket{job=\"openfga\", grpc_type=\"unary\", grpc_service=\"openfga.v1.OpenFGAService\"}[2m])))",
+                  "legendFormat": "{{grpc_method}}"
+                }
+              ]
+            },
+            {
+              "id": 4,
+              "title": "RPS per Method",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 0, "y": 9 },
+              "targets": [
+                {
+                  "expr": "sum(rate(grpc_server_started_total{job=\"openfga\",grpc_service=\"openfga.v1.OpenFGAService\"}[1m])) by (grpc_method)",
+                  "legendFormat": "{{grpc_method}}"
+                }
+              ]
+            },
+            {
+              "id": 5,
+              "title": "Status Code Count per Method",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 8, "y": 9 },
+              "targets": [
+                {
+                  "expr": "sum by(grpc_code, grpc_method) (rate(grpc_server_handled_total{grpc_service=\"openfga.v1.OpenFGAService\"}[1m]))",
+                  "legendFormat": "{{grpc_method}} - {{grpc_code}}"
+                }
+              ]
+            },
+            {
+              "id": 6,
+              "title": "Check Cache Hit Ratio",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 16, "y": 9 },
+              "fieldConfig": { "defaults": { "unit": "percent", "max": 100, "min": 0 } },
+              "targets": [
+                {
+                  "expr": "(sum(increase(openfga_check_cache_hit_count[1m])) / sum(increase(openfga_check_cache_total_count[1m]))) * 100"
+                }
+              ]
+            },
+            { "id": 101, "title": "Go Runtime Metrics", "type": "row", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 } },
+            {
+              "id": 8,
+              "title": "Goroutines",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+              "targets": [
+                { "expr": "go_goroutines{job=\"openfga\"}", "legendFormat": "count" },
+                { "expr": "irate(go_goroutines{job=\"openfga\"}[2m])", "legendFormat": "rate of change" }
+              ]
+            },
+            {
+              "id": 9,
+              "title": "Go GC Duration",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+              "fieldConfig": { "defaults": { "unit": "s" } },
+              "targets": [
+                { "expr": "go_gc_duration_seconds{job=\"openfga\", quantile=\"0.5\"}", "legendFormat": "p50" },
+                { "expr": "go_gc_duration_seconds{job=\"openfga\", quantile=\"0.75\"}", "legendFormat": "p75" },
+                { "expr": "go_gc_duration_seconds{job=\"openfga\", quantile=\"1\"}", "legendFormat": "max" }
+              ]
+            },
+            {
+              "id": 10,
+              "title": "Heap Memory Usage",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 0, "y": 34 },
+              "fieldConfig": { "defaults": { "unit": "bytes" } },
+              "targets": [{ "expr": "go_memstats_heap_alloc_bytes{job=\"openfga\"}" }]
+            },
+            {
+              "id": 11,
+              "title": "Memory Allocation Rate (malloc/sec)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 8, "y": 34 },
+              "targets": [{ "expr": "rate(go_memstats_mallocs_total{job=\"openfga\"}[2m])" }]
+            },
+            {
+              "id": 12,
+              "title": "Heap Allocation Rate (bytes/sec)",
+              "type": "timeseries",
+              "gridPos": { "h": 8, "w": 8, "x": 16, "y": 34 },
+              "fieldConfig": { "defaults": { "unit": "Bps" } },
+              "targets": [{ "expr": "rate(go_memstats_alloc_bytes_total{job=\"openfga\"}[2m])" }]
+            }
+          ]
+        }

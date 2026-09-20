@@ -2,21 +2,6 @@ apiVersion: v1
 kind: Namespace
 metadata:
     name: loki
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -24,22 +9,57 @@ metadata:
     name: loki-config
     namespace: loki
 data:
-    loki-config.yaml: ENC[AES256_GCM,data:fGfoFRAW7YCmDGq8byZP7mzOknx9nz0qooEHhui5Ib90fVClNzv9IOn1rDtDlXQqAnYh3C9XcS7K0OVx/BLID1pQ+Pj+bNbJSS+FkxLI+AVUe3Z1sP48tsi9T3CGjltYiNzPJS7IJDa55bra8Oek5Hy/bMxATh5ksaDvZnWTbvb4ahBCvR15xXABrvcsYkkML9+V3ioCLhOolGAHUAGT6lZYf50pvafmTTdqIGuru+CRH09qAMEqQt3Fov/B0h2lCokWXBJIHIp715tAcPmlmbDpNJabplCxoVXXXavXQFySz7pVviEXpVCaHRONBExGVuG2GQuMKRt6NIOTK7xobntS1OW+HPXtlRlLDbxnhw0Og4eSOl0iW/QHPgSmDFum+4MhyFw4ULHjo1AM7M9SxhAeAvGVftU5voNDQ7izN6Owo3idfpXQFdECo9415fhrwOOWb9RwRK0gH+Ku6Y46zJYljseoUQVjNqHqjOL2EySKjSrpxsRfjSiWfXeyG9pexbY7Lmddc2kfNImVYTpo1cjK7I04+bNyVYnxbxsOMlQndXLPwXxL89twIPYYRTgROPJBr5pq2t+nv+fY0+s/A27CxuBXwx8gtPK1rnvHsgCaS4TVzS1hmdrKPKMKs7Eyv3T2LjxOJSwOyCb/wMcZes0vOgJ5d7Fx+uzVu8+N6tlsJn9WRSZVIw3vbUMMhvy8JHZB77X3yn7QzDxeE/JL9+0wbA+LME/YnEkXwF0d7hUtMoXsDjzAcpByRuzXnHYfVpZigHjXbrxfRRilgI2WyKCnHckd78uR3Iw9IC94g+ae+oJ6nhz/bWcN1jT0Y6DvIlrTbIJDltkd/7WrCtsFnhGWGVWKXufwGkmcwtsdXZPJmfEmYsVuiVFdgYUJ2hDeZp0hd7yBrSJlQ0lz1YrA957GTEEhGdkclkpBTGOaQfEp6PnIzDEL+p5RltUx3xpnwizh5Ld6k/Q7CLLK0myHc0Zc29Lba6OLo2uglWK2kdf85TfqUbagnGX94KUaY/UC6BFmiyjS6mXKc/XdX+uZE5g33DS9p6BKxAGOsrp1f9S0GqQaYXoboZZcdsIwsfMxLNvNNChxfthQ3aiu99x1vksB427B1GpMrL0h7wxwbDZjB4HQDdtAJ4rftYqyawdwG0UkAVAFGJi48gCEA50C5TmxSmpqC6sUEAIpbXcIfBxRP9grZqOiH63bBEDPpDCszui0xFkw83+4Hfo51yEpIiVzIaETfK7et+ruTdCU2pcHxABh1ZVbdu2XHdz/wIXrvDVA2ji7spAxLR7BWJbnI3LDI+oYDo2boROlPVrOuvQOls5T78hYzOGOZeeUFdQGkPbZqrgRUYqtmNk3pg5f424eL+b6GpKmY7EwFtsiakJyto6BC80XXPMt1zmmjwwKYv8iA83ndUCuDAZfj+hga/CcIbdmZQ7Dj51QCmV0Gnqoxwo5LED0XEdCRipcI1twlaLirvkKvvk+tYZNjuwgfxIAMzRCm/WA9bSTubZC6rCH,iv:U45xtpqS9bQBz9/7c5o3b5UY1Yq/SIaKKAeCAmh8Kgw=,tag:abKmBKrR6OeiB8ltNLZ/Jw==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
+    loki-config.yaml: |
+        auth_enabled: false
+
+        server:
+          http_listen_port: 3100
+
+        ingester:
+          lifecycler:
+            address: 127.0.0.1
+            ring:
+              kvstore:
+                store: inmemory
+              replication_factor: 1
+          chunk_idle_period: 5m
+          chunk_retain_period: 30s
+          wal:
+            enabled: true
+            dir: /loki/wal
+
+        schema_config:
+          configs:
+            - from: 2020-10-24
+              store: boltdb-shipper
+              object_store: filesystem
+              schema: v11
+              index:
+                prefix: index_
+                period: 24h
+
+        storage_config:
+          boltdb_shipper:
+            active_index_directory: /loki/index
+            cache_location: /loki/cache
+          filesystem:
+            directory: /loki/chunks
+
+        limits_config:
+          allow_structured_metadata: false
+          ingestion_rate_mb: 10
+          ingestion_burst_size_mb: 20
+          max_concurrent_tail_requests: 20
+          retention_period: 720h
+
+        # retention runs through the compactor, not table_manager: table_manager
+        # retention relies on the object store's own TTL feature, which the
+        # filesystem backend used here doesn't support -- it was a silent
+        # no-op, logs were never actually being deleted.
+        compactor:
+          working_directory: /loki/compactor
+          retention_enabled: true
+          delete_request_store: filesystem
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -54,21 +74,6 @@ spec:
         requests:
             storage: 15Gi
     volumeMode: Filesystem
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -119,21 +124,6 @@ spec:
                 - name: loki-config
                   configMap:
                     name: loki-config
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: v1
 kind: Service
@@ -151,44 +141,6 @@ spec:
           name: loki
     selector:
         app: loki
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
----
-apiVersion: v1
-data:
-    users: ENC[AES256_GCM,data:+d1Ij2AszJLS2dh9bb4semQUsZ73HL5eeLULLQIkRnd6kfZUIMDFoA8watqFLAYwN2likCZHrDn1iNh5necbwy/QORZcxmzIlcwWfOGYXGnBPLcP0WiqsAsgTVSEyqUn7/iCV42x+mE+4wIMYYudhITAmLK513fKG3qpZ3AHlhmqt4CLJjZMRXTCrms6ck2Xgf9WAzPEJKez7Q93bHpUwFRYO2MXRZGfP3lUYpaLwZ0k+TmJkDL03vg2Dkznwr6FrcS/b9jqemZcYMdhGmTRWUvT0YxaX9WM+VTSJMzo8R6zo2PMCuqwjXJ0SqvBI6FeCt/cTCbp3yZGNxwdN/a0rVShyQmECK69AdWghZdjLwydx/ijRxIPVyeAGv/XfPFpxrBrvLrCB+LaVKhyskAlgT5u97xHQ9e2I93OeIWFCB+rQmuYQIHMt54PRdJq+hRlkO4OzhanwE36heArlguSWp8c8wncCUKxxw/Qt7C7Y04SHGz21gxAm3SAfRuxSyimroeKf73c+fhCevoVL53Qa2jHvEYBIju0Uac2MiwlTFG3XN5JcHsEB84HgW1PvLmstY/tGHFWI9lX4BVP7ALA2H1E5Zvmx7lh4rtcGw==,iv:5yw9BwS+xcOE5J/JLq0wH9rwPtBQVlsJhGcJx+jJ6ic=,tag:hUExcFauJ22Bn6UUjAljNA==,type:str]
-kind: Secret
-metadata:
-    name: loki-basic-auth-secret
-    namespace: loki
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -197,22 +149,7 @@ metadata:
     namespace: loki
 spec:
     basicAuth:
-        secret: ENC[AES256_GCM,data:H+NM66lRZ46BzJ/KiXbKuABeeZoumQ==,iv:1roxNRfoLHg6t/hGSbf+5oJ0zdDUYIp1/mXIe91RzCo=,tag:BOTLs6qUWYLrGUyVeIIwxQ==,type:str]
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
+        secret: loki-basic-auth-secret
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -254,18 +191,3 @@ spec:
                         name: loki
                         port:
                             number: 3100
-sops:
-    age:
-        - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
-          enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBSSGRza2xKNGI0UWxTdE16
-            Wkp4b041TkJBdGpmVHRnRCtEM3MvN2dLTFRvCmFJb0Y3RVloMTNiV3J1OEFGaGFU
-            Ry9xNXRPdGYzaVJFTVFkRkhhdlNhc3cKLS0tIDhONG9BR1A3MHZrd0xOMUtpREJn
-            d0QwYVhqQ3RHM0NkcWNJRnQ4TzJ1R3cK3iMW3sYxz4hchoWLBaVkW2XXhYWnKCVc
-            qf2HdOM2z5WfZrWnfFuYUC7fHNA1hF01iTLf5BeCCdZ53bp1k0AL9w==
-            -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T12:13:29Z"
-    mac: ENC[AES256_GCM,data:b54LWUYhnoFTLXc95K32kc/hMhy93kAam5tdzyCMXFbtvvabzsLE1kT1Z3Y0z+EzluzRKuN5Umm2Aw4+hLv9XGk91gNSuMatJ1u3LF7bsdoep4MrozDgsRNxE+LsaGfHYCaZ+oRc1Ddd8xzxTYiYsvO6uNZcA5jhj/xV6dYOxvI=,iv:v+85re+wkpNxvcDZsLJcsqlIs2SbYwRGQKTdxeINerQ=,tag:YAkdw9/20Ue+tSyfa6vhIA==,type:str]
-    encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key)$
-    version: 3.11.0
