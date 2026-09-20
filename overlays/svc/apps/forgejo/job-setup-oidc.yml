@@ -4,9 +4,7 @@ metadata:
     name: forgejo-oidc-setup
     namespace: forgejo
     annotations:
-        helm.sh/hook: post-install,post-upgrade
-        helm.sh/hook-weight: "1"
-        helm.sh/hook-delete-policy: hook-succeeded
+        kustomize.toolkit.fluxcd.io/force: enabled
 spec:
     template:
         spec:
