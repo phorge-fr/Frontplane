@@ -169,6 +169,89 @@ spec:
                       sourceLabels:
                           - node
                       targetLabel: instance
+        alertmanager:
+            # Notifications go to a Discord channel. The webhook URL is a secret: it lives in the
+            # alertmanager-discord Secret (alertmanager-secret.yml, SOPS), mounted below and read
+            # from a file.
+            config:
+                global:
+                    resolve_timeout: 5m
+                # The default inhibit rules of the chart, with cluster in `equal`: the series of the
+                # four sources share one Prometheus, so an alert of one cluster must not inhibit the
+                # alert of another one that has the same namespace and name.
+                inhibit_rules:
+                    - source_matchers:
+                          - severity = critical
+                      target_matchers:
+                          - severity =~ warning|info
+                      equal:
+                          - cluster
+                          - namespace
+                          - alertname
+                    - source_matchers:
+                          - severity = warning
+                      target_matchers:
+                          - severity = info
+                      equal:
+                          - cluster
+                          - namespace
+                          - alertname
+                    - source_matchers:
+                          - alertname = InfoInhibitor
+                      target_matchers:
+                          - severity = info
+                      equal:
+                          - cluster
+                          - namespace
+                    - target_matchers:
+                          - alertname = InfoInhibitor
+                route:
+                    receiver: discord
+                    group_by:
+                        - cluster
+                        - namespace
+                        - alertname
+                    group_wait: 30s
+                    group_interval: 5m
+                    repeat_interval: 12h
+                    routes:
+                        # Never notified: the heartbeat, the helper of the inhibit rules, and info.
+                        - matchers:
+                              - alertname =~ "Watchdog|InfoInhibitor"
+                          receiver: "null"
+                        - matchers:
+                              - severity = info
+                          receiver: "null"
+                        # Critical alerts are sent quickly and repeated often, warnings are batched.
+                        - matchers:
+                              - severity = critical
+                          repeat_interval: 4h
+                        - matchers:
+                              - severity = warning
+                          group_wait: 2m
+                          group_interval: 15m
+                          repeat_interval: 24h
+                receivers:
+                    - name: "null"
+                    - name: discord
+                      discord_configs:
+                          - webhook_url_file: /etc/alertmanager/secrets/alertmanager-discord/webhook-url
+                            send_resolved: true
+                templates:
+                    - /etc/alertmanager/config/*.tmpl
+            alertmanagerSpec:
+                secrets:
+                    - alertmanager-discord
+                # Keeps the silences and the notification log across restarts.
+                storage:
+                    volumeClaimTemplate:
+                        spec:
+                            storageClassName: longhorn
+                            accessModes:
+                                - ReadWriteOnce
+                            resources:
+                                requests:
+                                    storage: 1Gi
         # Cilium replaces kube-proxy, so there is nothing to scrape: drop its ServiceMonitor,
         # its dashboard and the KubeProxyDown alert that fires for good.
         kubeProxy:
