@@ -166,6 +166,48 @@ spec:
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
+                    // The scheduler and the controller-manager are host processes of the k0s
+                    // controllers and only listen on the loopback of their node, so they are
+                    // scraped from the host network of the node-local pod. Job names are the
+                    // ones the chart's rules and dashboards select on.
+                    prometheus.scrape "kube_scheduler" {
+                        job_name          = "kube-scheduler"
+                        targets           = [{"__address__" = "127.0.0.1:10259", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            insecure_skip_verify = true
+                        }
+
+                        forward_to = [prometheus.relabel.controlplane_filter.receiver]
+                    }
+
+                    prometheus.scrape "kube_controller_manager" {
+                        job_name          = "kube-controller-manager"
+                        targets           = [{"__address__" = "127.0.0.1:10257", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            insecure_skip_verify = true
+                        }
+
+                        forward_to = [prometheus.relabel.controlplane_filter.receiver]
+                    }
+
+                    // Feature gates and the bucket histograms that neither the chart's dashboards
+                    // nor its rules read: about 40% of the ~5k series of each node.
+                    prometheus.relabel "controlplane_filter" {
+                        forward_to = [prometheus.remote_write.core.receiver]
+
+                        rule {
+                            source_labels = ["__name__"]
+                            regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket"
+                            action        = "drop"
+                        }
+                    }
+
                     prometheus.remote_write "core" {
                         endpoint {
                             url = "https://prometheus.core.phorge/api/v1/write"
