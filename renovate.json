@@ -18,5 +18,27 @@
         "managerFilePatterns": [
             "/^(base|overlays)/.+\\.ya?ml$/"
         ]
-    }
+    },
+    "customManagers": [
+        {
+            "customType": "regex",
+            "description": "Image tags pinned in inline HelmRelease values, marked with a '# renovate: datasource=... depName=...' comment on the line above",
+            "managerFilePatterns": [
+                "/^(base|overlays)/.+\\.ya?ml$/"
+            ],
+            "matchStrings": [
+                "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\n\\s*tag: (?<currentValue>\\S+)"
+            ],
+            "versioningTemplate": "docker"
+        }
+    ],
+    "packageRules": [
+        {
+            "description": "The Forgejo app image (helm values) and the OIDC setup Job run the forgejo CLI against the same database: bump them together, in one PR",
+            "matchPackageNames": [
+                "code.forgejo.org/forgejo/forgejo"
+            ],
+            "groupName": "forgejo image"
+        }
+    ]
 }
