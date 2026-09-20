@@ -345,6 +345,28 @@ data:
                     "excludeByName": {
                       "Time": true,
                       "alertstate": true,
+                      "prometheus": true,
+                      "container": true,
+                      "endpoint": true,
+                      "customresource_group": true,
+                      "customresource_version": true,
+                      "ready": true,
+                      "suspended": true,
+                      "revision": true,
+                      "source_name": true,
+                      "chart_name": true,
+                      "chart_ref_name": true,
+                      "chart_source_name": true,
+                      "chart_app_version": true,
+                      "url": true,
+                      "issuer_kind": true,
+                      "issuer_group": true,
+                      "issuer_name": true,
+                      "condition_reason": true,
+                      "state": true,
+                      "volume": true,
+                      "data_engine": true,
+                      "disk_path": true,
                       "severity": true
                     },
                     "renameByName": {
@@ -353,7 +375,7 @@ data:
                     "indexByName": {
                       "alertname": 0,
                       "cluster": 1,
-                      "Since": 2
+                      "Value": 2
                     }
                   }
                 }
@@ -389,6 +411,18 @@ data:
                   {
                     "matcher": {
                       "id": "byName",
+                      "options": "cluster"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
                       "options": "alertname"
                     },
                     "properties": [
@@ -404,6 +438,10 @@ data:
                           "mode": "fixed",
                           "fixedColor": "red"
                         }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 320
                       }
                     ]
                   }
@@ -464,6 +502,28 @@ data:
                     "excludeByName": {
                       "Time": true,
                       "alertstate": true,
+                      "prometheus": true,
+                      "container": true,
+                      "endpoint": true,
+                      "customresource_group": true,
+                      "customresource_version": true,
+                      "ready": true,
+                      "suspended": true,
+                      "revision": true,
+                      "source_name": true,
+                      "chart_name": true,
+                      "chart_ref_name": true,
+                      "chart_source_name": true,
+                      "chart_app_version": true,
+                      "url": true,
+                      "issuer_kind": true,
+                      "issuer_group": true,
+                      "issuer_name": true,
+                      "condition_reason": true,
+                      "state": true,
+                      "volume": true,
+                      "data_engine": true,
+                      "disk_path": true,
                       "severity": true
                     },
                     "renameByName": {
@@ -472,7 +532,7 @@ data:
                     "indexByName": {
                       "alertname": 0,
                       "cluster": 1,
-                      "Since": 2
+                      "Value": 2
                     }
                   }
                 }
@@ -508,6 +568,18 @@ data:
                   {
                     "matcher": {
                       "id": "byName",
+                      "options": "cluster"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
                       "options": "alertname"
                     },
                     "properties": [
@@ -523,6 +595,10 @@ data:
                           "mode": "fixed",
                           "fixedColor": "orange"
                         }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 320
                       }
                     ]
                   }
@@ -583,6 +659,28 @@ data:
                     "excludeByName": {
                       "Time": true,
                       "alertstate": true,
+                      "prometheus": true,
+                      "container": true,
+                      "endpoint": true,
+                      "customresource_group": true,
+                      "customresource_version": true,
+                      "ready": true,
+                      "suspended": true,
+                      "revision": true,
+                      "source_name": true,
+                      "chart_name": true,
+                      "chart_ref_name": true,
+                      "chart_source_name": true,
+                      "chart_app_version": true,
+                      "url": true,
+                      "issuer_kind": true,
+                      "issuer_group": true,
+                      "issuer_name": true,
+                      "condition_reason": true,
+                      "state": true,
+                      "volume": true,
+                      "data_engine": true,
+                      "disk_path": true,
                       "severity": true
                     },
                     "renameByName": {
@@ -591,7 +689,7 @@ data:
                     "indexByName": {
                       "alertname": 0,
                       "cluster": 1,
-                      "Since": 2
+                      "Value": 2
                     }
                   }
                 }
@@ -627,6 +725,18 @@ data:
                   {
                     "matcher": {
                       "id": "byName",
+                      "options": "cluster"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
                       "options": "alertname"
                     },
                     "properties": [
@@ -642,6 +752,10 @@ data:
                           "mode": "fixed",
                           "fixedColor": "blue"
                         }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 320
                       }
                     ]
                   }
@@ -701,7 +815,29 @@ data:
                   "options": {
                     "excludeByName": {
                       "Time": true,
-                      "alertstate": true
+                      "alertstate": true,
+                      "prometheus": true,
+                      "container": true,
+                      "endpoint": true,
+                      "customresource_group": true,
+                      "customresource_version": true,
+                      "ready": true,
+                      "suspended": true,
+                      "revision": true,
+                      "source_name": true,
+                      "chart_name": true,
+                      "chart_ref_name": true,
+                      "chart_source_name": true,
+                      "chart_app_version": true,
+                      "url": true,
+                      "issuer_kind": true,
+                      "issuer_group": true,
+                      "issuer_name": true,
+                      "condition_reason": true,
+                      "state": true,
+                      "volume": true,
+                      "data_engine": true,
+                      "disk_path": true
                     },
                     "renameByName": {
                       "Value": "Since"
@@ -710,7 +846,7 @@ data:
                       "severity": 0,
                       "alertname": 1,
                       "cluster": 2,
-                      "Since": 3
+                      "Value": 3
                     }
                   }
                 }
@@ -746,6 +882,18 @@ data:
                   {
                     "matcher": {
                       "id": "byName",
+                      "options": "cluster"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
                       "options": "alertname"
                     },
                     "properties": [
@@ -761,6 +909,10 @@ data:
                           "mode": "fixed",
                           "fixedColor": "purple"
                         }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 320
                       }
                     ]
                   },
@@ -860,7 +1012,29 @@ data:
                   "options": {
                     "excludeByName": {
                       "Time": true,
-                      "alertstate": true
+                      "alertstate": true,
+                      "prometheus": true,
+                      "container": true,
+                      "endpoint": true,
+                      "customresource_group": true,
+                      "customresource_version": true,
+                      "ready": true,
+                      "suspended": true,
+                      "revision": true,
+                      "source_name": true,
+                      "chart_name": true,
+                      "chart_ref_name": true,
+                      "chart_source_name": true,
+                      "chart_app_version": true,
+                      "url": true,
+                      "issuer_kind": true,
+                      "issuer_group": true,
+                      "issuer_name": true,
+                      "condition_reason": true,
+                      "state": true,
+                      "volume": true,
+                      "data_engine": true,
+                      "disk_path": true
                     },
                     "renameByName": {
                       "Value": "Since"
@@ -869,7 +1043,7 @@ data:
                       "severity": 0,
                       "alertname": 1,
                       "cluster": 2,
-                      "Since": 3
+                      "Value": 3
                     }
                   }
                 }
@@ -905,6 +1079,18 @@ data:
                   {
                     "matcher": {
                       "id": "byName",
+                      "options": "cluster"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.width",
+                        "value": 90
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
                       "options": "alertname"
                     },
                     "properties": [
@@ -920,6 +1106,10 @@ data:
                           "mode": "fixed",
                           "fixedColor": "yellow"
                         }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 320
                       }
                     ]
                   },
