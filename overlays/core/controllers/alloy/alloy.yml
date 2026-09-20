@@ -44,7 +44,8 @@ spec:
                         level = "info"
                     }
 
-                    // Job names are the ones the chart's rules and dashboards select on.
+                    // Job names are the ones the chart's rules and dashboards select on. etcd serves its
+                    // metrics on the loopback through listen-metrics-urls in the k0s config.
                     prometheus.scrape "kube_scheduler" {
                         job_name          = "kube-scheduler"
                         targets           = [{"__address__" = "127.0.0.1:10259", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]
@@ -71,8 +72,16 @@ spec:
                         forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
+                    prometheus.scrape "etcd" {
+                        job_name   = "etcd"
+                        targets    = [{"__address__" = "127.0.0.1:2381", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]
+                        forward_to = [prometheus.relabel.controlplane_filter.receiver]
+                    }
+
                     // Feature gates and the bucket histograms that neither the chart's dashboards
-                    // nor its rules read: about 40% of the ~5k series of each node.
+                    // nor its rules read: about 40% of the ~5k series of each node. etcd only keeps
+                    // the three bucket histograms that its rules read (WAL fsync, backend commit and
+                    // peer round trip time).
                     prometheus.relabel "controlplane_filter" {
                         forward_to = [prometheus.remote_write.local.receiver]
 
@@ -80,6 +89,22 @@ spec:
                             source_labels = ["__name__"]
                             regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket"
                             action        = "drop"
+                        }
+
+                        rule {
+                            source_labels = ["__name__"]
+                            regex         = "etcd_disk_wal_fsync_duration_seconds_bucket|etcd_disk_backend_commit_duration_seconds_bucket|etcd_network_peer_round_trip_time_seconds_bucket"
+                            target_label  = "etcd_keep_bucket"
+                            replacement   = "1"
+                        }
+                        rule {
+                            source_labels = ["__name__", "etcd_keep_bucket"]
+                            regex         = "etcd_.*_bucket;"
+                            action        = "drop"
+                        }
+                        rule {
+                            regex  = "etcd_keep_bucket"
+                            action = "labeldrop"
                         }
                     }
 
