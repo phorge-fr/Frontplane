@@ -1,0 +1,25 @@
+# The chart restricts the ingress of the manager to the Longhorn components (restrictInternalTraffic),
+# which leaves no way in for Prometheus: the scrapes of the other nodes' managers time out.
+# Policies are additive.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+    name: longhorn-manager-metrics
+    namespace: longhorn-system
+spec:
+    podSelector:
+        matchLabels:
+            app: longhorn-manager
+    policyTypes:
+        - Ingress
+    ingress:
+        - from:
+              - namespaceSelector:
+                    matchLabels:
+                        kubernetes.io/metadata.name: kube-prometheus-stack
+                podSelector:
+                    matchLabels:
+                        app.kubernetes.io/name: prometheus
+          ports:
+              - protocol: TCP
+                port: 9500

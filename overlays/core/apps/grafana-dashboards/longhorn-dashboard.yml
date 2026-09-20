@@ -1,0 +1,1289 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: longhorn-dashboard
+    namespace: kube-prometheus-stack
+    labels:
+        grafana_dashboard: "1"
+data:
+    longhorn.json: |
+        {
+          "uid": "longhorn",
+          "title": "Longhorn",
+          "description": "Volumes, nodes, disks and replicas of Longhorn on core.",
+          "tags": [
+            "longhorn"
+          ],
+          "schemaVersion": 39,
+          "version": 1,
+          "editable": true,
+          "graphTooltip": 1,
+          "refresh": "1m",
+          "time": {
+            "from": "now-6h",
+            "to": "now"
+          },
+          "timezone": "browser",
+          "templating": {
+            "list": []
+          },
+          "annotations": {
+            "list": []
+          },
+          "links": [],
+          "panels": [
+            {
+              "id": 1,
+              "type": "stat",
+              "title": "Volumes",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 0,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(count by (volume) (longhorn_volume_capacity_bytes)) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "blue",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 2,
+              "type": "stat",
+              "title": "Healthy",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 4,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(longhorn_volume_robustness{state=\"healthy\"} == 1) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 3,
+              "type": "stat",
+              "title": "Degraded",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 8,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(longhorn_volume_robustness{state=\"degraded\"} == 1) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              },
+              "description": "Fewer healthy replicas than wanted: a replica is rebuilding or failed."
+            },
+            {
+              "id": 4,
+              "type": "stat",
+              "title": "Faulted",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 12,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(longhorn_volume_robustness{state=\"faulted\"} == 1) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "red",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              },
+              "description": "No healthy replica left."
+            },
+            {
+              "id": 5,
+              "type": "stat",
+              "title": "Nodes not ready",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 16,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(longhorn_node_status{condition=\"ready\"} == 0) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "red",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 6,
+              "type": "stat",
+              "title": "Disks not ready or not schedulable",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 4,
+                "x": 20,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(longhorn_disk_status{condition=~\"ready|schedulable\"} == 0) or vector(0)",
+                  "instant": true,
+                  "range": false
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "decimals": 0,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 7,
+              "type": "table",
+              "title": "Volumes",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 4
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc_namespace, pvc, robustness) (label_replace(longhorn_volume_robustness == 1, \"robustness\", \"$1\", \"state\", \"(.*)\"))",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc_namespace, pvc, node, attachment) (label_replace(longhorn_volume_state == 1, \"attachment\", \"$1\", \"state\", \"(.*)\"))",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                },
+                {
+                  "refId": "C",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "max by (pvc_namespace, pvc) (longhorn_volume_capacity_bytes)",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                },
+                {
+                  "refId": "D",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "max by (pvc_namespace, pvc) (longhorn_volume_actual_size_bytes)",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                },
+                {
+                  "refId": "E",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "100 * max by (pvc_namespace, pvc) (longhorn_volume_actual_size_bytes) / max by (pvc_namespace, pvc) (longhorn_volume_capacity_bytes)",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "filterFieldsByName",
+                  "options": {
+                    "include": {
+                      "names": [
+                        "pvc_namespace",
+                        "pvc",
+                        "robustness",
+                        "attachment",
+                        "node",
+                        "Value #C",
+                        "Value #D",
+                        "Value #E"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {},
+                    "renameByName": {
+                      "pvc_namespace": "Namespace",
+                      "pvc": "Volume claim",
+                      "robustness": "Robustness",
+                      "attachment": "State",
+                      "node": "Attached to",
+                      "Value #C": "Capacity",
+                      "Value #D": "Actual size",
+                      "Value #E": "Actual / capacity"
+                    },
+                    "indexByName": {
+                      "pvc_namespace": 0,
+                      "pvc": 1,
+                      "robustness": 2,
+                      "attachment": 3,
+                      "node": 4,
+                      "Value #C": 5,
+                      "Value #D": 6,
+                      "Value #E": 7
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "Nothing to show",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Robustness"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "healthy": {
+                                "color": "green",
+                                "index": 0
+                              },
+                              "degraded": {
+                                "color": "orange",
+                                "index": 1
+                              },
+                              "faulted": {
+                                "color": "red",
+                                "index": 2
+                              },
+                              "unknown": {
+                                "color": "purple",
+                                "index": 3
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Capacity"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "bytes"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Actual size"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "bytes"
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Actual / capacity"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "percent"
+                      },
+                      {
+                        "id": "decimals",
+                        "value": 0
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Namespace",
+                    "desc": false
+                  }
+                ]
+              },
+              "description": "Actual size is the space one replica takes on its disk, snapshots included: it can exceed what the filesystem of the volume reports."
+            },
+            {
+              "id": 8,
+              "type": "timeseries",
+              "title": "Node storage usage",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 12
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "100 * longhorn_node_storage_usage_bytes / longhorn_node_storage_capacity_bytes",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "percent",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false,
+                    "thresholdsStyle": {
+                      "mode": "line"
+                    }
+                  },
+                  "min": 0,
+                  "max": 100,
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "transparent",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 75
+                      },
+                      {
+                        "color": "red",
+                        "value": 90
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "description": "Whole disk, not only Longhorn's share. Longhorn stops scheduling replicas on a node that has less than 25% left (75% used)."
+            },
+            {
+              "id": 9,
+              "type": "timeseries",
+              "title": "Node storage scheduled",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 12
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_node_storage_scheduled_bytes",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} scheduled"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_node_storage_capacity_bytes - longhorn_node_storage_reservation_bytes",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} available to schedule"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "bytes",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "description": "Size of the replicas placed on the node (their maximum size, not what they use) against what Longhorn may place on it: the capacity minus the reserved part."
+            },
+            {
+              "id": 10,
+              "type": "timeseries",
+              "title": "Volume actual size",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 20
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "max by (pvc_namespace, pvc) (longhorn_volume_actual_size_bytes)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc_namespace}}/{{pvc}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "bytes",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 11,
+              "type": "timeseries",
+              "title": "Replicas by state",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 20
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count by (state) (longhorn_replica_state == 1)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{state}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "none",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 40,
+                    "showPoints": "never",
+                    "spanNulls": false,
+                    "stacking": {
+                      "mode": "normal",
+                      "group": "A"
+                    }
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "description": "Replicas of every volume. The running ones are the healthy ones."
+            },
+            {
+              "id": 12,
+              "type": "timeseries",
+              "title": "Volume IOPS",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 0,
+                "y": 28
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc) (longhorn_volume_read_iops)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} read"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc) (longhorn_volume_write_iops)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} write"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "iops",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 13,
+              "type": "timeseries",
+              "title": "Volume throughput",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 8,
+                "y": 28
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc) (longhorn_volume_read_throughput)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} read"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "sum by (pvc) (longhorn_volume_write_throughput)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} write"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "Bps",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 14,
+              "type": "timeseries",
+              "title": "Volume latency",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 28
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "max by (pvc) (longhorn_volume_read_latency)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} read"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "max by (pvc) (longhorn_volume_write_latency)",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{pvc}} write"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "ns",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 15,
+              "type": "timeseries",
+              "title": "Disk health (SMART)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 36
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_disk_health_attribute_raw{attribute=~\"Reallocated_Sector_Ct|Current_Pending_Sector|Offline_Uncorrectable|Reported_Uncorrect|UDMA_CRC_Error_Count\"}",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} {{attribute}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "none",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "description": "Error counters of the disks: they should stay at 0. Longhorn's own verdict is the longhorn_disk_health series."
+            },
+            {
+              "id": 16,
+              "type": "timeseries",
+              "title": "Disk temperature",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 36
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_disk_health_attribute_raw{attribute=\"Temperature_Celsius\"}",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "celsius",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 17,
+              "type": "timeseries",
+              "title": "Instance managers",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 44
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_instance_manager_cpu_usage_millicpu",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} CPU (millicores)"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_manager_cpu_usage_millicpu",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} manager CPU (millicores)"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "none",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              },
+              "description": "CPU of the instance manager (the engines and replicas of the node) and of the Longhorn manager."
+            },
+            {
+              "id": 18,
+              "type": "timeseries",
+              "title": "Instance manager and manager memory",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 44
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_instance_manager_memory_usage_bytes",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} instance manager"
+                },
+                {
+                  "refId": "B",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "longhorn_manager_memory_usage_bytes",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{node}} manager"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "bytes",
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never",
+                    "spanNulls": false
+                  },
+                  "min": 0
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            }
+          ]
+        }
