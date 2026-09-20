@@ -1,0 +1,62 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: flux
+    namespace: kube-prometheus-stack
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: flux
+          rules:
+              # gotk_resource_info comes from the custom resource state of kube-state-metrics on each
+              # cluster. `ready` is the Ready condition (True, False or Unknown while it reconciles),
+              # `exported_namespace` the namespace of the Flux object.
+              - alert: FluxReconciliationFailing
+                expr: gotk_resource_info{customresource_kind=~"Kustomization|HelmRelease",ready="False",suspended!="true"} == 1
+                for: 10m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "{{ $labels.cluster }}: {{ $labels.customresource_kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} is failing to reconcile"
+                    description: "The Ready condition has been False for 10 minutes: run `flux get` on the cluster, or read the object's status."
+              # Nothing new is deployed while the Git source is not ready (an expired token, an unreachable
+              # forge), whereas a chart repository can be down without stopping the objects already installed.
+              - alert: FluxSourceNotReady
+                expr: gotk_resource_info{customresource_kind="GitRepository",ready="False",suspended!="true"} == 1
+                for: 15m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: Git source {{ $labels.exported_namespace }}/{{ $labels.name }} is not ready"
+                    description: "The cluster no longer follows Git: the credentials may have expired, or the repository is unreachable."
+              - alert: FluxSourceNotReady
+                expr: gotk_resource_info{customresource_kind=~"HelmRepository|HelmChart|OCIRepository|Bucket",ready="False",suspended!="true"} == 1
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "{{ $labels.cluster }}: {{ $labels.customresource_kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} is not ready"
+                    description: "The source cannot be fetched: the releases that use it cannot be installed or upgraded."
+              # Suspending is how a change is tested live, so it is only reported once it has lasted.
+              - alert: FluxObjectSuspended
+                expr: gotk_resource_info{suspended="true"} == 1
+                for: 4h
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "{{ $labels.cluster }}: {{ $labels.customresource_kind }} {{ $labels.exported_namespace }}/{{ $labels.name }} has been suspended for 4 hours"
+                    description: "Flux does not reconcile the object: resume it with `flux resume`, or drop the suspension from its manifest."
+              # A silent failure of either source would turn every rule above quiet. Same approach as the
+              # ClusterNotReporting rule.
+              - alert: FluxMetricsMissing
+                expr: |
+                    (count by (cluster) (last_over_time(up{job="flux-system/flux-system",cluster!=""}[1d])) unless count by (cluster) (up{job="flux-system/flux-system",cluster!=""}))
+                    or
+                    (count by (cluster) (last_over_time(gotk_resource_info{cluster!=""}[1d])) unless count by (cluster) (gotk_resource_info{cluster!=""}))
+                for: 10m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "{{ $labels.cluster }}: Flux metrics are missing"
+                    description: "Either the controllers are not scraped anymore or kube-state-metrics stopped reporting the state of the Flux objects: the Flux alerts of this cluster cannot fire."

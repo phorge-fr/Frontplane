@@ -6,3 +6,4 @@ resources:
     - alertmanager-secret.yml
     - cluster-rules.yml
     - cert-manager-rules.yml
+    - flux-rules.yml
