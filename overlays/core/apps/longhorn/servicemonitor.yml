@@ -1,0 +1,25 @@
+# The chart can create it (metrics.serviceMonitor.enabled) but the HelmRelease is applied before
+# the Prometheus operator CRDs exist, which would fail the install of a new cluster.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+    name: longhorn-manager
+    namespace: longhorn-system
+    labels:
+        release: kube-prometheus-stack
+spec:
+    selector:
+        matchLabels:
+            app: longhorn-manager
+    endpoints:
+        # One manager per node, each one reports the volumes attached to its node.
+        - port: manager
+          path: /metrics
+          interval: 60s
+          metricRelabelings:
+              # The manager's Kubernetes client and work queue histograms are about 90% of its series
+              # (3,600 of 3,900) and describe its own internals.
+              - action: drop
+                sourceLabels:
+                    - __name__
+                regex: longhorn_(rest_client|workqueue)_.*

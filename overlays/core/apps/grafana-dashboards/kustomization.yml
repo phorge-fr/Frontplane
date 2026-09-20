@@ -4,3 +4,4 @@ resources:
     - active-alerts-dashboard.yml
     - cert-manager-dashboard.yml
     - forgejo-dashboard.yml
+    - longhorn-dashboard.yml

@@ -1,0 +1,89 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: longhorn
+    namespace: longhorn-system
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: longhorn
+          rules:
+              # The chart's KubePersistentVolumeFillingUp already covers the space used inside a volume.
+              # A failing rebuild has no metric of its own: the volume stays degraded, which is what the
+              # first rule reports. Backups are added with #39.
+              - alert: LonghornVolumeDegraded
+                expr: longhorn_volume_robustness{state="degraded"} == 1
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "Longhorn volume {{ $labels.pvc_namespace }}/{{ $labels.pvc }} is degraded"
+                    description: "The volume has had fewer healthy replicas than wanted for 15 minutes: a replica is failing to rebuild, or a node or disk is down."
+              - alert: LonghornVolumeFaulted
+                expr: longhorn_volume_robustness{state="faulted"} == 1
+                for: 1m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "Longhorn volume {{ $labels.pvc_namespace }}/{{ $labels.pvc }} is faulted"
+                    description: "No healthy replica is left: the volume cannot be attached and its data may be lost."
+              - alert: LonghornNodeNotReady
+                expr: longhorn_node_status{condition="ready"} == 0
+                for: 5m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "Longhorn node {{ $labels.node }} is not ready"
+                    description: "The replicas on this node are not available, the volumes that have one on it are degraded."
+              - alert: LonghornDiskNotReady
+                expr: longhorn_disk_status{condition="ready"} == 0
+                for: 5m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "Longhorn disk {{ $labels.disk }} of {{ $labels.node }} is not ready"
+                    description: "The replicas on this disk are not available{{ if $labels.condition_reason }}: {{ $labels.condition_reason }}{{ end }}."
+              - alert: LonghornDiskNotSchedulable
+                expr: longhorn_disk_status{condition="schedulable"} == 0
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "Longhorn disk {{ $labels.disk }} of {{ $labels.node }} does not accept new replicas"
+                    description: "Longhorn stopped scheduling on it{{ if $labels.condition_reason }}: {{ $labels.condition_reason }}{{ end }}. Rebuilds and new volumes cannot use it."
+              - alert: LonghornDiskUnhealthy
+                expr: longhorn_disk_health == 0
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "Longhorn reports disk {{ $labels.disk }} of {{ $labels.node }} as unhealthy"
+                    description: "The health check of the disk (SMART) failed: replace it before it takes its replicas along."
+              # Longhorn stops scheduling on a node that has less than 25% left (its default), so the
+              # warning comes when that is about to happen. The usage is the whole disk, not only Longhorn's.
+              - alert: LonghornNodeStorageAlmostFull
+                expr: 100 * longhorn_node_storage_usage_bytes / longhorn_node_storage_capacity_bytes > 75
+                for: 30m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "Longhorn storage of {{ $labels.node }} is {{ $value | printf \"%.0f\" }}% full"
+                    description: "Longhorn stops scheduling replicas on the node when 25% of the disk is left."
+              - alert: LonghornNodeStorageAlmostFull
+                expr: 100 * longhorn_node_storage_usage_bytes / longhorn_node_storage_capacity_bytes > 90
+                for: 10m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "Longhorn storage of {{ $labels.node }} is {{ $value | printf \"%.0f\" }}% full"
+                    description: "The volumes with a replica on this node can no longer grow."
+              # Longhorn only runs on core, absent() is enough.
+              - alert: LonghornMetricsMissing
+                expr: absent(longhorn_node_count_total{cluster="core"})
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "core: Longhorn metrics are missing"
+                    description: "The managers are not scraped anymore: none of the Longhorn alerts can fire."
