@@ -41,6 +41,7 @@ spec:
                         extraArgs:
                             listen-peer-urls: https://0.0.0.0:2380
                             listen-client-urls: https://0.0.0.0:2379
+                            listen-metrics-urls: http://127.0.0.1:2381
                 telemetry:
                     enabled: false
     hosts:
@@ -88,7 +89,7 @@ sops:
             Q3FvR2paYXNUVTVmaktyTjZJZE55bjAK/vhU0W/vKBensDvZHosC6cj4uJDQZZ98
             Ng04Psx4nTqiV1gHWjKJ6V3euQFDLBTsm/VZmeu+U8H8V2HqEBY8DA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-16T13:36:56Z"
-    mac: ENC[AES256_GCM,data:iyjZGwoF5nIfZupiN7G+nqtD3RbcXgRGdP6qIUHiARbQJKMQPn1Snl8h92I5y2TTvBEqniR/md7sABcUrrTWDl5WyIOcrDyIWT3eT/0Ky2YHD9bs2HQ4sYFQ0bwqKavN6t6dIHkCUySMgfEkDM4IW98IrwSe8Ys1rZzuxzzzPtw=,iv:SR2+SLmmxdXXiNAibqmOU+7cPQbsGmGCdtfhYP9TUs8=,tag:h4JZZMlanhcBJpNcZcGw4w==,type:str]
+    lastmodified: "2026-09-20T16:17:18Z"
+    mac: ENC[AES256_GCM,data:yE1JZ+OPOsp5nZBcbT/aGYra8i6rstOR9ntw8gw+9EeUtzI0O0YIbiC/23sSJFggGkOgAT/IrSYzAZDj5S3xGXtkdeML6Yua8P+3CNKehg200myz8tvzj5GJ3/SXgeQE3cRtV0cJghfpaHlD3n3f4BexEwjD4wAive39CdQfZYY=,iv:IPXnPwsrdxDBGbnMBrC2jPhymZe02IKaSib4aqX4oa8=,tag:cdfuepMKEybNouogvRBf6g==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
     version: 3.11.0
