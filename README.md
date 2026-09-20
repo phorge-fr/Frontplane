@@ -20,6 +20,18 @@ clusters/      # Per-cluster Flux entrypoints and setup guides
 overlays/      # Per-cluster Kustomize overlays
 ```
 
+## Metrics labels
+
+Every series in the central Prometheus (on core) carries the same labels, whether it was scraped natively on core or pushed by Alloy from the other clusters and the storage node:
+
+| Label | Meaning |
+|-------|---------|
+| `cluster` | `control`, `core`, `svc` or `stor` |
+| `node` | Machine hostname, on node-level series (node-exporter, kubelet, cAdvisor) |
+| `instance` | Machine hostname for node-exporter and kubelet, scrape address (`IP:port`) for everything else |
+
+On core, `cluster=core` comes from the default scrape class in `overlays/core/apps/kube-prometheus-stack/`. On the other clusters it is the `cluster` external label that Alloy sets from its `CLUSTER_NAME` variable (`base/controllers/alloy/`).
+
 ## Tooling
 
 | Tool | Purpose |
