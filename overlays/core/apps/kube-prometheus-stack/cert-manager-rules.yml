@@ -1,0 +1,53 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: cert-manager
+    namespace: kube-prometheus-stack
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: cert-manager
+          rules:
+              # The chart's certificate rules only cover the certificates of the Kubernetes components,
+              # these cover the Certificates that cert-manager issues, on every cluster. The Certificate's
+              # own namespace is exported_namespace: `namespace` is the one of the cert-manager pod.
+              #
+              # A renewal that keeps failing leaves the Certificate ready until it expires, so the expiry
+              # is the only signal of it. cert-manager renews 30 days before expiry by default, the warning
+              # comes 9 days after the first attempt.
+              - alert: CertManagerCertificateExpiringSoon
+                expr: certmanager_certificate_expiration_timestamp_seconds - time() < 21 * 24 * 3600
+                for: 1h
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "{{ $labels.cluster }}: certificate {{ $labels.exported_namespace }}/{{ $labels.name }} expires soon"
+                    description: "The certificate expires in {{ $value | humanizeDuration }} and has not been renewed: check the Certificate and its Order or CertificateRequest."
+              - alert: CertManagerCertificateExpiringSoon
+                expr: certmanager_certificate_expiration_timestamp_seconds - time() < 7 * 24 * 3600
+                for: 1h
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: certificate {{ $labels.exported_namespace }}/{{ $labels.name }} expires in less than a week"
+                    description: "The certificate expires in {{ $value | humanizeDuration }} and has not been renewed: check the Certificate and its Order or CertificateRequest."
+              # The ingress serves no valid certificate for it, a first issuance can take a few minutes.
+              - alert: CertManagerCertificateNotReady
+                expr: max by (cluster, namespace, exported_namespace, name, condition) (certmanager_certificate_ready_status{condition!="True"}) == 1
+                for: 15m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: certificate {{ $labels.exported_namespace }}/{{ $labels.name }} is not ready"
+                    description: "The Ready condition has not been True for 15 minutes: check the Certificate, its Order and Challenges, and the issuer."
+              # Same approach as the ClusterNotReporting rule: the three clusters share one Prometheus, so
+              # absent() would be masked by the other two.
+              - alert: CertManagerMissing
+                expr: count by (cluster) (last_over_time(up{job="cert-manager/cert-manager",cluster!=""}[1d])) unless count by (cluster) (up{job="cert-manager/cert-manager",cluster!=""})
+                for: 10m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: cert-manager is not scraped anymore"
+                    description: "The controller reported series during the last day and none now: it may be down, or its PodMonitor gone. Certificates are no longer renewed."
