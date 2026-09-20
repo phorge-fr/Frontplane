@@ -1,0 +1,1151 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: active-alerts-dashboard
+    namespace: kube-prometheus-stack
+    labels:
+        grafana_dashboard: "1"
+data:
+    active-alerts.json: |
+        {
+          "uid": "active-alerts",
+          "title": "Active alerts",
+          "description": "Active Prometheus alerts by severity (firing and pending), all clusters, from the ALERTS series.",
+          "tags": [
+            "alerting"
+          ],
+          "schemaVersion": 39,
+          "version": 2,
+          "editable": true,
+          "graphTooltip": 1,
+          "refresh": "1m",
+          "time": {
+            "from": "now-24h",
+            "to": "now"
+          },
+          "timezone": "browser",
+          "templating": {
+            "list": [
+              {
+                "name": "cluster",
+                "label": "Cluster",
+                "type": "query",
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "prometheus"
+                },
+                "query": {
+                  "query": "label_values(ALERTS, cluster)",
+                  "refId": "PromVar"
+                },
+                "definition": "label_values(ALERTS, cluster)",
+                "includeAll": true,
+                "multi": true,
+                "allValue": ".*",
+                "refresh": 2,
+                "sort": 1,
+                "current": {
+                  "selected": true,
+                  "text": [
+                    "All"
+                  ],
+                  "value": [
+                    "$__all"
+                  ]
+                }
+              }
+            ]
+          },
+          "annotations": {
+            "list": []
+          },
+          "links": [],
+          "panels": [
+            {
+              "id": 1,
+              "type": "stat",
+              "title": "Critical",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 0,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(ALERTS{alertstate=\"firing\",severity=\"critical\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}) or vector(0)",
+                  "instant": false,
+                  "range": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "red",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 2,
+              "type": "stat",
+              "title": "Warning",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 6,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(ALERTS{alertstate=\"firing\",severity=\"warning\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}) or vector(0)",
+                  "instant": false,
+                  "range": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "orange",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 3,
+              "type": "stat",
+              "title": "Info",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 12,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(ALERTS{alertstate=\"firing\",severity=\"info\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}) or vector(0)",
+                  "instant": false,
+                  "range": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "blue",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 4,
+              "type": "stat",
+              "title": "Pending",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 18,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count(ALERTS{alertstate=\"pending\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}) or vector(0)",
+                  "instant": false,
+                  "range": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      },
+                      {
+                        "color": "yellow",
+                        "value": 1
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 5,
+              "type": "table",
+              "title": "Critical (firing)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 4
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "(time() - ALERTS_FOR_STATE{alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\",severity=\"critical\"}) and ignoring(alertstate) ALERTS{alertstate=\"firing\"}",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "labelsToFields",
+                  "options": {
+                    "mode": "columns"
+                  }
+                },
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {
+                      "Time": true,
+                      "alertstate": true,
+                      "severity": true
+                    },
+                    "renameByName": {
+                      "Value": "Since"
+                    },
+                    "indexByName": {
+                      "alertname": 0,
+                      "cluster": 1,
+                      "Since": 2
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "No alerts",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Since"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 130
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "alertname"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "red"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Since",
+                    "desc": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": 6,
+              "type": "table",
+              "title": "Warning (firing)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 7,
+                "w": 24,
+                "x": 0,
+                "y": 11
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "(time() - ALERTS_FOR_STATE{alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\",severity=\"warning\"}) and ignoring(alertstate) ALERTS{alertstate=\"firing\"}",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "labelsToFields",
+                  "options": {
+                    "mode": "columns"
+                  }
+                },
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {
+                      "Time": true,
+                      "alertstate": true,
+                      "severity": true
+                    },
+                    "renameByName": {
+                      "Value": "Since"
+                    },
+                    "indexByName": {
+                      "alertname": 0,
+                      "cluster": 1,
+                      "Since": 2
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "No alerts",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Since"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 130
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "alertname"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "orange"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Since",
+                    "desc": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": 7,
+              "type": "table",
+              "title": "Info (firing)",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 5,
+                "w": 24,
+                "x": 0,
+                "y": 18
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "(time() - ALERTS_FOR_STATE{alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\",severity=\"info\"}) and ignoring(alertstate) ALERTS{alertstate=\"firing\"}",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "labelsToFields",
+                  "options": {
+                    "mode": "columns"
+                  }
+                },
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {
+                      "Time": true,
+                      "alertstate": true,
+                      "severity": true
+                    },
+                    "renameByName": {
+                      "Value": "Since"
+                    },
+                    "indexByName": {
+                      "alertname": 0,
+                      "cluster": 1,
+                      "Since": 2
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "No alerts",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Since"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 130
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "alertname"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "blue"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Since",
+                    "desc": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": 8,
+              "type": "table",
+              "title": "Other (firing), severity missing or unknown",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 24,
+                "x": 0,
+                "y": 23
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "(time() - ALERTS_FOR_STATE{alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\",severity!~\"critical|warning|info\"}) and ignoring(alertstate) ALERTS{alertstate=\"firing\"}",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "labelsToFields",
+                  "options": {
+                    "mode": "columns"
+                  }
+                },
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {
+                      "Time": true,
+                      "alertstate": true
+                    },
+                    "renameByName": {
+                      "Value": "Since"
+                    },
+                    "indexByName": {
+                      "severity": 0,
+                      "alertname": 1,
+                      "cluster": 2,
+                      "Since": 3
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "No alerts",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Since"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 130
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "alertname"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "purple"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "severity"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 100
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "critical": {
+                                "color": "red",
+                                "index": 0
+                              },
+                              "warning": {
+                                "color": "orange",
+                                "index": 1
+                              },
+                              "info": {
+                                "color": "blue",
+                                "index": 2
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Since",
+                    "desc": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": 9,
+              "type": "table",
+              "title": "Pending, all severities",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 5,
+                "w": 24,
+                "x": 0,
+                "y": 27
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "(time() - ALERTS_FOR_STATE{alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}) and ignoring(alertstate) ALERTS{alertstate=\"pending\"}",
+                  "instant": true,
+                  "range": false,
+                  "format": "table"
+                }
+              ],
+              "transformations": [
+                {
+                  "id": "labelsToFields",
+                  "options": {
+                    "mode": "columns"
+                  }
+                },
+                {
+                  "id": "merge",
+                  "options": {}
+                },
+                {
+                  "id": "organize",
+                  "options": {
+                    "excludeByName": {
+                      "Time": true,
+                      "alertstate": true
+                    },
+                    "renameByName": {
+                      "Value": "Since"
+                    },
+                    "indexByName": {
+                      "severity": 0,
+                      "alertname": 1,
+                      "cluster": 2,
+                      "Since": 3
+                    }
+                  }
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "No alerts",
+                  "custom": {
+                    "align": "auto",
+                    "cellOptions": {
+                      "type": "auto"
+                    },
+                    "filterable": true
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "Since"
+                    },
+                    "properties": [
+                      {
+                        "id": "unit",
+                        "value": "s"
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 130
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "alertname"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "yellow"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "severity"
+                    },
+                    "properties": [
+                      {
+                        "id": "custom.cellOptions",
+                        "value": {
+                          "type": "color-text"
+                        }
+                      },
+                      {
+                        "id": "custom.width",
+                        "value": 100
+                      },
+                      {
+                        "id": "mappings",
+                        "value": [
+                          {
+                            "type": "value",
+                            "options": {
+                              "critical": {
+                                "color": "red",
+                                "index": 0
+                              },
+                              "warning": {
+                                "color": "orange",
+                                "index": 1
+                              },
+                              "info": {
+                                "color": "blue",
+                                "index": 2
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "showHeader": true,
+                "cellHeight": "sm",
+                "sortBy": [
+                  {
+                    "displayName": "Since",
+                    "desc": true
+                  }
+                ]
+              }
+            },
+            {
+              "id": 10,
+              "type": "timeseries",
+              "title": "Active alerts over time",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 16,
+                "x": 0,
+                "y": 32
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "count by (severity) (ALERTS{alertstate=\"firing\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"})",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{severity}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "none",
+                  "min": 0,
+                  "custom": {
+                    "drawStyle": "bars",
+                    "fillOpacity": 60,
+                    "stacking": {
+                      "mode": "normal",
+                      "group": "A"
+                    },
+                    "lineWidth": 1
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "critical"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "red"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "warning"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "orange"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "info"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "blue"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi"
+                }
+              }
+            },
+            {
+              "id": 11,
+              "type": "bargauge",
+              "title": "Active by cluster",
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prometheus"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 8,
+                "x": 16,
+                "y": 32
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                  },
+                  "expr": "label_replace(count by (cluster) (ALERTS{alertstate=\"firing\",alertname!~\"Watchdog|InfoInhibitor\",cluster=~\"$cluster\"}), \"cluster\", \"(no cluster)\", \"cluster\", \"^$\")",
+                  "instant": false,
+                  "range": true,
+                  "legendFormat": "{{cluster}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "min": 0,
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "orange",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "orientation": "horizontal",
+                "displayMode": "basic",
+                "showUnfilled": true,
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 12,
+              "type": "text",
+              "title": "",
+              "gridPos": {
+                "h": 3,
+                "w": 24,
+                "x": 0,
+                "y": 40
+              },
+              "options": {
+                "mode": "markdown",
+                "content": "Alerts evaluated by Prometheus (`ALERTS` series), Watchdog and InfoInhibitor excluded. Silences are not reflected here: a silenced alert is still shown. The Since column counts from the start of the pending state."
+              }
+            }
+          ]
+        }
