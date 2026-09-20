@@ -4,3 +4,4 @@ resources:
     - kube-prometheus-stack.yml
     - secrets.yml
     - alertmanager-secret.yml
+    - cluster-rules.yml

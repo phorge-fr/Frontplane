@@ -1,0 +1,32 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: cluster-health
+    namespace: kube-prometheus-stack
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: cluster-health
+          rules:
+              # The chart's TargetDown already catches targets that report up == 0, per cluster and job.
+              # These two catch the case where the series are gone altogether: a cluster whose Alloy or
+              # network path is down, or a control-plane job that is no longer scraped. They look back a
+              # day, so the alert stays up for that long once the series have vanished. Series without a
+              # cluster label (core's, before the label was added) are ignored.
+              - alert: ClusterNotReporting
+                expr: count by (cluster) (last_over_time(up{job="node-exporter",cluster!=""}[1d])) unless count by (cluster) (up{job="node-exporter",cluster!=""})
+                for: 2m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: no metrics received anymore"
+                    description: "The cluster reported node-exporter series during the last day and none now: Alloy, the network path to core or the whole cluster may be down."
+              - alert: ControlPlaneJobMissing
+                expr: count by (cluster, job) (last_over_time(up{job=~"kube-scheduler|kube-controller-manager|etcd",cluster!=""}[1d])) unless count by (cluster, job) (up{job=~"kube-scheduler|kube-controller-manager|etcd",cluster!=""})
+                for: 5m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "{{ $labels.cluster }}: {{ $labels.job }} is not scraped anymore"
+                    description: "The job reported series during the last day and none now: the node-local Alloy or the component itself may be down."
