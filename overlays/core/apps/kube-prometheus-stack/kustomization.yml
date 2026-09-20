@@ -5,3 +5,4 @@ resources:
     - secrets.yml
     - alertmanager-secret.yml
     - cluster-rules.yml
+    - cert-manager-rules.yml

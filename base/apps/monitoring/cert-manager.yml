@@ -1,0 +1,18 @@
+# Same manifest on the three clusters. On core the Prometheus operator selects it through the
+# release label; on control and svc Alloy scrapes every PodMonitor and ignores the label.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+    name: cert-manager
+    namespace: cert-manager
+    labels:
+        release: kube-prometheus-stack
+spec:
+    selector:
+        matchLabels:
+            app.kubernetes.io/name: cert-manager
+            app.kubernetes.io/component: controller
+    podMetricsEndpoints:
+        # Set explicitly: Alloy defaults to 60s and the Prometheus operator to 30s.
+        - port: http-metrics
+          interval: 60s
