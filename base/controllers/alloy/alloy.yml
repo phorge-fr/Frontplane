@@ -47,6 +47,11 @@ spec:
     timeout: 5m0s
     values:
         alloy:
+            # Alloy only pushes to Prometheus/Loki: keep its HTTP server (needed by the
+            # readiness probe and the config reloader) on the loopback, and skip the
+            # usage reporting to Grafana Labs.
+            listenAddr: 127.0.0.1
+            enableReporting: false
             configMap:
                 create: true
                 content: |
@@ -54,8 +59,16 @@ spec:
                         level = "info"
                     }
 
+                    // Every Alloy pod only handles its own node: the DaemonSet runs on all of
+                    // them, so discovering cluster-wide targets here would push each series
+                    // once per node. Cluster-scoped scrapes live in the alloy-cluster release.
                     discovery.kubernetes "nodes" {
                         role = "node"
+
+                        selectors {
+                            role  = "node"
+                            field = "metadata.name=" + sys.env("K8S_NODE_NAME")
+                        }
                     }
 
                     discovery.relabel "cadvisor" {
@@ -153,73 +166,6 @@ spec:
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
-                    discovery.kubernetes "coredns_pods" {
-                        role = "pod"
-                        namespaces {
-                            names = ["kube-system"]
-                        }
-                        selectors {
-                            role  = "pod"
-                            label = "k8s-app=kube-dns"
-                        }
-                    }
-
-                    discovery.relabel "coredns" {
-                        targets = discovery.kubernetes.coredns_pods.targets
-
-                        rule {
-                            source_labels = ["__meta_kubernetes_pod_ip"]
-                            target_label  = "__address__"
-                            replacement   = "$1:9153"
-                        }
-                    }
-
-                    prometheus.scrape "coredns" {
-                        job_name   = "coredns"
-                        targets    = discovery.relabel.coredns.output
-                        forward_to = [prometheus.remote_write.core.receiver]
-                    }
-
-                    prometheus.scrape "apiserver" {
-                        job_name          = "apiserver"
-                        targets           = [{"__address__" = "kubernetes.default.svc:443"}]
-                        scheme            = "https"
-                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
-
-                        tls_config {
-                            ca_file = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
-                        }
-
-                        forward_to = [prometheus.relabel.apiserver_filter.receiver]
-                    }
-
-                    // apiserver/etcd histogram _bucket series are the dominant source of
-                    // cardinality (~36k of ~72k total series observed on a 3-node cluster).
-                    // Drop them, keep _sum/_count so rate/average latency stays available.
-                    prometheus.relabel "apiserver_filter" {
-                        forward_to = [prometheus.remote_write.core.receiver]
-
-                        rule {
-                            source_labels = ["__name__"]
-                            regex         = ".*_bucket"
-                            action        = "drop"
-                        }
-                    }
-
-                    prometheus.scrape "kube_state_metrics" {
-                        job_name   = "kube-state-metrics"
-                        targets    = [{"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"}]
-                        forward_to = [prometheus.remote_write.core.receiver]
-                    }
-
-                    // Watches PodMonitor CRDs cluster-wide and scrapes whatever they
-                    // reference -- requires the prometheus-operator CRDs to be installed
-                    // (base/controllers/prometheus-operator-crds), but not the operator
-                    // itself: Alloy interprets the CRDs natively.
-                    prometheus.operator.podmonitors "pods" {
-                        forward_to = [prometheus.remote_write.core.receiver]
-                    }
-
                     prometheus.remote_write "core" {
                         endpoint {
                             url = "https://prometheus.core.phorge/api/v1/write"
@@ -241,6 +187,11 @@ spec:
 
                     discovery.kubernetes "pods" {
                         role = "pod"
+
+                        selectors {
+                            role  = "pod"
+                            field = "spec.nodeName=" + sys.env("K8S_NODE_NAME")
+                        }
                     }
 
                     discovery.relabel "pods" {
@@ -308,3 +259,179 @@ spec:
                     - name: rootfs
                       hostPath:
                           path: /
+    postRenderers:
+        # The chart probes the pod IP, which is the node IP under hostNetwork: probe the
+        # loopback instead so the HTTP server doesn't have to listen on the node network.
+        - kustomize:
+              patches:
+                  - target:
+                        kind: DaemonSet
+                        name: alloy
+                    patch: |-
+                        - op: add
+                          path: /spec/template/spec/containers/0/readinessProbe/httpGet/host
+                          value: 127.0.0.1
+---
+# Scrapes that must happen once per cluster rather than once per node, so they can't live
+# in the DaemonSet above. A single replica on the host network like the DaemonSet, so its
+# HTTP server can stay on the loopback too (hence its own port, they share the node).
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+    name: alloy-cluster
+    namespace: alloy
+spec:
+    chart:
+        spec:
+            chart: alloy
+            version: '1.12.1'
+            sourceRef:
+                kind: HelmRepository
+                name: alloy
+    interval: 1h0s
+    timeout: 5m0s
+    values:
+        alloy:
+            listenAddr: 127.0.0.1
+            listenPort: 12346
+            enableReporting: false
+            configMap:
+                create: true
+                content: |
+                    logging {
+                        level = "info"
+                    }
+
+                    // Scraped through each replica of the `kubernetes` Endpoints rather than
+                    // through the service IP: that one lands on a random replica on every
+                    // new connection and mixes their counters into a single series.
+                    discovery.kubernetes "apiserver" {
+                        role = "endpoints"
+
+                        namespaces {
+                            names = ["default"]
+                        }
+
+                        selectors {
+                            role  = "endpoints"
+                            field = "metadata.name=kubernetes"
+                        }
+                    }
+
+                    prometheus.scrape "apiserver" {
+                        job_name          = "apiserver"
+                        targets           = discovery.kubernetes.apiserver.targets
+                        scheme            = "https"
+                        bearer_token_file = "/var/run/secrets/kubernetes.io/serviceaccount/token"
+
+                        tls_config {
+                            ca_file     = "/var/run/secrets/kubernetes.io/serviceaccount/ca.crt"
+                            server_name = "kubernetes"
+                        }
+
+                        forward_to = [prometheus.relabel.apiserver_filter.receiver]
+                    }
+
+                    // apiserver/etcd histogram _bucket series are the dominant source of
+                    // cardinality (~36k of ~72k total series observed on a 3-node cluster).
+                    // Drop them, keep _sum/_count so rate/average latency stays available.
+                    prometheus.relabel "apiserver_filter" {
+                        forward_to = [prometheus.remote_write.core.receiver]
+
+                        rule {
+                            source_labels = ["__name__"]
+                            regex         = ".*_bucket"
+                            action        = "drop"
+                        }
+                    }
+
+                    discovery.kubernetes "coredns_pods" {
+                        role = "pod"
+                        namespaces {
+                            names = ["kube-system"]
+                        }
+                        selectors {
+                            role  = "pod"
+                            label = "k8s-app=kube-dns"
+                        }
+                    }
+
+                    discovery.relabel "coredns" {
+                        targets = discovery.kubernetes.coredns_pods.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_ip"]
+                            target_label  = "__address__"
+                            replacement   = "$1:9153"
+                        }
+                    }
+
+                    prometheus.scrape "coredns" {
+                        job_name   = "coredns"
+                        targets    = discovery.relabel.coredns.output
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.scrape "kube_state_metrics" {
+                        job_name   = "kube-state-metrics"
+                        targets    = [{"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"}]
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    // Watches PodMonitor CRDs cluster-wide and scrapes whatever they
+                    // reference -- requires the prometheus-operator CRDs to be installed
+                    // (base/controllers/prometheus-operator-crds), but not the operator
+                    // itself: Alloy interprets the CRDs natively.
+                    prometheus.operator.podmonitors "pods" {
+                        forward_to = [prometheus.remote_write.core.receiver]
+                    }
+
+                    prometheus.remote_write "core" {
+                        endpoint {
+                            url = "https://prometheus.core.phorge/api/v1/write"
+
+                            basic_auth {
+                                username = sys.env("ALLOY_BASIC_AUTH_USERNAME")
+                                password = sys.env("ALLOY_BASIC_AUTH_PASSWORD")
+                            }
+
+                            tls_config {
+                                ca_file = "/etc/alloy-ca/ca.crt"
+                            }
+                        }
+
+                        external_labels = {
+                            cluster = sys.env("CLUSTER_NAME"),
+                        }
+                    }
+            envFrom:
+                - secretRef:
+                      name: alloy-secrets
+            mounts:
+                extra:
+                    - name: alloy-ca-cert
+                      mountPath: /etc/alloy-ca
+                      readOnly: true
+        controller:
+            type: deployment
+            replicas: 1
+            hostNetwork: true
+            dnsPolicy: ClusterFirstWithHostNet
+            # Two pods on the same node would fight for the loopback port.
+            updateStrategy:
+                type: Recreate
+            volumes:
+                extra:
+                    - name: alloy-ca-cert
+                      configMap:
+                          name: alloy-ca-cert
+    postRenderers:
+        - kustomize:
+              patches:
+                  - target:
+                        kind: Deployment
+                        name: alloy-cluster
+                    patch: |-
+                        - op: add
+                          path: /spec/template/spec/containers/0/readinessProbe/httpGet/host
+                          value: 127.0.0.1

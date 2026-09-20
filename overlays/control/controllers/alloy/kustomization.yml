@@ -5,4 +5,7 @@ resources:
   - alloy-secrets.yml
 
 patches:
+  # Same per-cluster env for the DaemonSet and the cluster-scoped release.
   - path: alloy-patch.yml
+    target:
+      kind: HelmRelease
