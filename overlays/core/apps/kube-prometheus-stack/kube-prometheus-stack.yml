@@ -169,6 +169,13 @@ spec:
                       sourceLabels:
                           - node
                       targetLabel: instance
+        # Cilium replaces kube-proxy, so there is nothing to scrape: drop its ServiceMonitor,
+        # its dashboard and the KubeProxyDown alert that fires for good.
+        kubeProxy:
+            enabled: false
+        defaultRules:
+            rules:
+                kubeProxy: false
         kubeApiServer:
             serviceMonitor:
                 metricRelabelings:
