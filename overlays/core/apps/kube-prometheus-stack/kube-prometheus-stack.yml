@@ -75,6 +75,13 @@ spec:
                         - monitoring.phorge.fr
             persistence:
                 enabled: false
+            sidecar:
+                dashboards:
+                    # Shows the `cluster` variable that the chart's dashboards hide by
+                    # default (needs a cluster label on every series, set above and by Alloy).
+                    multicluster:
+                        global:
+                            enabled: true
             grafana:
                 sidecar:
                     dashboards:
