@@ -98,6 +98,16 @@ spec:
                 retention: 30d
                 retentionSize: 35GiB
                 enableRemoteWriteReceiver: true
+                # externalLabels only apply on the way out (remote_write, alerts), not
+                # to series stored in the local TSDB, so tag the locally scraped series
+                # with the same `cluster` label Alloy sets on control/svc/stor.
+                scrapeClasses:
+                    - name: cluster-label
+                      default: true
+                      relabelings:
+                          - action: replace
+                            targetLabel: cluster
+                            replacement: core
                 storageSpec:
                     volumeClaimTemplate:
                         spec:
@@ -107,6 +117,51 @@ spec:
                             resources:
                                 requests:
                                     storage: 40Gi
+        # Node-level series follow the convention already used on control/svc/stor:
+        # `node` and `instance` are the machine hostname. Overriding a relabelings list
+        # replaces the chart default, hence the metrics_path rule repeated below.
+        prometheus-node-exporter:
+            prometheus:
+                monitor:
+                    relabelings:
+                        - action: replace
+                          sourceLabels:
+                              - __meta_kubernetes_pod_node_name
+                          targetLabel: node
+                        - action: replace
+                          sourceLabels:
+                              - __meta_kubernetes_pod_node_name
+                          targetLabel: instance
+        kubelet:
+            serviceMonitor:
+                # `node` is set by the operator from the endpoint's target.
+                relabelings:
+                    - action: replace
+                      sourceLabels:
+                          - __metrics_path__
+                      targetLabel: metrics_path
+                    - action: replace
+                      sourceLabels:
+                          - node
+                      targetLabel: instance
+                cAdvisorRelabelings:
+                    - action: replace
+                      sourceLabels:
+                          - __metrics_path__
+                      targetLabel: metrics_path
+                    - action: replace
+                      sourceLabels:
+                          - node
+                      targetLabel: instance
+                probesRelabelings:
+                    - action: replace
+                      sourceLabels:
+                          - __metrics_path__
+                      targetLabel: metrics_path
+                    - action: replace
+                      sourceLabels:
+                          - node
+                      targetLabel: instance
         kubeApiServer:
             serviceMonitor:
                 metricRelabelings:
