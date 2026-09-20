@@ -70,6 +70,12 @@ spec:
                             target_label = "__metrics_path__"
                             replacement  = "/metrics/cadvisor"
                         }
+                        // The chart's recording rules filter on this label (on core the
+                        // operator's ServiceMonitor sets it).
+                        rule {
+                            target_label = "metrics_path"
+                            replacement  = "/metrics/cadvisor"
+                        }
                         rule {
                             source_labels = ["__meta_kubernetes_node_name"]
                             target_label  = "node"
@@ -98,6 +104,10 @@ spec:
                             replacement   = "$1:10250"
                         }
                         rule {
+                            target_label = "metrics_path"
+                            replacement  = "/metrics"
+                        }
+                        rule {
                             source_labels = ["__meta_kubernetes_node_name"]
                             target_label  = "node"
                         }
@@ -116,7 +126,13 @@ spec:
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
-                    prometheus.exporter.unix "node" {}
+                    // The pod shares the host's network and PID namespaces and mounts the
+                    // host rootfs (see the controller values below), so the exporter reports
+                    // the machine rather than the Alloy pod.
+                    prometheus.exporter.unix "node" {
+                        rootfs_path    = "/host/root"
+                        udev_data_path = "/host/root/run/udev/data"
+                    }
 
                     discovery.relabel "node" {
                         targets = prometheus.exporter.unix.node.targets
@@ -124,6 +140,10 @@ spec:
                         rule {
                             target_label = "job"
                             replacement  = "node-exporter"
+                        }
+                        rule {
+                            target_label = "node"
+                            replacement  = sys.env("K8S_NODE_NAME")
                         }
                     }
 
@@ -271,10 +291,20 @@ spec:
                     - name: alloy-ca-cert
                       mountPath: /etc/alloy-ca
                       readOnly: true
+                    - name: rootfs
+                      mountPath: /host/root
+                      readOnly: true
+                      mountPropagation: HostToContainer
         controller:
             type: daemonset
+            hostNetwork: true
+            hostPID: true
+            dnsPolicy: ClusterFirstWithHostNet
             volumes:
                 extra:
                     - name: alloy-ca-cert
                       configMap:
                           name: alloy-ca-cert
+                    - name: rootfs
+                      hostPath:
+                          path: /
