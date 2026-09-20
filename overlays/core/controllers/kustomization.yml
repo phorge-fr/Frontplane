@@ -4,3 +4,4 @@ resources:
   - ../../../base/controllers/cert-manager
   - ../../../base/controllers/longhorn
   - traefik
+  - alloy
