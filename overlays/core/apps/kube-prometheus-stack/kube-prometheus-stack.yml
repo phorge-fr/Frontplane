@@ -187,13 +187,6 @@ spec:
                       sourceLabels:
                           - __name__
                       regex: (apiserver|etcd)_.*_bucket
-        kubeEtcd:
-            serviceMonitor:
-                metricRelabelings:
-                    - action: drop
-                      sourceLabels:
-                          - __name__
-                      regex: (apiserver|etcd)_.*_bucket
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
