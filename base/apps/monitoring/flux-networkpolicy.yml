@@ -1,0 +1,18 @@
+# The network policies of Flux (allow-scraping) only let the pods of the cluster reach the metrics
+# port. Alloy runs in the host network, so the scrapes it makes on another node come from a
+# remote-node identity and are dropped: only the controllers on Alloy's own node were reached.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+    name: allow-scraping-from-nodes
+    namespace: flux-system
+spec:
+    endpointSelector: {}
+    ingress:
+        - fromEntities:
+              - host
+              - remote-node
+          toPorts:
+              - ports:
+                    - port: "8080"
+                      protocol: TCP

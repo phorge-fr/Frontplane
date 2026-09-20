@@ -1,0 +1,29 @@
+# Same manifest on the three clusters, see cert-manager.yml for how each one picks it up.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+    name: flux-system
+    namespace: flux-system
+    labels:
+        release: kube-prometheus-stack
+spec:
+    selector:
+        matchExpressions:
+            - key: app
+              operator: In
+              values:
+                  - source-controller
+                  - kustomize-controller
+                  - helm-controller
+                  - notification-controller
+    podMetricsEndpoints:
+        - port: http-prom
+          interval: 60s
+          metricRelabelings:
+              # Histogram buckets nothing uses: the Go runtime's, the work queues', and the
+              # controller-runtime reconcile time (gotk_reconcile_duration_seconds carries the
+              # same information per object). About 40% of the series, _sum and _count stay.
+              - action: drop
+                sourceLabels:
+                    - __name__
+                regex: (go_gc_heap_(allocs|frees)_by_size_bytes|go_gc_pauses_seconds|go_sched_[a-z_]+|workqueue_(queue|work)_duration_seconds|controller_runtime_reconcile_time_seconds)_bucket
