@@ -14,12 +14,25 @@ data:
             blueprints.goauthentik.io/description: Phorge brand for auth.phorge.fr
 
         entries:
+          # The device authorization grant (RFC 8628) needs a flow on the brand. The user has to be
+          # signed in (require_authenticated) and authentik appends the step that asks for the code,
+          # so the flow has no stage of its own. The Incus CLI has no other way to log in with OIDC.
+          - model: authentik_flows.flow
+            id: device-code-flow
+            identifiers:
+              slug: default-device-code-flow
+            attrs:
+              name: Device code flow
+              title: Authorize a device
+              designation: authentication
+              authentication: require_authenticated
           - model: authentik_brands.brand
             id: phorge-brand
             identifiers:
               domain: auth.phorge.fr
             attrs:
               default: true
+              flow_device_code: !KeyOf device-code-flow
               branding_title: Phorge
               branding_logo: https://avatars.githubusercontent.com/u/187407936
               branding_favicon: /static/dist/assets/icons/icon.png
