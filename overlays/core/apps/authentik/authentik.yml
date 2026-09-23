@@ -57,6 +57,7 @@ spec:
             configMaps:
                 - authentik-grafana-oauth-blueprint
                 - authentik-forgejo-oauth-blueprint
+                - authentik-incus-oauth-blueprint
                 - authentik-brand
         authentik:
             enabled: true

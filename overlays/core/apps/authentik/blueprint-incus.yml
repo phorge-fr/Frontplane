@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: authentik-incus-oauth-blueprint
+    namespace: authentik
+data:
+    incus-oauth.yaml: |-
+        # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+        version: 1
+
+        metadata:
+          name: incus-oauth
+          labels:
+            blueprints.goauthentik.io/description: Incus OIDC application
+
+        # Incus is a public client: it has no client secret (oidc.client.id is its only OIDC key).
+        # Its CLI logs in with the device authorization grant (RFC 8628, the device code flow of the
+        # brand in blueprint-brand.yml), its web UI with the authorization code flow, and both send
+        # a PKCE challenge, which authentik honours without a switch.
+        # Any user that authenticates gets full access to Incus until its authorization (OpenFGA) is
+        # set up: restrict the application with a group policy binding before adding other users.
+        entries:
+          - model: authentik_providers_oauth2.oauth2provider
+            id: incus-oauth-provider
+            identifiers:
+              name: Incus OAuth
+            attrs:
+              name: Incus OAuth
+              client_id: 446e0b05-3aa6-4cfd-8ebc-084e0d7b1eef
+              client_type: public
+              # Also the lifetime of the device code: the default minute is too short to open the
+              # verification page, sign in and type the code when running `incus remote add`.
+              access_code_validity: minutes=5
+              # Incus only reads the email claim, which oidc.claim=email takes from the access token.
+              property_mappings:
+                - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-openid]]
+                - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-email]]
+                - !Find [authentik_providers_oauth2.scopemapping, [managed, goauthentik.io/providers/oauth2/scope-offline_access]]
+              authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-explicit-consent]]
+              invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+              signing_key: !Find [authentik_crypto.certificatekeypair, [name, authentik Self-signed Certificate]]
+              grant_types:
+                - authorization_code
+                - refresh_token
+                - urn:ietf:params:oauth:grant-type:device_code
+              # The web UI sends the user back to https://<the host it was reached on>/oidc/callback
+              # (Incus builds it from the Host header, internal/server/auth/oidc). iaas.phorge.fr is
+              # reached on the standard 443: the edge HAProxy (Network repo) forwards it in TCP mode, by
+              # SNI, to port 8443 of the Incus nodes, so the Host header carries no port. The CLI's
+              # device flow needs no redirect.
+              redirect_uris:
+                - matching_mode: strict
+                  url: https://iaas.phorge.fr/oidc/callback
+          - model: authentik_core.application
+            identifiers:
+              slug: incus
+            attrs:
+              name: Incus
+              slug: incus
+              provider: !Find [authentik_providers_oauth2.oauth2provider, [name, Incus OAuth]]

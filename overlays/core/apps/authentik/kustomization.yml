@@ -5,4 +5,5 @@ resources:
     - secrets.yml
     - blueprint-grafana.yml
     - blueprint-forgejo.yml
+    - blueprint-incus.yml
     - blueprint-brand.yml
