@@ -8,3 +8,5 @@ resources:
     - longhorn-dashboard.yml
     - ceph-dashboard.yml
     - incus-dashboard.yml
+    - authentik-dashboard.yml
+    - openfga-dashboard.yml

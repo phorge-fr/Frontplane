@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+    - cluster-rules.yml
+    - cert-manager-rules.yml
+    - flux-rules.yml
+    - ceph-rules.yml
+    - incus-rules.yml

@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
     name: longhorn-dashboard
     namespace: kube-prometheus-stack
+    annotations:
+        grafana_folder: "Cluster health"
     labels:
         grafana_dashboard: "1"
 data:

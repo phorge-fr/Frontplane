@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
     name: active-alerts-dashboard
     namespace: kube-prometheus-stack
+    annotations:
+        grafana_folder: "Alerting"
     labels:
         grafana_dashboard: "1"
 data:

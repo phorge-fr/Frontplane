@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
     name: ceph-dashboard
     namespace: kube-prometheus-stack
+    annotations:
+        grafana_folder: "Compute"
     labels:
         grafana_dashboard: "1"
 data:

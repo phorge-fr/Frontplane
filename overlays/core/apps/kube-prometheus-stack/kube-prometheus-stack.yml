@@ -82,15 +82,19 @@ spec:
                     multicluster:
                         global:
                             enabled: true
-            grafana:
-                sidecar:
-                    dashboards:
-                        enabled: true
-                        label: grafana_dashboard
-                        labelValue: "1"
-                        searchNamespace: kube-prometheus-stack
-                        folder: /tmp/dashboards
-                        enableDeletion: true
+                    enabled: true
+                    label: grafana_dashboard
+                    labelValue: "1"
+                    searchNamespace: kube-prometheus-stack
+                    folder: /tmp/dashboards
+                    enableDeletion: true
+                    # Sorts the ConfigMaps into Grafana folders by their grafana_folder
+                    # annotation, one subfolder of `folder` per value (foldersFromFilesStructure
+                    # makes the provider mirror that layout into Grafana). A dashboard with no
+                    # annotation stays at the top level.
+                    folderAnnotation: grafana_folder
+                    provider:
+                        foldersFromFilesStructure: true
             additionalDataSources:
                 - name: Loki
                   type: loki

@@ -4,8 +4,5 @@ resources:
     - kube-prometheus-stack.yml
     - secrets.yml
     - alertmanager-secret.yml
-    - cluster-rules.yml
-    - cert-manager-rules.yml
-    - flux-rules.yml
-    - ceph-rules.yml
-    - incus-rules.yml
+    - alertmanager-rules
+    - grafana-dashboards
