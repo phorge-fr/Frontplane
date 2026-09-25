@@ -1,0 +1,58 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: ceph
+    namespace: kube-prometheus-stack
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: ceph
+          rules:
+              # Only the active mgr's Alloy can scrape ceph_* (it is the only one whose port
+              # answers), so the series vanish entirely if none is reachable: the same signal as
+              # a wrong Ceph health, but with nothing left to read the health from. Same approach
+              # as ClusterNotReporting (cluster-rules.yml): plain absent() would also fire for a
+              # Ceph that has simply never been deployed yet, this one stays quiet until it has
+              # reported at least once in the last day.
+              - alert: CephMetricsMissing
+                expr: count(last_over_time(ceph_health_status[1d])) unless count(ceph_health_status)
+                for: 5m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "comp: no Ceph mgr is reporting metrics"
+                    description: "ceph_health_status reported series during the last day and none now: every mgr may be down, or its Alloy can no longer reach the active one."
+              # HEALTH_WARN and HEALTH_ERR (health_status_to_number: OK=0, WARN=1, ERR=2).
+              - alert: CephHealthWarn
+                expr: ceph_health_status == 1
+                for: 5m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "comp: Ceph health is WARN"
+                    description: "Run `ceph health detail` on the cluster for the failing checks."
+              - alert: CephHealthError
+                expr: ceph_health_status == 2
+                for: 2m
+                labels:
+                    severity: critical
+                annotations:
+                    summary: "comp: Ceph health is ERR"
+                    description: "Run `ceph health detail` on the cluster for the failing checks."
+              - alert: CephOSDDown
+                expr: count(ceph_osd_up == 0) > 0
+                for: 5m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "comp: {{ $value }} Ceph OSD(s) down"
+                    description: "Run `ceph osd tree` to find which one and why."
+              - alert: CephOSDNearFull
+                expr: max(ceph_osd_nearfull_ratio) > 0 and on() count(ceph_osd_up == 0) == 0
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "comp: an OSD passed the nearfull ratio"
+                    description: "Run `ceph osd df` to find which one."

@@ -7,3 +7,5 @@ resources:
     - cluster-rules.yml
     - cert-manager-rules.yml
     - flux-rules.yml
+    - ceph-rules.yml
+    - incus-rules.yml
