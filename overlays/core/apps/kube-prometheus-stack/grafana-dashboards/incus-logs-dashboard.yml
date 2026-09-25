@@ -1,0 +1,580 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    name: incus-logs-dashboard
+    namespace: kube-prometheus-stack
+    annotations:
+        grafana_folder: "Compute"
+    labels:
+        grafana_dashboard: "1"
+data:
+    incus-logs.json: |
+        {
+          "uid": "incus-logs",
+          "title": "Incus logs",
+          "description": "Incus daemon logs on the comp cluster, pushed straight from Incus (not through Alloy). level is a logfmt field inside the message, not a Loki label, so it is only filterable with a | logfmt pipeline, not a dashboard variable. type only has the value \"logging\" so far: Incus also emits lifecycle and network-acl events (compute.yml's logging.loki-frontplane.types), the Type filter is ready for when they show up.",
+          "tags": [
+            "incus",
+            "comp",
+            "logs"
+          ],
+          "schemaVersion": 39,
+          "version": 1,
+          "editable": true,
+          "graphTooltip": 1,
+          "refresh": "30s",
+          "time": {
+            "from": "now-6h",
+            "to": "now"
+          },
+          "timezone": "browser",
+          "templating": {
+            "list": [
+              {
+                "name": "instance",
+                "label": "Instance",
+                "type": "query",
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki"
+                },
+                "query": {
+                  "query": "label_values({app=\"incus\"}, instance)",
+                  "refId": "LokiVar"
+                },
+                "definition": "label_values({app=\"incus\"}, instance)",
+                "includeAll": true,
+                "multi": true,
+                "allValue": ".*",
+                "refresh": 2,
+                "sort": 1,
+                "current": {
+                  "selected": true,
+                  "text": [
+                    "All"
+                  ],
+                  "value": [
+                    "$__all"
+                  ]
+                }
+              },
+              {
+                "name": "type",
+                "label": "Type",
+                "type": "query",
+                "datasource": {
+                  "type": "loki",
+                  "uid": "loki"
+                },
+                "query": {
+                  "query": "label_values({app=\"incus\"}, type)",
+                  "refId": "LokiVar"
+                },
+                "definition": "label_values({app=\"incus\"}, type)",
+                "includeAll": true,
+                "multi": true,
+                "allValue": ".*",
+                "refresh": 2,
+                "sort": 1,
+                "current": {
+                  "selected": true,
+                  "text": [
+                    "All"
+                  ],
+                  "value": [
+                    "$__all"
+                  ]
+                }
+              },
+              {
+                "name": "search",
+                "label": "Search (regex)",
+                "type": "textbox",
+                "query": "",
+                "current": {
+                  "text": "",
+                  "value": ""
+                },
+                "hide": 0
+              }
+            ]
+          },
+          "annotations": {
+            "list": []
+          },
+          "links": [],
+          "panels": [
+            {
+              "id": 1,
+              "type": "stat",
+              "title": "Instances",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 0,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "count(count by (instance) ({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`}))",
+                  "queryType": "instant",
+                  "instant": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 2,
+              "type": "stat",
+              "title": "Lines (last 1h)",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 6,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "sum(count_over_time({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`}[1h]))",
+                  "queryType": "instant",
+                  "instant": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 3,
+              "type": "stat",
+              "title": "Warnings/errors (last 1h)",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 12,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "sum(count_over_time({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} | logfmt | level=~\"warn|warning|error|eror|crit|fatal\" [1h]))",
+                  "queryType": "instant",
+                  "instant": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "orange",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 4,
+              "type": "stat",
+              "title": "Debug lines (last 1h)",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 4,
+                "w": 6,
+                "x": 18,
+                "y": 0
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "sum(count_over_time({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} | logfmt | level=\"debug\" [1h]))",
+                  "queryType": "instant",
+                  "instant": true
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "noValue": "0",
+                  "unit": "none",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "color": "green",
+                        "value": null
+                      }
+                    ]
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "colorMode": "background",
+                "graphMode": "none",
+                "textMode": "value",
+                "justifyMode": "center",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                }
+              }
+            },
+            {
+              "id": 5,
+              "type": "timeseries",
+              "title": "Lines per second, by level",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 0,
+                "y": 4
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "sum by (level) (rate({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} | logfmt [$__interval]))",
+                  "queryType": "range",
+                  "legendFormat": "{{level}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "ops",
+                  "min": 0,
+                  "custom": {
+                    "drawStyle": "bars",
+                    "fillOpacity": 60,
+                    "stacking": {
+                      "mode": "normal",
+                      "group": "A"
+                    },
+                    "lineWidth": 0
+                  }
+                },
+                "overrides": [
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "error"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "red"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "warn"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "orange"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "warning"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "orange"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "info"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "blue"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "matcher": {
+                      "id": "byName",
+                      "options": "debug"
+                    },
+                    "properties": [
+                      {
+                        "id": "color",
+                        "value": {
+                          "mode": "fixed",
+                          "fixedColor": "gray"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 6,
+              "type": "timeseries",
+              "title": "Lines per second, by instance",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 12,
+                "x": 12,
+                "y": 4
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "sum by (instance) (rate({app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} [$__interval]))",
+                  "queryType": "range",
+                  "legendFormat": "{{instance}}"
+                }
+              ],
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "ops",
+                  "min": 0,
+                  "custom": {
+                    "drawStyle": "line",
+                    "lineWidth": 1,
+                    "fillOpacity": 10,
+                    "showPoints": "never"
+                  }
+                },
+                "overrides": []
+              },
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi",
+                  "sort": "desc"
+                }
+              }
+            },
+            {
+              "id": 7,
+              "type": "logs",
+              "title": "Warnings and errors",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 8,
+                "w": 24,
+                "x": 0,
+                "y": 12
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "{app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} | logfmt | level=~\"warn|warning|error|eror|crit|fatal\"",
+                  "queryType": "range"
+                }
+              ],
+              "options": {
+                "showTime": true,
+                "showLabels": true,
+                "wrapLogMessage": true,
+                "sortOrder": "Descending",
+                "enableLogDetails": true,
+                "dedupStrategy": "none"
+              },
+              "description": "Filters on the level=\"...\" field the logfmt-formatted messages carry, not a Loki label: Incus does not index it."
+            },
+            {
+              "id": 8,
+              "type": "logs",
+              "title": "All logs",
+              "datasource": {
+                "type": "loki",
+                "uid": "loki"
+              },
+              "gridPos": {
+                "h": 14,
+                "w": 24,
+                "x": 0,
+                "y": 20
+              },
+              "targets": [
+                {
+                  "refId": "A",
+                  "datasource": {
+                    "type": "loki",
+                    "uid": "loki"
+                  },
+                  "expr": "{app=\"incus\", instance=~`${instance:regex}`, type=~`${type:regex}`} |~ `$search`",
+                  "queryType": "range"
+                }
+              ],
+              "options": {
+                "showTime": true,
+                "showLabels": true,
+                "wrapLogMessage": true,
+                "sortOrder": "Descending",
+                "enableLogDetails": true,
+                "dedupStrategy": "none"
+              }
+            }
+          ]
+        }
