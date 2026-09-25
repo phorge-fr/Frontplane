@@ -26,7 +26,7 @@ Every series in the central Prometheus (on core) carries the same labels, whethe
 
 | Label | Meaning |
 |-------|---------|
-| `cluster` | `control`, `core`, `svc` or `stor` |
+| `cluster` | `control`, `core`, `svc`, `stor` or `comp` |
 | `node` | Machine hostname, on node-level series (node-exporter, kubelet, cAdvisor, scheduler, controller-manager) |
 | `instance` | Machine hostname for node-exporter, kubelet, scheduler and controller-manager, scrape address (`IP:port`) for everything else |
 | `exported_namespace` | Namespace of the object a series describes, where `namespace` is already the one of the pod that is scraped: the Certificates of cert-manager and the Flux objects |

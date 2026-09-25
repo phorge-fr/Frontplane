@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+    name: incus
+    namespace: kube-prometheus-stack
+    labels:
+        release: kube-prometheus-stack
+spec:
+    groups:
+        - name: incus
+          rules:
+              - alert: IncusWarnings
+                expr: max(incus_warnings_total) > 0
+                for: 15m
+                labels:
+                    severity: warning
+                annotations:
+                    summary: "comp: Incus has active warnings"
+                    description: "Run `incus warning list` on the cluster."
