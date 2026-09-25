@@ -3,6 +3,8 @@ kind: ConfigMap
 metadata:
     name: forgejo-dashboard
     namespace: kube-prometheus-stack
+    annotations:
+        grafana_folder: "Service"
     labels:
         grafana_dashboard: "1"
 data:
