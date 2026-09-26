@@ -299,9 +299,13 @@ spec:
             enabled: false
         # Alloy (overlays/core/controllers/alloy) runs its own node-exporter instead, the same
         # way control/svc already do: one DaemonSet pod per node instead of two. Same job name
-        # and instance label (node name), so the stock dashboards/rules don't notice.
+        # and instance label (node name), so the rules don't notice -- but the chart's own
+        # "Node Exporter" dashboards are gated on nodeExporter.enabled too (queries only use
+        # job/instance/cluster, no dependency on the DaemonSet itself), so forceDeployDashboards
+        # keeps them provisioned even with the DaemonSet off (#101).
         nodeExporter:
             enabled: false
+            forceDeployDashboards: true
         defaultRules:
             rules:
                 kubeProxy: false
