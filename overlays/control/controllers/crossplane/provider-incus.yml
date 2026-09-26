@@ -1,0 +1,10 @@
+# Crossplane provider for Incus (github.com/l-nmch/provider-incus, published to the Upbound
+# marketplace), for the IaaS/Crossplane direction noted in the top-level CLAUDE.md. Credentials
+# (a ProviderConfig and its Secret, an Incus client certificate trusted by the comp cluster) are
+# not set up yet: nothing in this repo uses the provider until then.
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+    name: provider-incus
+spec:
+    package: xpkg.upbound.io/l-nmch/provider-incus:v0.1.3
