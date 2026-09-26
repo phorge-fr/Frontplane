@@ -105,7 +105,7 @@ spec:
                             insecure_skip_verify = true
                         }
 
-                        forward_to = [prometheus.remote_write.core.receiver]
+                        forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
                     discovery.relabel "kubelet" {
@@ -136,7 +136,7 @@ spec:
                             insecure_skip_verify = true
                         }
 
-                        forward_to = [prometheus.remote_write.core.receiver]
+                        forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
                     // The pod shares the host's network and PID namespaces and mounts the
@@ -203,16 +203,18 @@ spec:
                         forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
-                    // Feature gates and the bucket histograms that neither the chart's dashboards
-                    // nor its rules read: about 40% of the ~5k series of each node. etcd only keeps
-                    // the three bucket histograms that its rules read (WAL fsync, backend commit and
-                    // peer round trip time).
+                    // Feature gates, workqueue/informer bucket histograms and etcd's own gRPC server
+                    // instrumentation: none of it is read by the chart's dashboards or rules. etcd
+                    // only keeps the three bucket histograms that its rules read (WAL fsync, backend
+                    // commit and peer round trip time). Also filters the two kubelet scrapes above
+                    // (cadvisor and the kubelet's own /metrics), which otherwise forward everything
+                    // straight to remote_write with no filtering at all.
                     prometheus.relabel "controlplane_filter" {
                         forward_to = [prometheus.remote_write.core.receiver]
 
                         rule {
                             source_labels = ["__name__"]
-                            regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket"
+                            regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket|workqueue_queue_duration_seconds_bucket|grpc_server_.*"
                             action        = "drop"
                         }
 
@@ -402,12 +404,14 @@ spec:
                     // apiserver/etcd histogram _bucket series are the dominant source of
                     // cardinality (~36k of ~72k total series observed on a 3-node cluster).
                     // Drop them, keep _sum/_count so rate/average latency stays available.
+                    // kubernetes_feature_enabled isn't a _bucket metric but is just as unused
+                    // (a static per-feature-gate boolean, ~726 series on its own).
                     prometheus.relabel "apiserver_filter" {
                         forward_to = [prometheus.remote_write.core.receiver]
 
                         rule {
                             source_labels = ["__name__"]
-                            regex         = ".*_bucket"
+                            regex         = ".*_bucket|kubernetes_feature_enabled"
                             action        = "drop"
                         }
                     }
