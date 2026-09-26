@@ -52,6 +52,14 @@ spec:
                 passwordMode: keepUpdated
             config:
                 APP_NAME: φorge
+                # WAL needs shared memory (mmap-like) to coordinate writers, which NFS doesn't
+                # support correctly (see #27: forgejo.db-wal accumulated writes for weeks without
+                # ever checkpointing, "database disk image is malformed" on the next fresh open).
+                # DELETE is the traditional rollback journal SQLite's own docs recommend for
+                # network filesystems -- slightly slower (fsync per transaction) but no shared-
+                # memory dependency, and Forgejo's write volume here is far too low to notice.
+                database:
+                    SQLITE_JOURNAL_MODE: DELETE
                 server:
                     SSH_LISTEN_PORT: 2222
                     SSH_PORT: 22
