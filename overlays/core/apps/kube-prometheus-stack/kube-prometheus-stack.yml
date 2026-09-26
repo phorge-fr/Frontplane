@@ -282,6 +282,11 @@ spec:
         # its dashboard and the KubeProxyDown alert that fires for good.
         kubeProxy:
             enabled: false
+        # Alloy (overlays/core/controllers/alloy) runs its own node-exporter instead, the same
+        # way control/svc already do: one DaemonSet pod per node instead of two. Same job name
+        # and instance label (node name), so the stock dashboards/rules don't notice.
+        nodeExporter:
+            enabled: false
         defaultRules:
             rules:
                 kubeProxy: false

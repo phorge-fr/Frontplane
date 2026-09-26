@@ -16,6 +16,9 @@ spec:
 # processes of the k0s controllers and only listen on the loopback of their node. This
 # node-local Alloy, on the host network, scrapes them and pushes to the Prometheus of the cluster.
 # The other clusters do the same from their own Alloy (base/controllers/alloy).
+# Also runs its own node-exporter (same as base/controllers/alloy) instead of the chart's
+# nodeExporter subchart (disabled below, in kube-prometheus-stack.yml): one DaemonSet pod per
+# node instead of two, same metric names/instance labels so the stock dashboards don't notice.
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -85,6 +88,33 @@ spec:
                         forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
+                    // The pod shares the host's network and mounts the host rootfs (see the
+                    // controller values below), so the exporter reports the machine rather than
+                    // the Alloy pod.
+                    prometheus.exporter.unix "node" {
+                        rootfs_path    = "/host/root"
+                        udev_data_path = "/host/root/run/udev/data"
+                    }
+
+                    discovery.relabel "node" {
+                        targets = prometheus.exporter.unix.node.targets
+
+                        rule {
+                            target_label = "job"
+                            replacement  = "node-exporter"
+                        }
+                        rule {
+                            target_label = "node"
+                            replacement  = sys.env("K8S_NODE_NAME")
+                        }
+                    }
+
+                    prometheus.scrape "node" {
+                        job_name   = "node-exporter"
+                        targets    = discovery.relabel.node.output
+                        forward_to = [prometheus.remote_write.local.receiver]
+                    }
+
                     // Feature gates, workqueue/informer bucket histograms and etcd's own gRPC server
                     // instrumentation: none of it is read by the chart's dashboards or rules. etcd
                     // only keeps the three bucket histograms that its rules read (WAL fsync, backend
@@ -125,10 +155,21 @@ spec:
                             cluster = "core",
                         }
                     }
+            mounts:
+                extra:
+                    - name: rootfs
+                      mountPath: /host/root
+                      readOnly: true
+                      mountPropagation: HostToContainer
         controller:
             type: daemonset
             hostNetwork: true
             dnsPolicy: ClusterFirstWithHostNet
+            volumes:
+                extra:
+                    - name: rootfs
+                      hostPath:
+                          path: /
     postRenderers:
         # The chart probes the pod IP, which is the node IP under hostNetwork: probe the
         # loopback instead so the HTTP server doesn't have to listen on the node network.
