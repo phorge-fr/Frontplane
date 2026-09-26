@@ -155,6 +155,51 @@ spec:
                             cluster = "core",
                         }
                     }
+
+                    // Same node-local pod discovery as the other clusters (base/controllers/alloy),
+                    // tailing only this node's pods so each log line is sent once. Loki is
+                    // in-cluster here, no auth/TLS needed (unlike the other clusters, which push
+                    // to it over the network through Traefik).
+                    discovery.kubernetes "pods" {
+                        role = "pod"
+
+                        selectors {
+                            role  = "pod"
+                            field = "spec.nodeName=" + sys.env("K8S_NODE_NAME")
+                        }
+                    }
+
+                    discovery.relabel "pods" {
+                        targets = discovery.kubernetes.pods.targets
+
+                        rule {
+                            source_labels = ["__meta_kubernetes_namespace"]
+                            target_label  = "namespace"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_name"]
+                            target_label  = "pod"
+                        }
+                        rule {
+                            source_labels = ["__meta_kubernetes_pod_container_name"]
+                            target_label  = "container"
+                        }
+                    }
+
+                    loki.source.kubernetes "pods" {
+                        targets    = discovery.relabel.pods.output
+                        forward_to = [loki.write.local.receiver]
+                    }
+
+                    loki.write "local" {
+                        endpoint {
+                            url = "http://loki.loki.svc.cluster.local:3100/loki/api/v1/push"
+                        }
+
+                        external_labels = {
+                            cluster = "core",
+                        }
+                    }
             mounts:
                 extra:
                     - name: rootfs
