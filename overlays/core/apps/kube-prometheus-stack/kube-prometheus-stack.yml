@@ -231,13 +231,23 @@ spec:
                     group_interval: 5m
                     repeat_interval: 12h
                     routes:
-                        # Never notified: the heartbeat, the helper of the inhibit rules, and info.
+                        # Never notified: the helper of the inhibit rules, and info.
                         - matchers:
-                              - alertname =~ "Watchdog|InfoInhibitor"
+                              - alertname = InfoInhibitor
                           receiver: "null"
                         - matchers:
                               - severity = info
                           receiver: "null"
+                        # Dead man's switch (#69): Watchdog always fires, so this route pings
+                        # healthchecks.io every few minutes for as long as Prometheus and this
+                        # Alertmanager are alive and able to send. healthchecks.io's own alerting
+                        # (independent of core) fires if the ping ever stops arriving.
+                        - matchers:
+                              - alertname = Watchdog
+                          receiver: healthchecks-watchdog
+                          group_wait: 0s
+                          group_interval: 3m
+                          repeat_interval: 3m
                         # TargetDown (the chart's rule, >10% of a job's targets down) can never be
                         # right about ceph-mgr on comp: only the active mgr listens on its metrics
                         # port, so 2 of its 3 targets are down by design, permanently over the 10%
@@ -263,11 +273,16 @@ spec:
                       discord_configs:
                           - webhook_url_file: /etc/alertmanager/secrets/alertmanager-discord/webhook-url
                             send_resolved: true
+                    - name: healthchecks-watchdog
+                      webhook_configs:
+                          - url_file: /etc/alertmanager/secrets/alertmanager-healthchecks/ping-url
+                            send_resolved: false
                 templates:
                     - /etc/alertmanager/config/*.tmpl
             alertmanagerSpec:
                 secrets:
                     - alertmanager-discord
+                    - alertmanager-healthchecks
                 # Keeps the silences and the notification log across restarts.
                 storage:
                     volumeClaimTemplate:
