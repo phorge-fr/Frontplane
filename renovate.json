@@ -5,7 +5,7 @@
         ":semanticCommits"
     ],
     "baseBranchPatterns": [
-        "phorge-rev01"
+        "main"
     ],
     "prHourlyLimit": 0,
     "prConcurrentLimit": 0,
