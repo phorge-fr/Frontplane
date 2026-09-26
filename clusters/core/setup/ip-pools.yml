@@ -4,5 +4,5 @@ metadata:
     name: default-pool
 spec:
     blocks:
-        -   start: 10.2.0.10
-            stop: 10.2.0.20
+        - start: 10.2.0.10
+          stop: 10.2.0.20

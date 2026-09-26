@@ -13,7 +13,7 @@ spec:
     wait: true
     timeout: 5m0s
     dependsOn:
-        -   name: overlay-configs
+        - name: overlay-configs
     decryption:
         provider: sops
         secretRef:
