@@ -78,16 +78,16 @@ spec:
                         forward_to = [prometheus.relabel.controlplane_filter.receiver]
                     }
 
-                    // Feature gates and the bucket histograms that neither the chart's dashboards
-                    // nor its rules read: about 40% of the ~5k series of each node. etcd only keeps
-                    // the three bucket histograms that its rules read (WAL fsync, backend commit and
-                    // peer round trip time).
+                    // Feature gates, workqueue/informer bucket histograms and etcd's own gRPC server
+                    // instrumentation: none of it is read by the chart's dashboards or rules. etcd
+                    // only keeps the three bucket histograms that its rules read (WAL fsync, backend
+                    // commit and peer round trip time).
                     prometheus.relabel "controlplane_filter" {
                         forward_to = [prometheus.remote_write.local.receiver]
 
                         rule {
                             source_labels = ["__name__"]
-                            regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket"
+                            regex         = "kubernetes_feature_enabled|scheduler_plugin_execution_duration_seconds_bucket|scheduler_event_handling_duration_seconds_bucket|informer_processing_latency_seconds_bucket|workqueue_work_duration_seconds_bucket|workqueue_queue_duration_seconds_bucket|grpc_server_.*"
                             action        = "drop"
                         }
 

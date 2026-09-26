@@ -158,6 +158,15 @@ spec:
                       sourceLabels:
                           - node
                       targetLabel: instance
+                # Same unused feature-gate/workqueue series as kubeApiServer above, coming from
+                # the kubelet's own /metrics this time. Unlike control/svc, this cluster's kubelet
+                # is scraped by this chart's own ServiceMonitor rather than through Alloy, so it
+                # has no filtering of its own yet.
+                metricRelabelings:
+                    - action: drop
+                      sourceLabels:
+                          - __name__
+                      regex: kubernetes_feature_enabled|workqueue_.*_bucket
                 cAdvisorRelabelings:
                     - action: replace
                       sourceLabels:
@@ -287,6 +296,14 @@ spec:
                       sourceLabels:
                           - __name__
                       regex: (apiserver|etcd)_.*_bucket
+                    # This ServiceMonitor scrapes the same target as alloy-cluster's "apiserver"
+                    # job (base/controllers/alloy), whose filter is a plain .*_bucket and also
+                    # drops these two — kept in sync here since this path has its own, narrower
+                    # regex above that doesn't catch them.
+                    - action: drop
+                      sourceLabels:
+                          - __name__
+                      regex: kubernetes_feature_enabled|workqueue_.*_bucket
         # The state of the Flux objects (ready, suspended, revision) as gotk_resource_info, through the
         # custom resource state of kube-state-metrics. The same block is in
         # base/controllers/kube-state-metrics for control and svc: the image.* kinds are left out as
