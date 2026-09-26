@@ -4,5 +4,6 @@ resources:
     - kube-prometheus-stack.yml
     - secrets.yml
     - alertmanager-secret.yml
+    - alertmanager-healthchecks-secret.yml
     - alertmanager-rules
     - grafana-dashboards
