@@ -5,7 +5,7 @@
         ":semanticCommits"
     ],
     "baseBranchPatterns": [
-        "main"
+        "dev"
     ],
     "prHourlyLimit": 0,
     "prConcurrentLimit": 0,
