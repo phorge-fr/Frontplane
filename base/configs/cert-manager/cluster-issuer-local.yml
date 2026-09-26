@@ -14,8 +14,8 @@ spec:
     isCA: true
     commonName: local-root-ca
     secretName: local-root-ca-secret
-    duration: 87600h
-    renewBefore: 78840h
+    duration: 87600h # 10y
+    renewBefore: 78840h # 9y
     privateKey:
         algorithm: ECDSA
         size: 256

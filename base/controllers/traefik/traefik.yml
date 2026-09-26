@@ -38,12 +38,12 @@ spec:
         affinity:
             podAntiAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
-                    -   weight: 100
-                        podAffinityTerm:
-                            labelSelector:
-                                matchLabels:
-                                    app.kubernetes.io/instance: traefik-local-traefik
-                            topologyKey: kubernetes.io/hostname
+                    - weight: 100
+                      podAffinityTerm:
+                          labelSelector:
+                              matchLabels:
+                                  app.kubernetes.io/instance: traefik-local-traefik
+                          topologyKey: kubernetes.io/hostname
         ingressClass:
             enabled: true
             isDefaultClass: false
@@ -86,12 +86,12 @@ spec:
         affinity:
             podAntiAffinity:
                 preferredDuringSchedulingIgnoredDuringExecution:
-                    -   weight: 100
-                        podAffinityTerm:
-                            labelSelector:
-                                matchLabels:
-                                    app.kubernetes.io/instance: traefik-public-traefik
-                            topologyKey: kubernetes.io/hostname
+                    - weight: 100
+                      podAffinityTerm:
+                          labelSelector:
+                              matchLabels:
+                                  app.kubernetes.io/instance: traefik-public-traefik
+                          topologyKey: kubernetes.io/hostname
         ingressClass:
             enabled: true
             isDefaultClass: false
