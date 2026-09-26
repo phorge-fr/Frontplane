@@ -156,7 +156,7 @@ spec:
                 pathType: Prefix
                 tls:
                     - hosts:
-                        - auth.phorge.fr
+                          - auth.phorge.fr
                       secretName: authentik-tls
                 https: false
         worker:

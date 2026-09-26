@@ -77,12 +77,12 @@ spec:
             hosts:
                 - host: git.phorge.fr
                   paths:
-                    - path: /
-                      pathType: Prefix
-                      port: http
+                      - path: /
+                        pathType: Prefix
+                        port: http
             tls:
                 - hosts:
-                    - git.phorge.fr
+                      - git.phorge.fr
                   secretName: forgejo-tls
         persistence:
             accessModes:
@@ -96,22 +96,22 @@ spec:
             mount: true
             size: 10Gi
             storageClass: nfs
-            subPath: null
+            subPath:
             volumeName: ""
         service:
             ssh:
                 annotations: {}
-                clusterIP: null
-                externalIPs: null
-                externalTrafficPolicy: null
-                hostPort: null
-                ipFamilies: null
-                ipFamilyPolicy: null
+                clusterIP:
+                externalIPs:
+                externalTrafficPolicy:
+                hostPort:
+                ipFamilies:
+                ipFamilyPolicy:
                 labels: {}
-                loadBalancerClass: null
+                loadBalancerClass:
                 loadBalancerIP: 10.3.0.13
                 loadBalancerSourceRanges: []
-                nodePort: null
+                nodePort:
                 port: 22
                 type: LoadBalancer
         signing:

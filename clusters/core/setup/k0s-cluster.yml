@@ -36,7 +36,7 @@ spec:
                         keepalived:
                             vrrpInstances:
                                 - virtualIPs:
-                                    - 10.2.0.4/24
+                                      - 10.2.0.4/24
                                   authPass: ENC[AES256_GCM,data:QyVDuPldTIQ=,iv:3RAOXvTDRlYVHESKjTojJ1DbplRSoDQh0k1C3loax7k=,tag:2XZsUQb9HLldTG+W1xwrfQ==,type:str]
                                   interface: enp1s0
                     nodeLocalLoadBalancing:
@@ -53,35 +53,35 @@ spec:
                     enabled: false
     hosts:
         - ssh:
-            address: 10.2.0.1
-            user: root
-            port: 22
+              address: 10.2.0.1
+              user: root
+              port: 22
           role: controller+worker
           installFlags:
-            - --disable-components=konnectivity-server
-            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+              - --disable-components=konnectivity-server
+              - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
           noTaints: true
           privateAddress: 10.2.0.1
           privateInterface: enp1s0
         - ssh:
-            address: 10.2.0.2
-            user: root
-            port: 22
+              address: 10.2.0.2
+              user: root
+              port: 22
           role: controller+worker
           installFlags:
-            - --disable-components=konnectivity-server
-            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+              - --disable-components=konnectivity-server
+              - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
           noTaints: true
           privateAddress: 10.2.0.2
           privateInterface: enp1s0
         - ssh:
-            address: 10.2.0.3
-            user: root
-            port: 22
+              address: 10.2.0.3
+              user: root
+              port: 22
           role: controller+worker
           installFlags:
-            - --disable-components=konnectivity-server
-            - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
+              - --disable-components=konnectivity-server
+              - --kubelet-extra-args=--image-gc-high-threshold=50 --image-gc-low-threshold=45
           noTaints: true
           privateAddress: 10.2.0.3
           privateInterface: enp1s0
@@ -89,13 +89,13 @@ sops:
     age:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUOFJ0aDdQbGVDcmJLWHpB
-            WWQzWmJtZ3AxN2UrZEtQdmRoUHJFa0NVclhZClY5YWZIbGNXclV4UzRqNnRJNDNl
-            TExtTkVwTTFVcGNEWUVzcmh3b1ZJbncKLS0tIFJNY093RDJTZkF2Y3oyVzh3UWxG
-            OFlUZVhkQ3NGdFB5cHpRcDVuVjI5cDgKN/bSNE56hkOtOmtRAlzSAx5tk5fFh/7w
-            Mif4xBsbxHG682e9RwCPd5a7xUxfE4mBzDFHZqpQ7LwiVKI3gewjsQ==
-            -----END AGE ENCRYPTED FILE-----
+              -----BEGIN AGE ENCRYPTED FILE-----
+              YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBUOFJ0aDdQbGVDcmJLWHpB
+              WWQzWmJtZ3AxN2UrZEtQdmRoUHJFa0NVclhZClY5YWZIbGNXclV4UzRqNnRJNDNl
+              TExtTkVwTTFVcGNEWUVzcmh3b1ZJbncKLS0tIFJNY093RDJTZkF2Y3oyVzh3UWxG
+              OFlUZVhkQ3NGdFB5cHpRcDVuVjI5cDgKN/bSNE56hkOtOmtRAlzSAx5tk5fFh/7w
+              Mif4xBsbxHG682e9RwCPd5a7xUxfE4mBzDFHZqpQ7LwiVKI3gewjsQ==
+              -----END AGE ENCRYPTED FILE-----
     lastmodified: "2026-09-26T13:26:21Z"
     mac: ENC[AES256_GCM,data:b4fWNzA/1e/RPc+0tfXAwsXBCY//mFmPTJwZNEPDrhIynE7pk/3HcOuztDaU4UdEoB/f5ZjXVKuVpzPU301osuF9KG7hSCCJo9Uugs0chIHQ088F0BB8xTTiprno4Z7R8otiKvw009ZYp/bSX61XWSQMX1KXvTmJa6Io5k3jcAI=,iv:AutS8R2DklnqGFcWH3jc+TKOcDOYB9n/D/MioU2lTVU=,tag:wBnzEfcy48tO06isNOcy4w==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$

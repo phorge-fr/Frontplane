@@ -1,0 +1,14 @@
+extends: default
+
+ignore: |
+    .ignore/
+    clusters/*/flux-system/gotk-components.yaml
+
+rules:
+    indentation:
+        spaces: 4
+        indent-sequences: true
+    line-length: disable
+    document-start: disable
+    truthy:
+        check-keys: false
