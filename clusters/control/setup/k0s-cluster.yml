@@ -17,6 +17,12 @@ spec:
                     port: 6443
                     sans:
                         - 10.1.0.4
+                    extraArgs:
+                        # Real object counts per type (apiserver_storage_objects) never go past a
+                        # few hundred here, but the default watch cache reserves 100 slots for
+                        # every one of the 130+ registered types regardless. apiserver RSS was
+                        # 0.9-1.3 GiB on this cluster's 3 nodes before this change (2026-09-26).
+                        default-watch-cache-size: "20"
                 network:
                     provider: custom
                     kubeProxy:
@@ -30,7 +36,7 @@ spec:
                             vrrpInstances:
                                 - virtualIPs:
                                     - 10.1.0.4/24
-                                  authPass: ENC[AES256_GCM,data:8bDO0uR5WK0=,iv:NKmI1hIR+mHp5rYPCvhkHYm9qmiPgZlAgHHITFiXfcQ=,tag:6/ctVfxK5jUU9a21cL5oMg==,type:str]
+                                  authPass: ENC[AES256_GCM,data:2q5+XwFbFPg=,iv:ozlMjChfhf3ZLWKuMuAF3vmLCO7CQLQr2jhPIyie1KE=,tag:jBRqUTvpPkKiJd+tD88o3Q==,type:str]
                                   interface: eth0
                     nodeLocalLoadBalancing:
                         enabled: true
@@ -83,13 +89,13 @@ sops:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3YkEyVEgxVHJ2L1FNeXRP
-            U1hJdTM1UXMvaFhCMGNnSFMvKzlVTUdFa1VjCmFlK2FJMUlvY3NUVnpHbzZGTVNx
-            YlRKNHpIOGJwQVc0Q3hRWUxOQTBoWGsKLS0tIGJPQXc3QVo2blhmSTd5SWxEWUxJ
-            NGFGODFsL1FuYzNSdndoRmExNkU0M2cKOHXxPvI6KqirDMMjnS0WqSTw+YeXOpvY
-            iiXzB24OgdsVhoIhGlA0ivLBtazgVuAXVt2Ty+URSxjDzKwd9S/plQ==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYUlo3bktOU0t5dXFYZlJJ
+            T3NXY3dXWHdWWVJGdmZhT3d0WU5odTQvMFZVClhKSlRjbUUzZW4wTmtpNXpINmxs
+            NndScFU3T09BR2h2N3c0VlZoTG9DL2sKLS0tIEZyVnJseXNldGo0cGI4dzFzbFMw
+            d0o2VC9LaXVZenA4YnhHS1ZaVVR4YncKTumwChFdA5QVlMEhJ0feye2agH/20y+f
+            Fvybm2xvAUXnlDlsnTVn52syVY6vG1OHJGFpkbzTDZuwWl39kjd0eA==
             -----END AGE ENCRYPTED FILE-----
-    lastmodified: "2026-09-20T16:17:18Z"
-    mac: ENC[AES256_GCM,data:5jGHtnorudz/asw0SwDfD7yzokHn6Vd4qckVd0EF5VvkdKgGiRLzckIKSi6lOBud7dSHJQ9I7lW9q16ui3fU+Z1JblTlh78wvkbf8YzO9RxwZ+01jtNMLHedKYiuYy6XcG4aaATWSM5DBzQDvjAkAiTfWrZsqQuUliLc/LZJdas=,iv:8O9RkRodlezQhiU2mNWlXDnHs3Ptn+KZVktAwVdAr0A=,tag:n3wYjTD1BxZDJCj09YdWeg==,type:str]
+    lastmodified: "2026-09-26T13:06:07Z"
+    mac: ENC[AES256_GCM,data:yoyt0odjQBG83e0+/trCV5kl3s2JSp8vZjuYDVFOoQmc2WVtxALnP5zErExzRwhApFsN3HzoQpybLvUK/0p/84SRa76C+Gl+UecT5sNIBl7uulphIkkaBSwfDIDkpxzVrMgDDtOR9BoXv5MvsL+O9W3drVq9XotNPuufa1qzRn0=,iv:piLgsTvm1WclGFIWsp+NxJlTBLtLTVs+kui/Fp2K35M=,tag:zuH/pn+wWcv8tRIk4TXRLw==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
     version: 3.11.0
