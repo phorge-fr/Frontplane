@@ -1,15 +1,15 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: traefik-public
-  namespace: traefik
+    name: traefik-public
+    namespace: traefik
 spec:
-  values:
-    service:
-      annotations:
-        lbipam.cilium.io/ips: "10.1.0.11"
-    ports:
-      websecure:
-        proxyProtocol:
-          trustedIPs:
-            - "10.1.0.254/32"
+    values:
+        service:
+            annotations:
+                lbipam.cilium.io/ips: 10.1.0.11
+        ports:
+            websecure:
+                proxyProtocol:
+                    trustedIPs:
+                        - 10.1.0.254/32

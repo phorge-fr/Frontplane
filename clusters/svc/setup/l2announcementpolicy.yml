@@ -1,8 +1,8 @@
-apiVersion: "cilium.io/v2alpha1"
+apiVersion: cilium.io/v2alpha1
 kind: CiliumL2AnnouncementPolicy
 metadata:
-  name: default
+    name: default
 spec:
-  interfaces:
-  - end0
-  loadBalancerIPs: true
+    interfaces:
+        - end0
+    loadBalancerIPs: true

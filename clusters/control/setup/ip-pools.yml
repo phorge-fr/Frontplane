@@ -1,8 +1,8 @@
 apiVersion: cilium.io/v2
 kind: CiliumLoadBalancerIPPool
 metadata:
-  name: "default-pool"
+    name: default-pool
 spec:
-  blocks:
-  - start: "10.1.0.10"
-    stop: "10.1.0.20"
+    blocks:
+        -   start: 10.1.0.10
+            stop: 10.1.0.20
