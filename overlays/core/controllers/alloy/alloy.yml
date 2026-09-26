@@ -46,6 +46,13 @@ spec:
 
                     // Job names are the ones the chart's rules and dashboards select on. etcd serves its
                     // metrics on the loopback through listen-metrics-urls in the k0s config.
+                    //
+                    // This block down to controlplane_filter is identical to the one in
+                    // base/controllers/alloy/alloy.yml (control/svc): keep both in sync by hand.
+                    // Alloy's config is one opaque string in the Helm values, so Kustomize can't
+                    // share or patch pieces of it across files — this fork exists only because
+                    // core also needs the apiserver/kubelet/node scrapes handled differently
+                    // (by kube-prometheus-stack's own ServiceMonitors instead of Alloy).
                     prometheus.scrape "kube_scheduler" {
                         job_name          = "kube-scheduler"
                         targets           = [{"__address__" = "127.0.0.1:10259", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]

@@ -171,6 +171,11 @@ spec:
                     // listen-metrics-urls in the k0s config), so they are scraped from the host
                     // network of the node-local pod. Job names are the ones the chart's rules and
                     // dashboards select on.
+                    //
+                    // This block down to controlplane_filter is identical to the one in
+                    // overlays/core/controllers/alloy/alloy.yml (core's own forked Alloy config):
+                    // keep both in sync by hand. Alloy's config is one opaque string in the Helm
+                    // values, so Kustomize can't share or patch pieces of it across files.
                     prometheus.scrape "kube_scheduler" {
                         job_name          = "kube-scheduler"
                         targets           = [{"__address__" = "127.0.0.1:10259", "instance" = sys.env("K8S_NODE_NAME"), "node" = sys.env("K8S_NODE_NAME")}]
