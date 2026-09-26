@@ -11,7 +11,7 @@ spec:
         branch: main
     secretRef:
         name: flux-system
-    url: https://github.com/phorge-fr/Frontplane.git
+    url: https://github.com/phorge-fr/Hangar.git
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
