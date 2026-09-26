@@ -31,6 +31,11 @@ spec:
     # resource state. The same block is in the kube-prometheus-stack values of core, where it sits
     # under the chart's kube-state-metrics key.
     values:
+        # Also exposes its own telemetry port (8081) on the Service, scraped by Alloy
+        # (base/controllers/alloy): the KubeStateMetrics* rules of the chart read
+        # kube_state_metrics_* series that only exist there (#65).
+        selfMonitor:
+            enabled: true
         rbac:
             extraRules:
                 - apiGroups:

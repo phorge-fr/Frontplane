@@ -448,9 +448,15 @@ spec:
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
+                    // Two ports under the same job label, since the chart's rules select on it: 8080
+                    // for the kube_* state metrics, 8081 for its own telemetry (kube_state_metrics_*,
+                    // read by the four KubeStateMetrics* rules).
                     prometheus.scrape "kube_state_metrics" {
                         job_name   = "kube-state-metrics"
-                        targets    = [{"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"}]
+                        targets    = [
+                            {"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8080"},
+                            {"__address__" = "kube-state-metrics.kube-state-metrics.svc.cluster.local:8081"},
+                        ]
                         forward_to = [prometheus.remote_write.core.receiver]
                     }
 
