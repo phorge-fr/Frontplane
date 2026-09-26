@@ -1,10 +1,10 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: traefik-local
-  namespace: traefik
+    name: traefik-local
+    namespace: traefik
 spec:
-  values:
-    service:
-      annotations:
-        lbipam.cilium.io/ips: "10.3.0.10"
+    values:
+        service:
+            annotations:
+                lbipam.cilium.io/ips: 10.3.0.10

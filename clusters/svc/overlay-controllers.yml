@@ -1,18 +1,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: overlay-controllers
-  namespace: flux-system
+    name: overlay-controllers
+    namespace: flux-system
 spec:
-  interval: 10m0s
-  path: ./overlays/svc/controllers
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  prune: true
-  wait: true
-  timeout: 5m0s
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+    interval: 10m0s
+    path: ./overlays/svc/controllers
+    sourceRef:
+        kind: GitRepository
+        name: flux-system
+    prune: true
+    wait: true
+    timeout: 5m0s
+    decryption:
+        provider: sops
+        secretRef:
+            name: sops-age
