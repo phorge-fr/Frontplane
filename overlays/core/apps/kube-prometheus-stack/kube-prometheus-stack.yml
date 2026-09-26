@@ -333,6 +333,11 @@ spec:
         # base/controllers/kube-state-metrics for control and svc: the image.* kinds are left out as
         # their CRDs are not installed, and so is the webhook path of the Receivers (a secret).
         kube-state-metrics:
+            # Also exposes and scrapes its own telemetry port (8081): the four KubeStateMetrics*
+            # rules of the chart (list/watch errors, sharding) read kube_state_metrics_* series
+            # that only exist there, so they could never fire (#65).
+            selfMonitor:
+                enabled: true
             rbac:
                 extraRules:
                     - apiGroups:
