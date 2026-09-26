@@ -12,44 +12,44 @@ spec:
                 - name: forgejo-oidc-setup
                   image: code.forgejo.org/forgejo/forgejo:16.0.5-rootless
                   command:
-                    - /bin/sh
-                    - -c
+                      - /bin/sh
+                      - -c
                   args:
-                    - |
-                      SOURCE_ID=$(forgejo admin auth list --config /data/gitea/conf/app.ini | awk -F'\t' '$2 == "Phorge" {print $1}')
-                      if [ -n "$SOURCE_ID" ]; then
-                        ACTION="update-oauth --id $SOURCE_ID"
-                      else
-                        ACTION="add-oauth"
-                      fi
-                      forgejo admin auth $ACTION --config /data/gitea/conf/app.ini --name "Phorge" --provider "openidConnect" --key "$CLIENT_ID" --secret "$CLIENT_SECRET" --auto-discover-url "https://auth.phorge.fr/application/o/forgejo/.well-known/openid-configuration" --icon-url "https://avatars.githubusercontent.com/u/187407936?s=200&v=4" --scopes "email profile openid forgejo" --required-claim-name "forgejo" --group-claim-name "forgejo" --admin-group "admin" --restricted-group "restricted"
+                      - |
+                        SOURCE_ID=$(forgejo admin auth list --config /data/gitea/conf/app.ini | awk -F'\t' '$2 == "Phorge" {print $1}')
+                        if [ -n "$SOURCE_ID" ]; then
+                          ACTION="update-oauth --id $SOURCE_ID"
+                        else
+                          ACTION="add-oauth"
+                        fi
+                        forgejo admin auth $ACTION --config /data/gitea/conf/app.ini --name "Phorge" --provider "openidConnect" --key "$CLIENT_ID" --secret "$CLIENT_SECRET" --auto-discover-url "https://auth.phorge.fr/application/o/forgejo/.well-known/openid-configuration" --icon-url "https://avatars.githubusercontent.com/u/187407936?s=200&v=4" --scopes "email profile openid forgejo" --required-claim-name "forgejo" --group-claim-name "forgejo" --admin-group "admin" --restricted-group "restricted"
                   envFrom:
-                    - secretRef:
-                        name: forgejo-oidc-secret
+                      - secretRef:
+                            name: forgejo-oidc-secret
                   volumeMounts:
-                    - name: forgejo-data
-                      mountPath: /data
+                      - name: forgejo-data
+                        mountPath: /data
             initContainers:
                 - name: wait-for-forgejo
                   image: curlimages/curl:8.22.0
                   command:
-                    - /bin/sh
-                    - -c
-                    - |
-                      echo "Waiting for Forgejo to be ready..."
-                      for i in $(seq 1 60); do
-                        if curl -s -o /dev/null -w "%{http_code}" http://forgejo-http.forgejo.svc.cluster.local:3000 | grep -q "200"; then
-                          echo "Forgejo is ready!"
-                          exit 0
-                        fi
-                        echo "Attempt $i: waiting..."
-                        sleep 5
-                      done
-                      echo "Timeout: Forgejo not ready after 5 minutes"
-                      exit 1
+                      - /bin/sh
+                      - -c
+                      - |
+                        echo "Waiting for Forgejo to be ready..."
+                        for i in $(seq 1 60); do
+                          if curl -s -o /dev/null -w "%{http_code}" http://forgejo-http.forgejo.svc.cluster.local:3000 | grep -q "200"; then
+                            echo "Forgejo is ready!"
+                            exit 0
+                          fi
+                          echo "Attempt $i: waiting..."
+                          sleep 5
+                        done
+                        echo "Timeout: Forgejo not ready after 5 minutes"
+                        exit 1
             restartPolicy: Never
             volumes:
                 - name: forgejo-data
                   persistentVolumeClaim:
-                    claimName: forgejo-shared-storage
+                      claimName: forgejo-shared-storage
     backoffLimit: 1

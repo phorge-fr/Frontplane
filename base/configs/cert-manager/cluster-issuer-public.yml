@@ -10,26 +10,26 @@ spec:
             name: letsencrypt
         solvers:
             - dns01:
-                cloudflare:
-                    email: ENC[AES256_GCM,data:w7BdRQtttCjogOMoElE60XZBk4Xi4mc=,iv:u8Ofe9qychFBfcAPQXPnbtNaHK3x//PoSDMbgXo9S8A=,tag:FOJfvzk9UTElxN25rEgSrQ==,type:str]
-                    apiTokenSecretRef:
-                        name: cloudflare-api-token-secret
-                        key: ENC[AES256_GCM,data:OHTQXTnaG1IA,iv:QdmoaBWTJVFOR3wej++869sr9APLl+Df3yzlTfvwiew=,tag:I07bIXQTKJC8zrDpMfoKJA==,type:str]
+                  cloudflare:
+                      email: ENC[AES256_GCM,data:w7BdRQtttCjogOMoElE60XZBk4Xi4mc=,iv:u8Ofe9qychFBfcAPQXPnbtNaHK3x//PoSDMbgXo9S8A=,tag:FOJfvzk9UTElxN25rEgSrQ==,type:str]
+                      apiTokenSecretRef:
+                          name: cloudflare-api-token-secret
+                          key: ENC[AES256_GCM,data:OHTQXTnaG1IA,iv:QdmoaBWTJVFOR3wej++869sr9APLl+Df3yzlTfvwiew=,tag:I07bIXQTKJC8zrDpMfoKJA==,type:str]
               selector:
-                dnsZones:
-                    - phorge.fr
-                    - '*.phorge.fr'
+                  dnsZones:
+                      - phorge.fr
+                      - '*.phorge.fr'
 sops:
     age:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQ0IwWmxVS3hVWk84Wndi
-            RTc3MFgwLzNZVlN2ckdTbFAvOFowVk03STJBCk5DVDV5TC92amlJaDIvM2NhMFRX
-            dUFoeUpFSW4va3ZRVFc2ZWZJd0dMWnMKLS0tIDA4K2ppNVA1cDNMbnFhK0pXSFhj
-            VitrMWdZdjRFVUdJaTYrczMzdFlGbG8K4IPiKIIKKleFg9WNsHp5daVT7vs0ABS4
-            3JCPwECAmdLZeaYGy8RY4HZ+vSBumyEF/NlLDTYSGTegP0llNOyjiw==
-            -----END AGE ENCRYPTED FILE-----
+              -----BEGIN AGE ENCRYPTED FILE-----
+              YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQ0IwWmxVS3hVWk84Wndi
+              RTc3MFgwLzNZVlN2ckdTbFAvOFowVk03STJBCk5DVDV5TC92amlJaDIvM2NhMFRX
+              dUFoeUpFSW4va3ZRVFc2ZWZJd0dMWnMKLS0tIDA4K2ppNVA1cDNMbnFhK0pXSFhj
+              VitrMWdZdjRFVUdJaTYrczMzdFlGbG8K4IPiKIIKKleFg9WNsHp5daVT7vs0ABS4
+              3JCPwECAmdLZeaYGy8RY4HZ+vSBumyEF/NlLDTYSGTegP0llNOyjiw==
+              -----END AGE ENCRYPTED FILE-----
     lastmodified: "2026-09-26T15:27:00Z"
     mac: ENC[AES256_GCM,data:TsBz6O4qXARm3b2kVMQPU/HOd9HXJ8upn7TdESR0QIQ3AXAzMa+CbtE7IDY5sAzkp4odsju8RCEb/84B/r70q2hYhtCvHCHmwVsyCb9W0AE4cIRZMI42wzGzGi6LNR2btFM9D5dpYDhyza4f2a/T5F7ARLfDCIHdIUXL0BpTVnE=,iv:OjpthiwpaMzSFEDR6E2a5YPvu+tEBzCuQ/GDgmB4vyg=,tag:zeHrebIDWJpm33Om+o2nHQ==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$
@@ -47,13 +47,13 @@ sops:
     age:
         - recipient: age1ae6yk6xtlt8h40272xqxegz3t3zpvvuxj0jwy489xs6e34k0y9xsvpmt03
           enc: |
-            -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQ0IwWmxVS3hVWk84Wndi
-            RTc3MFgwLzNZVlN2ckdTbFAvOFowVk03STJBCk5DVDV5TC92amlJaDIvM2NhMFRX
-            dUFoeUpFSW4va3ZRVFc2ZWZJd0dMWnMKLS0tIDA4K2ppNVA1cDNMbnFhK0pXSFhj
-            VitrMWdZdjRFVUdJaTYrczMzdFlGbG8K4IPiKIIKKleFg9WNsHp5daVT7vs0ABS4
-            3JCPwECAmdLZeaYGy8RY4HZ+vSBumyEF/NlLDTYSGTegP0llNOyjiw==
-            -----END AGE ENCRYPTED FILE-----
+              -----BEGIN AGE ENCRYPTED FILE-----
+              YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBYQ0IwWmxVS3hVWk84Wndi
+              RTc3MFgwLzNZVlN2ckdTbFAvOFowVk03STJBCk5DVDV5TC92amlJaDIvM2NhMFRX
+              dUFoeUpFSW4va3ZRVFc2ZWZJd0dMWnMKLS0tIDA4K2ppNVA1cDNMbnFhK0pXSFhj
+              VitrMWdZdjRFVUdJaTYrczMzdFlGbG8K4IPiKIIKKleFg9WNsHp5daVT7vs0ABS4
+              3JCPwECAmdLZeaYGy8RY4HZ+vSBumyEF/NlLDTYSGTegP0llNOyjiw==
+              -----END AGE ENCRYPTED FILE-----
     lastmodified: "2026-09-26T15:27:00Z"
     mac: ENC[AES256_GCM,data:TsBz6O4qXARm3b2kVMQPU/HOd9HXJ8upn7TdESR0QIQ3AXAzMa+CbtE7IDY5sAzkp4odsju8RCEb/84B/r70q2hYhtCvHCHmwVsyCb9W0AE4cIRZMI42wzGzGi6LNR2btFM9D5dpYDhyza4f2a/T5F7ARLfDCIHdIUXL0BpTVnE=,iv:OjpthiwpaMzSFEDR6E2a5YPvu+tEBzCuQ/GDgmB4vyg=,tag:zeHrebIDWJpm33Om+o2nHQ==,type:str]
     encrypted_regex: ^(email|password|secret_key|data|stringData|ca|crt|key|id|secret|token|aggregatorCA|serviceAccount|bootstraptoken|secretboxencryptionsecret|secretboxEncryptionSecret|clientSecret|clientId|clientID|external-dns.alpha.kubernetes.io/target|adminPassword|metrics.crt|metrics.key|ca.crt|uri|postgresPassword|preshared|username|cloud-init.user-data|access_key|secret_key|authPass)$

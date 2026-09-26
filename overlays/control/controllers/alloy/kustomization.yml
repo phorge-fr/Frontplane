@@ -1,11 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ../../../../base/controllers/alloy
-  - alloy-secrets.yml
+    - ../../../../base/controllers/alloy
+    - alloy-secrets.yml
 
 patches:
-  # Same per-cluster env for the DaemonSet and the cluster-scoped release.
-  - path: alloy-patch.yml
-    target:
-      kind: HelmRelease
+    # Same per-cluster env for the DaemonSet and the cluster-scoped release.
+    - path: alloy-patch.yml
+      target:
+          kind: HelmRelease

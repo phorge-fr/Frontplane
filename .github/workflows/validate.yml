@@ -1,0 +1,75 @@
+name: Validate
+
+on:
+    pull_request:
+        branches:
+            - main
+            - dev
+    push:
+        branches:
+            - main
+            - dev
+
+jobs:
+    kustomize-build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Build every Kustomization in the repo
+              run: |
+                  fail=0
+                  while IFS= read -r -d '' kfile; do
+                    dir=$(dirname "$kfile")
+                    echo "== $dir =="
+                    if ! kubectl kustomize "$dir" > /dev/null; then
+                      echo "FAILED: $dir"
+                      fail=1
+                    fi
+                  done < <(find . -name kustomization.yml -not -path "./.git/*" -print0)
+                  exit $fail
+
+    kubeconform:
+        runs-on: ubuntu-latest
+        needs: kustomize-build
+        steps:
+            - uses: actions/checkout@v7
+
+            - name: Install kubeconform
+              run: |
+                  curl -sSL https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz | tar xz kubeconform
+                  sudo install kubeconform /usr/local/bin/kubeconform
+
+            - name: Validate rendered manifests against Kubernetes/CRD schemas
+              run: |
+                  # SOPS-encrypted resources (Secrets, but also some ConfigMaps) carry an extra
+                  # top-level `sops` field that no Kubernetes schema allows for: strip any document
+                  # that has one before handing the rest to kubeconform, rather than skipping whole
+                  # Kinds and losing real coverage.
+                  cat > /tmp/filter-sops.py << 'PYEOF'
+                  import sys, yaml
+                  docs = list(yaml.safe_load_all(sys.stdin))
+                  kept = [d for d in docs if d and 'sops' not in d]
+                  print(yaml.dump_all(kept))
+                  PYEOF
+
+                  fail=0
+                  while IFS= read -r -d '' kfile; do
+                    dir=$(dirname "$kfile")
+                    echo "== $dir =="
+                    if ! kubectl kustomize "$dir" 2>/dev/null | python3 /tmp/filter-sops.py | \
+                      kubeconform -strict -ignore-missing-schemas \
+                        -schema-location default \
+                        -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json'
+                    then
+                      echo "FAILED: $dir"
+                      fail=1
+                    fi
+                  done < <(find . -name kustomization.yml -not -path "./.git/*" -print0)
+                  exit $fail
+
+    yamllint:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+            - run: pipx run yamllint --strict .
